@@ -43,6 +43,15 @@ export const quantumErrorCorrectionCourse: Course = {
           interactiveComponent: "BuildAtomActivity",
           duration: 25,
           points: 20
+        },
+        {
+          id: "2.3.1.4",
+          title: "Error Detection vs. Correction",
+          description: "Understand the difference between detecting and correcting quantum errors.",
+          content: "In quantum computing, there's an important distinction between error detection (knowing an error has occurred) and error correction (fixing the error without damaging the quantum information). This lesson explores this distinction and its implications.\n\nWe'll discuss the challenges of quantum measurement, which can destroy the very quantum states we're trying to preserve. We'll see how quantum error correction codes must be designed to extract just enough information about errors without collapsing quantum superpositions.\n\nWe'll also look at practical examples of error detection circuits and how they form the foundation for more complex error correction schemes. By the end of this lesson, you'll understand why quantum error detection is necessary but not sufficient for scalable quantum computing.",
+          type: "reading",
+          duration: 15,
+          points: 10
         }
       ]
     },
@@ -77,6 +86,24 @@ export const quantumErrorCorrectionCourse: Course = {
           type: "interactive",
           interactiveComponent: "AtomSimulation",
           duration: 30,
+          points: 25
+        },
+        {
+          id: "2.3.2.4",
+          title: "Surface Codes: The Future of Quantum Error Correction",
+          description: "Explore the error correction codes most likely to be used in future quantum computers.",
+          content: "Surface codes are currently the most promising quantum error correction codes for large-scale quantum computers. Unlike the 3-qubit and 9-qubit codes we've studied, surface codes are designed to be implemented on a 2D grid of qubits with only nearest-neighbor interactions, making them well-suited for actual quantum hardware.\n\nIn this lesson, we'll introduce the basic concepts of surface codes and why they're so attractive for practical quantum computing. We'll discuss how they can achieve high error thresholds (around 1% error rate per operation), making them more tolerant of hardware imperfections than other codes.\n\nWe'll also look at how surface codes scale, requiring approximately 1,000-10,000 physical qubits for each logical qubit that can perform reliable computation. This helps explain why building large-scale, fault-tolerant quantum computers is such a significant engineering challenge.",
+          type: "reading",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.3.2.5",
+          title: "Error Correction Codes Quiz",
+          description: "Test your understanding of quantum error correction codes.",
+          content: "Let's check what you've learned about quantum error correction codes and their implementation.",
+          type: "quiz",
+          duration: 15,
           points: 25
         }
       ]

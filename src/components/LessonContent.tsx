@@ -89,10 +89,10 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     );
   };
   
-  // Function to safely render paragraphs as div elements
+  // Function to safely render paragraphs 
   const renderParagraphs = (content: string) => {
     return content.split('\n\n').map((paragraph, index) => (
-      <div key={index} className="mb-4">{paragraph}</div>
+      <p key={index} className="mb-4">{paragraph}</p>
     ));
   };
   

@@ -4,9 +4,7 @@ import Footer from "@/components/Footer";
 import LevelSection from "@/components/LevelSection";
 import HeroSection from "@/components/curriculum/HeroSection";
 import TeachingMethodology from "@/components/curriculum/TeachingMethodology";
-import { level1Courses } from "@/data/courses/level1";
-import { level2Courses } from "@/data/courses/level2";
-import { level3Courses } from "@/data/courses/level3";
+import { level1Courses, level2Courses, level3Courses } from "@/data/courseData";
 
 const Curriculum = () => {
   return (
