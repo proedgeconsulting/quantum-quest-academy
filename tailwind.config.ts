@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,33 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				quantum: {
+					100: "#F2E6FF",
+					200: "#D6BCFA",
+					300: "#B794F4",
+					400: "#9B87F5",
+					500: "#805AD5",
+					600: "#6B46C1",
+					700: "#553C9A",
+					800: "#44337A",
+					900: "#322659"
+				},
+				energy: {
+					100: "#FFEDD5",
+					200: "#FED7AA",
+					300: "#FDBA74",
+					400: "#FB923C",
+					500: "#F97316",
+					600: "#EA580C",
+					700: "#C2410C",
+					800: "#9A3412",
+					900: "#7C2D12"
+				},
+				success: {
+					100: "#DCFCE7",
+					500: "#22C55E",
+					900: "#14532D"
 				}
 			},
 			borderRadius: {
@@ -70,25 +98,32 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
+				},
+				'quantum-pulse': {
+					'0%, 100%': { opacity: '1', transform: 'scale(1)' },
+					'50%': { opacity: '0.8', transform: 'scale(1.05)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 3s ease-in-out infinite',
+				'spin-slow': 'spin-slow 8s linear infinite',
+				'quantum-pulse': 'quantum-pulse 2s ease-in-out infinite'
 			}
 		}
 	},
