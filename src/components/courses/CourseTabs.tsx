@@ -4,6 +4,7 @@ import CourseGrid from "./CourseGrid";
 import { level1Courses } from "@/data/courses/level1Courses";
 import { level2Courses } from "@/data/courses/level2Courses";
 import { level3Courses } from "@/data/coursesData";
+import { Course } from "@/data/types/courseTypes";
 
 const CourseTabs = () => {
   // Combine all courses for the "All" tab

@@ -1,9 +1,10 @@
 
 import { motion } from "framer-motion";
 import CourseCard from "@/components/CourseCard";
+import { Course } from "@/data/types/courseTypes";
 
 interface CourseGridProps {
-  courses: {
+  courses: Course[] | {
     id: string;
     title: string;
     description: string;
@@ -29,7 +30,7 @@ const CourseGrid = ({ courses }: CourseGridProps) => {
             title={course.title}
             description={course.description}
             level={parseInt(course.id.split('.')[0]) as 1 | 2 | 3}
-            progress={course.progress}
+            progress={'progress' in course ? course.progress : 0}
             duration={course.duration}
             icon={course.icon}
             weeks={course.weeks}

@@ -28,4 +28,5 @@ export interface Course {
   duration: string;
   icon: "atom" | "brain" | "code" | "graduation" | "circuit" | "wave";
   weeks: number;
+  progress?: number; // Making this optional since it might be calculated dynamically
 }

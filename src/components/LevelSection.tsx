@@ -2,12 +2,13 @@
 import { motion } from "framer-motion";
 import CourseCard from "./CourseCard";
 import { Atom, Brain, CircuitBoard, Code, GraduationCap, Waves } from "lucide-react";
+import { Course } from "@/data/types/courseTypes";
 
 interface LevelSectionProps {
   level: number;
   title: string;
   description: string;
-  courses: {
+  courses: Course[] | {
     id: string;
     title: string;
     description: string;
@@ -78,7 +79,7 @@ const LevelSection = ({ level, title, description, courses }: LevelSectionProps)
                 title={course.title}
                 description={course.description}
                 level={level as 1 | 2 | 3}
-                progress={course.progress}
+                progress={'progress' in course ? course.progress : 0}
                 duration={course.duration}
                 icon={course.icon}
                 weeks={course.weeks}
