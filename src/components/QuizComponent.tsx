@@ -3,6 +3,7 @@ import { useState } from "react";
 import QuizProgress from "@/components/quiz/QuizProgress";
 import QuizQuestion from "@/components/quiz/QuizQuestion";
 import QuizActions from "@/components/quiz/QuizActions";
+import QuizResult from "@/components/quiz/QuizResult";
 import { getQuizQuestions, QuizQuestion as QuizQuestionType } from "@/utils/quizHelpers";
 
 interface QuizComponentProps {
@@ -20,6 +21,7 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
   
   const quizQuestions = getQuizQuestions(lessonId);
   const currentQuestion = quizQuestions[currentQuestionIndex];
+  const finalScore = Math.round((correctAnswers / quizQuestions.length) * 100);
   
   const handleAnswerSelect = (answerIndex: number) => {
     if (showFeedback) return;
@@ -44,10 +46,30 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setQuizCompleted(true);
-      const score = Math.round((correctAnswers / quizQuestions.length) * 100);
-      onComplete(score);
     }
   };
+  
+  const handleQuizComplete = () => {
+    onComplete(finalScore);
+  };
+  
+  const handleRestartQuiz = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setShowFeedback(false);
+    setCorrectAnswers(0);
+    setQuizCompleted(false);
+  };
+  
+  if (quizCompleted) {
+    return (
+      <QuizResult 
+        score={finalScore} 
+        onRestart={handleRestartQuiz}
+        onContinue={handleQuizComplete}
+      />
+    );
+  }
   
   return (
     <div className="space-y-6">
