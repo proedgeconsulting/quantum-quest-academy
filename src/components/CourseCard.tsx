@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -82,6 +81,11 @@ const CourseCard = ({
     }
   };
   
+  const handleContinueClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.location.href = `/courses/${id}`;
+  };
+  
   return (
     <Link to={`/courses/${id}`} aria-label={`View details for ${title} course: ${description}`}>
       <motion.div
@@ -123,7 +127,11 @@ const CourseCard = ({
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-1 bg-quantum-500 text-white px-3 py-1 rounded-full text-xs font-medium"
+                className="flex items-center gap-1 bg-quantum-500 text-white px-3 py-1 rounded-full text-xs font-medium cursor-pointer"
+                onClick={handleContinueClick}
+                role="button"
+                tabIndex={0}
+                aria-label={`Continue ${title} course`}
               >
                 <Play className="h-3 w-3" /> Continue
               </motion.div>
