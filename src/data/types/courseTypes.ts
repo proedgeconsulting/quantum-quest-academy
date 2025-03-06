@@ -10,6 +10,7 @@ export interface Lesson {
   duration: number; // in minutes
   points: number;
   interactiveComponent?: string;
+  videoUrl?: string; // Adding videoUrl as an optional property
   interactiveOptions?: {
     simulatorType?: string;
     datasetOptions?: string[];
