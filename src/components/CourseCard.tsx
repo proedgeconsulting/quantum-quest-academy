@@ -83,7 +83,7 @@ const CourseCard = ({
   };
   
   return (
-    <Link to={`/courses/${id}`}>
+    <Link to={`/courses/${id}`} aria-label={`View details for ${title} course: ${description}`}>
       <motion.div
         className={cn(
           "quantum-card overflow-hidden h-full",
@@ -107,7 +107,9 @@ const CourseCard = ({
           </div>
           
           <h3 className="text-lg font-semibold mb-2">{title}</h3>
-          <p className="text-sm text-quantum-700 dark:text-quantum-300 mb-4">{description}</p>
+          <p className="text-sm text-quantum-700 dark:text-quantum-300 mb-4" title={description}>
+            {description.length > 100 ? `${description.substring(0, 100)}...` : description}
+          </p>
           
           <div className="flex items-center justify-between text-xs text-quantum-600 dark:text-quantum-400 mb-2">
             <span>{duration}</span>
