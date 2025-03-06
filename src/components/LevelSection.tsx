@@ -1,8 +1,10 @@
 
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import CourseCard from "./CourseCard";
-import { Atom, Brain, CircuitBoard, Code, GraduationCap, Waves } from "lucide-react";
+import { Atom, Brain, CircuitBoard, Code, GraduationCap, Waves, ArrowRight } from "lucide-react";
 import { Course } from "@/data/types/courseTypes";
+import { Button } from "@/components/ui/button";
 
 interface LevelSectionProps {
   level: number;
@@ -48,26 +50,36 @@ const LevelSection = ({ level, title, description, courses }: LevelSectionProps)
   
   return (
     <motion.section
+      id={`level-${level}`}
       className={`py-12 ${getBgColor()}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="p-3 rounded-full bg-white/70 dark:bg-quantum-800/70 shadow-md">
-            {getIcon()}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-full bg-white/70 dark:bg-quantum-800/70 shadow-md">
+              {getIcon()}
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-quantum-900 dark:text-quantum-100">
+                {title}
+              </h2>
+              <p className="text-quantum-600 dark:text-quantum-300">{description}</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-quantum-900 dark:text-quantum-100">
-              {title}
-            </h2>
-            <p className="text-quantum-600 dark:text-quantum-300">{description}</p>
-          </div>
+          
+          <Button asChild variant="outline" className="self-start md:self-center">
+            <Link to={`/curriculum/level/${level}`} className="flex items-center gap-2">
+              View All Level {level} Courses
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {courses.map((course, index) => (
+          {courses.slice(0, 3).map((course, index) => (
             <motion.div
               key={course.id}
               initial={{ opacity: 0, y: 20 }}
@@ -87,6 +99,17 @@ const LevelSection = ({ level, title, description, courses }: LevelSectionProps)
             </motion.div>
           ))}
         </div>
+        
+        {courses.length > 3 && (
+          <div className="mt-6 text-center">
+            <Button asChild variant="ghost">
+              <Link to={`/curriculum/level/${level}`} className="flex items-center gap-2 mx-auto">
+                See {courses.length - 3} more courses
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </motion.section>
   );
