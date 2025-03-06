@@ -5,6 +5,7 @@ import QuizQuestion from "@/components/quiz/QuizQuestion";
 import QuizActions from "@/components/quiz/QuizActions";
 import QuizResult from "@/components/quiz/QuizResult";
 import { getQuizQuestions, QuizQuestion as QuizQuestionType } from "@/utils/quizHelpers";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface QuizComponentProps {
   lessonId: string;
@@ -72,11 +73,21 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
   }
   
   return (
-    <div className="space-y-6">
+    <motion.div 
+      className="space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Quiz introduction */}
-      <div className="prose dark:prose-invert max-w-none mb-6">
+      <motion.div 
+        className="prose dark:prose-invert max-w-none mb-6"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <p>{quizContent}</p>
-      </div>
+      </motion.div>
       
       {/* Progress bar */}
       <QuizProgress 
@@ -84,15 +95,25 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
         totalQuestions={quizQuestions.length} 
       />
       
-      {/* Question and answers */}
-      <QuizQuestion
-        question={currentQuestion.question}
-        options={currentQuestion.options}
-        selectedAnswer={selectedAnswer}
-        correctAnswer={currentQuestion.correctAnswer}
-        showFeedback={showFeedback}
-        onSelectAnswer={handleAnswerSelect}
-      />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentQuestionIndex}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.3 }}
+        >
+          {/* Question and answers */}
+          <QuizQuestion
+            question={currentQuestion.question}
+            options={currentQuestion.options}
+            selectedAnswer={selectedAnswer}
+            correctAnswer={currentQuestion.correctAnswer}
+            showFeedback={showFeedback}
+            onSelectAnswer={handleAnswerSelect}
+          />
+        </motion.div>
+      </AnimatePresence>
       
       {/* Actions */}
       <QuizActions
@@ -102,7 +123,7 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
         onCheckAnswer={handleCheckAnswer}
         onNextQuestion={handleNextQuestion}
       />
-    </div>
+    </motion.div>
   );
 };
 
