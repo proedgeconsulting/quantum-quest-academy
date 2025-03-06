@@ -41,13 +41,33 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
   
   if (!lesson) return null;
   
-  // Render interactive components
+  // Render interactive components - instead of passing onComplete directly, we'll wrap them
   const renderInteractiveComponent = () => {
     switch (lesson.interactiveComponent) {
       case "BuildAtomActivity":
-        return <BuildAtomActivity onComplete={onComplete} />;
+        return (
+          <div className="interactive-component-wrapper">
+            <BuildAtomActivity />
+            <div className="mt-6 flex justify-center">
+              <Button onClick={onComplete} className="gap-2">
+                <CheckCircle size={16} />
+                Complete Activity
+              </Button>
+            </div>
+          </div>
+        );
       case "AtomSimulation":
-        return <AtomSimulation onComplete={onComplete} />;
+        return (
+          <div className="interactive-component-wrapper">
+            <AtomSimulation />
+            <div className="mt-6 flex justify-center">
+              <Button onClick={onComplete} className="gap-2">
+                <CheckCircle size={16} />
+                Complete Simulation
+              </Button>
+            </div>
+          </div>
+        );
       default:
         return (
           <div className="p-6 text-center bg-quantum-50 dark:bg-quantum-900 rounded-lg">
