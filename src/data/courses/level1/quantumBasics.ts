@@ -31,7 +31,8 @@ export const quantumBasicsCourse: Course = {
           content: "Everything in our universe is made up of tiny building blocks called atoms. But what are atoms made of? In this lesson, we'll dive into the subatomic world to discover protons, neutrons, and electrons.\n\nWe'll learn how these particles come together to form atoms, and how atoms combine to create everything from the air we breathe to the stars in the sky.",
           type: "reading",
           duration: 15,
-          points: 10
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/HpNMT6x-Hls"
         },
         {
           id: "1.1.1.3",
@@ -75,7 +76,8 @@ export const quantumBasicsCourse: Course = {
           content: "Light interacts with matter in fascinating ways. In this lesson, we'll explore phenomena like reflection, refraction, and absorption.\n\nWe'll also learn about the electromagnetic spectrum, from radio waves to gamma rays, and discover how different types of light affect our world.",
           type: "video",
           duration: 10,
-          points: 10
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
         },
         {
           id: "1.1.2.3",
@@ -119,7 +121,8 @@ export const quantumBasicsCourse: Course = {
           content: "You might wonder why we don't notice the uncertainty principle in our everyday lives. The answer lies in scale: the uncertainty becomes significant only at the quantum level.\n\nImagine trying to measure both the position and speed of a car. You can do this quite accurately because the car is large compared to the minimum uncertainty that quantum physics imposes. But for an electron, the uncertainty is huge compared to its size, making it impossible to precisely track both its position and momentum simultaneously.",
           type: "video",
           duration: 12,
-          points: 10
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/TQKELOE9eY4"
         },
         {
           id: "1.1.3.3",
@@ -163,7 +166,8 @@ export const quantumBasicsCourse: Course = {
           content: "Erwin Schrödinger created his famous cat thought experiment to highlight how strange quantum superposition becomes when applied to everyday objects.\n\nIn this thought experiment, a cat is placed in a sealed box with a device that has a 50% chance of releasing poison based on a quantum event (like a radioactive atom decaying). According to quantum mechanics, until the box is opened, the quantum system is in a superposition of states - and by extension, the cat would be both alive and dead simultaneously!\n\nThis paradox helps us think about the boundary between the quantum world and our everyday experience.",
           type: "video",
           duration: 15,
-          points: 10
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/UjaAxUO6-Uw"
         },
         {
           id: "1.1.4.3",
@@ -207,7 +211,8 @@ export const quantumBasicsCourse: Course = {
           content: "Quantum tunneling isn't just a theoretical curiosity - it has practical applications and occurs naturally all around us. Tunneling makes nuclear fusion possible in stars, enables some types of radioactive decay, and is essential for scanning tunneling microscopes that can image individual atoms.\n\nIn technology, tunneling is crucial for certain electronic components like tunnel diodes and flash memory used in computers and smartphones. Without quantum tunneling, many modern technologies wouldn't work!",
           type: "video",
           duration: 12,
-          points: 10
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/cTodS8hkSDg"
         },
         {
           id: "1.1.5.3",
@@ -251,7 +256,8 @@ export const quantumBasicsCourse: Course = {
           content: "Quantum physics has revolutionized medicine through technologies like Magnetic Resonance Imaging (MRI) and Positron Emission Tomography (PET) scans. MRI machines use quantum properties of hydrogen atoms to create detailed images of soft tissues in the body. PET scans rely on antimatter (positrons) to detect areas of high metabolic activity, helping to identify cancers and monitor brain activity.\n\nThese technologies save countless lives by enabling early detection and precise diagnosis of medical conditions, all thanks to our understanding of quantum physics.",
           type: "video",
           duration: 15,
-          points: 10
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/7SEmv2f8w5I"
         },
         {
           id: "1.1.6.3",
