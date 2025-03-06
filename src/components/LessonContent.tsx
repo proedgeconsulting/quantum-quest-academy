@@ -18,6 +18,7 @@ interface LessonContentProps {
     duration: number;
     points: number;
     interactiveComponent?: string;
+    videoUrl?: string;  // Added videoUrl property
   };
   onComplete: () => void;
   isCompleted: boolean;
@@ -46,6 +47,33 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
   // Check if content has iframe
   const hasIframe = lesson.content.includes('<iframe');
   
+  // Default video URLs based on the lesson content
+  // In a real application, these would come from your database
+  const getDefaultVideoUrl = (lessonId: string) => {
+    const videoMap: Record<string, string> = {
+      // Level 1 videos
+      "1.1.2.2": "https://www.youtube.com/embed/FjHJ7FjgL34", // Light in Action
+      "1.1.3.2": "https://www.youtube.com/embed/TQKELOE9eY4", // Uncertainty in Everyday Life
+      "1.1.4.2": "https://www.youtube.com/embed/UjaAxUO6-Uw", // Schrödinger's Cat
+      "1.1.5.2": "https://www.youtube.com/embed/cTodS8hkSDg", // Tunneling in the Real World
+      "1.1.6.2": "https://www.youtube.com/embed/7SEmv2f8w5I", // Medical Quantum Technologies
+      
+      // Level 2 videos
+      "2.1.1.2": "https://www.youtube.com/embed/F_Riqjdh2oM", // Quantum Gates: The Building Blocks
+      "2.1.2.2": "https://www.youtube.com/embed/F8U1d2Hqark", // The Deutsch-Jozsa Algorithm
+      "2.1.3.2": "https://www.youtube.com/embed/0Zzw6XGwZOE", // Multi-Qubit Gates
+      "2.1.4.2": "https://www.youtube.com/embed/q7FS0YTRzKI", // Visualizing Quantum States
+      "2.1.5.2": "https://www.youtube.com/embed/QHZ_XLxERzA", // Error Mitigation Techniques
+      "2.1.6.2": "https://www.youtube.com/embed/OqUGBjp2aKs", // Circuit Transformation Techniques
+      
+      // Level 3 videos
+      "3.3.2.2": "https://www.youtube.com/embed/2w7Y5H85xX8", // Quantum Policy and Governance
+      "3.3.3.3": "https://www.youtube.com/embed/RZfYLNDKu0o", // Quantum IP Strategy
+    };
+    
+    return videoMap[lessonId] || "https://www.youtube.com/embed/0gh3JrdL-Zg"; // Default quantum computing video
+  };
+  
   // Memoize interactive component to prevent unnecessary re-renders
   const InteractiveComponent = useMemo(() => {
     switch (lesson.interactiveComponent) {
@@ -64,14 +92,20 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     }
   }, [lesson.interactiveComponent]);
   
-  // Render video component (placeholder for now)
+  // Render video component 
   const renderVideo = () => {
+    const videoUrl = lesson.videoUrl || getDefaultVideoUrl(lesson.id);
+    
     return (
-      <div className="aspect-video bg-black rounded-lg flex flex-col items-center justify-center mb-6">
-        <div className="bg-quantum-500 rounded-full p-4 mb-4 cursor-pointer hover:bg-quantum-600 transition-colors">
-          <Play className="text-white h-8 w-8" />
-        </div>
-        <p className="text-white text-sm">Video content is not available in the preview.</p>
+      <div className="aspect-video bg-black rounded-lg overflow-hidden mb-6">
+        <iframe 
+          src={videoUrl}
+          title={lesson.title}
+          className="w-full h-full"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
       </div>
     );
   };
