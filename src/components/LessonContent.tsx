@@ -89,14 +89,19 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     );
   };
   
+  // Function to safely render paragraphs as spans for proper DOM nesting
+  const renderParagraphs = (content: string) => {
+    return content.split('\n\n').map((paragraph, index) => (
+      <span key={index} className="block mb-4">{paragraph}</span>
+    ));
+  };
+  
   return (
     <div className="space-y-6">
       {/* Reading Content */}
       {lesson.type === "reading" && (
         <div className="prose dark:prose-invert max-w-none">
-          {lesson.content.split('\n\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
+          {renderParagraphs(lesson.content)}
         </div>
       )}
       
@@ -105,9 +110,7 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
         <>
           {renderVideo()}
           <div className="prose dark:prose-invert max-w-none">
-            {lesson.content.split('\n\n').map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+            {renderParagraphs(lesson.content)}
           </div>
         </>
       )}
@@ -116,9 +119,7 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
       {lesson.type === "interactive" && (
         <>
           <div className="prose dark:prose-invert max-w-none mb-6">
-            {lesson.content.split('\n\n').map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+            {renderParagraphs(lesson.content)}
           </div>
           
           {renderInteractiveComponent()}
