@@ -14,6 +14,7 @@ import Faq from "./pages/Faq";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import CourseDetails from "./pages/CourseDetails";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Index />} />
     <Route path="/curriculum" element={<Curriculum />} />
     <Route path="/courses" element={<Courses />} />
+    <Route path="/courses/:courseId" element={<CourseDetails />} />
     <Route path="/progress" element={<Progress />} />
     <Route path="/about" element={<About />} />
     <Route path="/tools" element={<Tools />} />
