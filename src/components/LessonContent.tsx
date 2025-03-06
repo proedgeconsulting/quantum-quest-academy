@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Play } from "lucide-react";
 import BuildAtomActivity from "@/components/BuildAtomActivity";
@@ -39,49 +39,22 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     }, timeToShowButton);
     
     return () => clearTimeout(timer);
-  }, [lesson, isCompleted]);
+  }, [lesson, isCompleted, lesson?.duration, lesson?.type]);
   
   if (!lesson) return null;
   
-  // Render interactive components - instead of passing onComplete directly, we'll wrap them
-  const renderInteractiveComponent = () => {
+  // Check if content has iframe
+  const hasIframe = lesson.content.includes('<iframe');
+  
+  // Memoize interactive component to prevent unnecessary re-renders
+  const InteractiveComponent = useMemo(() => {
     switch (lesson.interactiveComponent) {
       case "BuildAtomActivity":
-        return (
-          <div className="interactive-component-wrapper">
-            <BuildAtomActivity />
-            <div className="mt-6 flex justify-center">
-              <Button onClick={onComplete} className="gap-2">
-                <CheckCircle size={16} />
-                Complete Activity
-              </Button>
-            </div>
-          </div>
-        );
+        return <BuildAtomActivity />;
       case "AtomSimulation":
-        return (
-          <div className="interactive-component-wrapper">
-            <AtomSimulation />
-            <div className="mt-6 flex justify-center">
-              <Button onClick={onComplete} className="gap-2">
-                <CheckCircle size={16} />
-                Complete Simulation
-              </Button>
-            </div>
-          </div>
-        );
+        return <AtomSimulation />;
       case "QuantumSimulator":
-        return (
-          <div className="interactive-component-wrapper">
-            <QuantumSimulator />
-            <div className="mt-6 flex justify-center">
-              <Button onClick={onComplete} className="gap-2">
-                <CheckCircle size={16} />
-                Complete Simulation
-              </Button>
-            </div>
-          </div>
-        );
+        return <QuantumSimulator />;
       default:
         return (
           <div className="p-6 text-center bg-quantum-50 dark:bg-quantum-900 rounded-lg">
@@ -89,7 +62,7 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
           </div>
         );
     }
-  };
+  }, [lesson.interactiveComponent]);
   
   // Render video component (placeholder for now)
   const renderVideo = () => {
@@ -103,9 +76,6 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     );
   };
   
-  // Check if content has iframe
-  const hasIframe = lesson.content.includes('<iframe');
-  
   // Function to render markdown with iframe support
   const renderContent = () => {
     if (hasIframe) {
@@ -118,13 +88,13 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
             if (part.startsWith('<iframe')) {
               // Extract iframe src and attributes
               return (
-                <div key={index} className="my-6 rounded-lg overflow-hidden border border-quantum-200 dark:border-quantum-700">
+                <div key={`iframe-${index}`} className="my-6 rounded-lg overflow-hidden border border-quantum-200 dark:border-quantum-700">
                   <div dangerouslySetInnerHTML={{ __html: part }} />
                 </div>
               );
             } else {
               // Render markdown for non-iframe parts
-              return <ReactMarkdown key={index}>{part}</ReactMarkdown>;
+              return <ReactMarkdown key={`markdown-${index}`}>{part}</ReactMarkdown>;
             }
           })}
         </div>
@@ -158,7 +128,15 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
           {renderContent()}
           
           <div className="mt-8">
-            {renderInteractiveComponent()}
+            <div className="interactive-component-wrapper">
+              {InteractiveComponent}
+              <div className="mt-6 flex justify-center">
+                <Button onClick={onComplete} className="gap-2">
+                  <CheckCircle size={16} />
+                  Complete {lesson.interactiveComponent?.replace(/([A-Z])/g, ' $1').trim()}
+                </Button>
+              </div>
+            </div>
           </div>
         </>
       )}
