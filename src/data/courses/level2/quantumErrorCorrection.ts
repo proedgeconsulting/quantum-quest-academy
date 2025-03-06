@@ -1,4 +1,3 @@
-
 import { Course } from "@/data/types/courseTypes";
 
 // Level 2 Course: Quantum Error Correction
@@ -105,6 +104,200 @@ export const quantumErrorCorrectionCourse: Course = {
           type: "quiz",
           duration: 15,
           points: 25
+        }
+      ]
+    },
+    {
+      id: "2.3.3",
+      title: "Stabilizer Formalism",
+      description: "Master the mathematical framework behind quantum error correction.",
+      lessons: [
+        {
+          id: "2.3.3.1",
+          title: "Introduction to Stabilizer Codes",
+          description: "Learn the elegant mathematical structure behind most quantum error correction codes.",
+          content: "Stabilizer codes form the backbone of modern quantum error correction. In this lesson, we'll explore how these powerful codes use group theory to efficiently describe quantum error correction procedures.\n\nWe'll begin by understanding what a stabilizer is: an operator that leaves a certain quantum state unchanged. We'll then see how collections of stabilizers can uniquely define a protected subspace for our quantum information. The stabilizer formalism provides a compact way to describe error correction codes that would otherwise require tracking an exponential number of quantum states.\n\nWe'll walk through the step-by-step process of constructing simple stabilizer codes and see how they can detect and correct errors through syndrome measurements. This mathematical framework not only simplifies our understanding of quantum error correction but also enables the discovery of new and more efficient codes.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        },
+        {
+          id: "2.3.3.2",
+          title: "The Heisenberg Picture",
+          description: "Explore an alternative view of quantum mechanics that simplifies error correction analysis.",
+          content: "While most introductory quantum mechanics courses teach the Schrödinger picture (where states evolve and operators remain fixed), the Heisenberg picture (where operators evolve and states remain fixed) often provides more insight into quantum error correction.\n\nIn this lesson, we'll explore how the Heisenberg picture allows us to track the propagation of errors through a quantum circuit more intuitively. Rather than focusing on how quantum states change when errors occur, we'll look at how the errors themselves transform as they pass through different quantum gates.\n\nWe'll see how this perspective makes it easier to analyze complex error correction procedures and understand the behavior of errors in stabilizer codes. By the end of this lesson, you'll have a powerful new tool for thinking about quantum error propagation and correction.",
+          type: "video",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.3.3.3",
+          title: "Stabilizer Simulator",
+          description: "Experiment with stabilizer states and see how they respond to errors and corrections.",
+          content: "In this interactive lesson, you'll use our Stabilizer Simulator to visualize and manipulate stabilizer states. This tool will help you develop intuition for how these mathematical objects behave in the presence of errors.\n\nYou'll be able to construct different stabilizer codes, introduce various types of errors, and perform syndrome measurements to diagnose and correct those errors. The simulator provides both circuit-level visualization and abstract group-theoretic representations, helping you connect these different perspectives.\n\nBy experimenting with different scenarios, you'll gain a deeper understanding of how stabilizer codes work and why they're so useful for quantum error correction. The interactive nature of this lesson will help solidify the concepts from the previous theoretical lessons.",
+          type: "interactive",
+          interactiveComponent: "RandomNumberSimulator",
+          duration: 30,
+          points: 25
+        },
+        {
+          id: "2.3.3.4",
+          title: "Fault-Tolerant Syndrome Extraction",
+          description: "Learn how to measure error syndromes without introducing new errors.",
+          content: "One of the central challenges in quantum error correction is diagnosing errors without introducing new ones in the process. Syndrome extraction refers to the measurements we perform to identify what errors have occurred, but these measurements themselves can go wrong.\n\nIn this lesson, we'll explore fault-tolerant syndrome extraction techniques that are robust against errors in the measurement process itself. We'll see how redundant measurements and careful circuit design can prevent small errors from cascading into uncorrectable ones.\n\nWe'll walk through concrete examples of fault-tolerant syndrome extraction circuits and analyze how they prevent error propagation. By the end of this lesson, you'll understand how quantum error correction can be made reliable even when the correction procedure itself is subject to errors.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.3.4",
+      title: "Advanced Error Correction Techniques",
+      description: "Explore cutting-edge approaches to quantum error correction.",
+      lessons: [
+        {
+          id: "2.3.4.1",
+          title: "Topological Quantum Codes",
+          description: "Learn about error correction codes with geometric interpretations.",
+          content: "Topological quantum codes represent one of the most promising approaches to practical quantum error correction. These codes have a beautiful geometric interpretation where quantum information is encoded in global properties of a system, making them naturally resistant to local errors.\n\nIn this lesson, we'll explore the toric code—the prototypical topological quantum code developed by Alexei Kitaev. We'll see how quantum information can be stored in the topology of a surface and how errors can be visualized as strings or loops on this surface.\n\nWe'll discuss how these topological features provide natural protection against errors and why these codes are particularly well-suited for physical implementations. The geometric nature of these codes not only makes them robust but also provides an intuitive way to visualize complex quantum error correction procedures.",
+          type: "video",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.3.4.2",
+          title: "Quantum LDPC Codes",
+          description: "Explore the quantum versions of powerful classical error correction codes.",
+          content: "Low-Density Parity Check (LDPC) codes are among the most powerful error correction codes in classical communications, enabling data transmission at rates approaching theoretical limits. Quantum LDPC codes aim to bring these advantages to quantum systems.\n\nIn this lesson, we'll explore how classical LDPC codes can be adapted to the quantum realm, despite the challenges posed by the no-cloning theorem and the non-commutative nature of quantum operations. We'll see how sparse parity check matrices can be designed to satisfy the additional constraints required for quantum error correction.\n\nWe'll discuss recent breakthroughs in quantum LDPC codes that promise better scaling properties than surface codes, potentially requiring far fewer physical qubits per logical qubit. These developments represent some of the most exciting recent advances in theoretical quantum error correction and could significantly reduce the resources needed for fault-tolerant quantum computing.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        },
+        {
+          id: "2.3.4.3",
+          title: "Error Correction Strategy Game",
+          description: "Test your understanding by playing a game where you must correct errors efficiently.",
+          content: "In this interactive lesson, you'll put your quantum error correction knowledge to the test in a strategic game environment. You'll be presented with a quantum memory affected by various errors, and your job is to diagnose and correct these errors using the minimum resources possible.\n\nThe game becomes progressively more challenging as you advance, introducing more complex error patterns, measurement uncertainties, and resource constraints. You'll need to decide which syndrome measurements to perform, interpret the results correctly, and apply the appropriate corrections.\n\nPoints are awarded based on how efficiently you preserve the quantum information and how few resources you consume. This gamified approach will test your understanding of quantum error correction concepts and help you develop intuition for error diagnosis and correction strategies.",
+          type: "interactive",
+          interactiveComponent: "QuantumCoinSimulator",
+          duration: 30,
+          points: 25
+        },
+        {
+          id: "2.3.4.4",
+          title: "Machine Learning for Error Correction",
+          description: "Discover how machine learning can enhance quantum error correction.",
+          content: "As quantum systems scale up, the classical processing required for error correction becomes increasingly complex. Machine learning offers promising approaches to optimize this critical component of quantum computing.\n\nIn this lesson, we'll explore how neural networks and other machine learning techniques can be applied to quantum error correction. We'll see how these methods can improve decoding algorithms, predict error patterns, and optimize error correction strategies based on device-specific noise characteristics.\n\nWe'll examine recent experimental results where machine learning decoders outperformed traditional methods, particularly in realistic noise environments. We'll also discuss how these techniques can adapt to changing noise conditions in real quantum hardware, potentially enabling more efficient error correction tailored to specific quantum processors.",
+          type: "video",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.3.4.5",
+          title: "Advanced Error Correction Quiz",
+          description: "Test your understanding of advanced quantum error correction techniques.",
+          content: "Let's check what you've learned about advanced quantum error correction methods and their applications.",
+          type: "quiz",
+          duration: 15,
+          points: 25
+        }
+      ]
+    },
+    {
+      id: "2.3.5",
+      title: "Fault-Tolerant Quantum Computation",
+      description: "Learn how to perform reliable computations on error-corrected quantum systems.",
+      lessons: [
+        {
+          id: "2.3.5.1",
+          title: "The Threshold Theorem",
+          description: "Understand the fundamental result that makes fault-tolerant quantum computation possible.",
+          content: "The quantum threshold theorem is one of the most important theoretical results in quantum computing. It states that if the physical error rate can be reduced below a certain threshold, then arbitrarily reliable quantum computation becomes possible through the use of error correction.\n\nIn this lesson, we'll explore the threshold theorem in depth, understanding both its profound implications and the assumptions behind it. We'll see how quantum error correction can be recursively applied to achieve arbitrarily low logical error rates, provided the physical error rates are below the threshold.\n\nWe'll discuss typical threshold values for different error correction schemes and what they mean for experimental quantum computing. The threshold theorem provides the theoretical foundation for scalable quantum computing, offering assurance that quantum algorithms can be reliably executed despite the inevitable presence of noise and errors.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        },
+        {
+          id: "2.3.5.2",
+          title: "Transversal Gates and Code Switching",
+          description: "Learn techniques for performing logical operations on encoded quantum information.",
+          content: "Once we've encoded quantum information to protect it from errors, we need methods to manipulate this information without compromising its protection. Transversal gates are operations that can be applied to encoded logical qubits while maintaining their error-correcting properties.\n\nIn this lesson, we'll explore which quantum gates can be implemented transversally in different error correction codes and why no single code can support a universal set of transversal gates (as proven by the Eastin-Knill theorem). We'll then examine code switching techniques that allow us to temporarily convert between different error correction codes to access complementary sets of transversal gates.\n\nWe'll also discuss magic state distillation, a critical technique for implementing the non-Clifford gates needed for universal quantum computation. By the end of this lesson, you'll understand the main approaches for performing logical operations on error-corrected quantum information.",
+          type: "video",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.3.5.3",
+          title: "Logical Circuit Simulator",
+          description: "Design and test quantum circuits that operate on error-corrected logical qubits.",
+          content: "In this interactive lesson, you'll use our Logical Circuit Simulator to design quantum algorithms that operate at the logical level, with underlying error correction automatically handled by the system. This tool bridges the gap between abstract quantum algorithms and their fault-tolerant implementations.\n\nYou'll be able to construct circuits using logical qubits protected by error correction codes, and the simulator will show both the high-level logical operations and the underlying physical operations including error correction procedures. You can introduce different noise models to see how your circuit performs under realistic conditions.\n\nBy experimenting with different logical gates and error correction strategies, you'll gain practical experience with the concepts of fault-tolerant quantum computation. This hands-on approach will help you understand the trade-offs between computational power, error protection, and resource requirements.",
+          type: "interactive",
+          interactiveComponent: "QubitStateSimulator",
+          duration: 30,
+          points: 25
+        },
+        {
+          id: "2.3.5.4",
+          title: "Resource Estimation",
+          description: "Learn how to calculate the physical resources needed for fault-tolerant quantum algorithms.",
+          content: "Implementing quantum algorithms fault-tolerantly requires significantly more physical qubits and gates than their ideal counterparts. Resource estimation is the process of calculating these requirements for specific algorithms and error correction strategies.\n\nIn this lesson, we'll learn techniques for estimating the number of physical qubits, the circuit depth, and the total number of operations needed to run fault-tolerant versions of important quantum algorithms like Shor's factoring algorithm or quantum chemistry simulations.\n\nWe'll examine how different parameters—such as the desired failure probability, the underlying error correction code, and the physical error rate—affect these resource requirements. This analysis is crucial for understanding when quantum computers might become practically useful for different applications and what technological improvements are most important for reducing resource overhead.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.3.6",
+      title: "Practical Implementations",
+      description: "Explore how quantum error correction is being realized in actual quantum hardware.",
+      lessons: [
+        {
+          id: "2.3.6.1",
+          title: "Current Experimental Status",
+          description: "Learn about the state-of-the-art in implementing quantum error correction.",
+          content: "Quantum error correction has moved from purely theoretical proposals to early experimental demonstrations. In this lesson, we'll explore the current state of experimental quantum error correction across different hardware platforms.\n\nWe'll examine recent milestones such as the demonstration of the surface code on superconducting qubits, the implementation of small stabilizer codes in trapped ions, and error detection in photonic systems. We'll discuss both the achievements and limitations of these experiments, highlighting the gap between current capabilities and what's needed for full fault tolerance.\n\nWe'll also explore different metrics for evaluating progress in experimental quantum error correction, such as the achieved reduction in logical error rates and the break-even point where error correction provides a net benefit. By understanding the current experimental landscape, you'll gain insight into the practical challenges of implementing quantum error correction.",
+          type: "video",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.3.6.2",
+          title: "Hardware-Tailored Error Correction",
+          description: "Discover how error correction schemes can be optimized for specific quantum hardware.",
+          content: "Different quantum hardware platforms have distinct error characteristics, connectivity constraints, and operational capabilities. Hardware-tailored error correction involves adapting error correction schemes to leverage the strengths and mitigate the weaknesses of specific quantum technologies.\n\nIn this lesson, we'll explore how error correction strategies can be customized for superconducting qubits, trapped ions, neutral atoms, photonics, and spin qubits. We'll examine how factors like native gate sets, qubit connectivity, measurement capabilities, and dominant error types influence the choice of error correction approach.\n\nWe'll also discuss hybrid approaches that combine hardware-level error mitigation with formal error correction codes to achieve the best performance on near-term devices. This tailored approach is crucial for maximizing the error protection provided by limited qubit resources in early fault-tolerant devices.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        },
+        {
+          id: "2.3.6.3",
+          title: "Quantum Hardware Simulator",
+          description: "Experience the challenges of implementing error correction on realistic quantum hardware.",
+          content: "In this interactive lesson, you'll use our Quantum Hardware Simulator to explore the practical challenges of implementing error correction on different hardware platforms. This simulator provides a more realistic model of quantum hardware than the idealized circuit model.\n\nYou'll be able to design and implement small error correction experiments on simulated hardware with realistic constraints like limited connectivity, gate errors, measurement errors, and decoherence. The simulator will help you visualize how errors propagate through the system and how error correction procedures attempt to mitigate them.\n\nBy experimenting with different hardware parameters and error correction strategies, you'll develop intuition for the practical challenges of quantum error correction implementation. This hands-on experience will help you understand the engineering trade-offs involved in building fault-tolerant quantum computers.",
+          type: "interactive",
+          interactiveComponent: "RandomNumberSimulator",
+          duration: 30,
+          points: 25
+        },
+        {
+          id: "2.3.6.4",
+          title: "The Path to Fault Tolerance",
+          description: "Understand the roadmap to achieving practical fault-tolerant quantum computing.",
+          content: "Building a fault-tolerant quantum computer remains one of the greatest challenges in quantum information science. In this lesson, we'll explore the roadmap from current noisy intermediate-scale quantum (NISQ) devices to future fault-tolerant quantum computers.\n\nWe'll examine the major milestones along this path, such as demonstrating quantum error correction beyond the break-even point, implementing logical qubits with lower error rates than physical qubits, and scaling up to enough logical qubits for useful algorithms. We'll discuss different strategies for navigating this path, including incremental approaches that provide partial error protection in the near term.\n\nWe'll also explore the interplay between hardware improvements and error correction techniques, understanding how advances in qubit coherence, gate fidelity, and system size reduce the overhead required for fault tolerance. By understanding this roadmap, you'll gain perspective on how quantum computing capabilities are likely to evolve over the coming years.",
+          type: "reading",
+          duration: 20,
+          points: 15
+        },
+        {
+          id: "2.3.6.5",
+          title: "Final Course Assessment",
+          description: "Demonstrate your mastery of quantum error correction concepts and techniques.",
+          content: "This comprehensive assessment will test your understanding of the full range of quantum error correction topics covered in this course. You'll be presented with a variety of questions and problems that require you to apply what you've learned about error models, correction codes, fault-tolerant techniques, and practical implementations.\n\nThe assessment includes both theoretical questions to test your conceptual understanding and practical problems where you'll need to design error correction strategies for specific scenarios. You'll also be asked to interpret experimental data and evaluate the performance of different error correction approaches.\n\nSuccessfully completing this assessment will demonstrate your mastery of quantum error correction principles and your readiness to apply these concepts in research or industry contexts. This knowledge forms a crucial foundation for advanced work in quantum computing, where error correction is essential for achieving practical quantum advantage.",
+          type: "quiz",
+          duration: 40,
+          points: 50
         }
       ]
     }
