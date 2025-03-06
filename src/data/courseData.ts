@@ -9,8 +9,20 @@ export {
   quantumCodingLiteCourse,
   level1Courses 
 } from "@/data/courses/level1";
-export { quantumCircuitsCourse, level2Courses } from "@/data/courses/level2Courses";
-export { quantumMachineLearningCourse, level3Courses } from "@/data/courses/level3Courses";
+
+export { 
+  quantumCircuitsCourse,
+  quantumEntanglementCourse,
+  quantumErrorCorrectionCourse,
+  level2Courses 
+} from "@/data/courses/level2/index";
+
+export { 
+  quantumMachineLearningCourse,
+  realWorldQuantumAICourse,
+  quantumFutureCourse,
+  level3Courses 
+} from "@/data/courses/level3/index";
 
 // Re-export services
 export { getCourseById } from "@/data/services/courseService";
