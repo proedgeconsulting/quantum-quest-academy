@@ -3,6 +3,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Atom, Brain, GraduationCap, Lightbulb, Puzzle, Target } from "lucide-react";
+import LearningApproachDialog, { ApproachType } from "@/components/about/LearningApproachDialog";
 
 const About = () => {
   return (
@@ -49,72 +50,12 @@ const About = () => {
             Our Approach to Learning
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader className="pb-2">
-                <Puzzle className="h-8 w-8 text-quantum-500 mb-2" />
-                <CardTitle>Interactive Learning</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-quantum-700 dark:text-quantum-300">
-                  Hands-on activities and experiments that make abstract quantum concepts tangible and engaging.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <GraduationCap className="h-8 w-8 text-quantum-500 mb-2" />
-                <CardTitle>Scaffolded Progression</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-quantum-700 dark:text-quantum-300">
-                  Carefully designed learning paths that build competence and confidence at each stage.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <Target className="h-8 w-8 text-quantum-500 mb-2" />
-                <CardTitle>Achievement-Focused</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-quantum-700 dark:text-quantum-300">
-                  Milestones and rewards that celebrate progress and motivate continued exploration.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <Brain className="h-8 w-8 text-quantum-500 mb-2" />
-                <CardTitle>Cognitive Development</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-quantum-700 dark:text-quantum-300">
-                  Activities designed to develop critical thinking and problem-solving skills.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <Lightbulb className="h-8 w-8 text-quantum-500 mb-2" />
-                <CardTitle>Creative Exploration</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-quantum-700 dark:text-quantum-300">
-                  Open-ended challenges that encourage innovation and creative applications of quantum principles.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <Atom className="h-8 w-8 text-quantum-500 mb-2" />
-                <CardTitle>Scientific Accuracy</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-quantum-700 dark:text-quantum-300">
-                  Content developed by experts to ensure concepts are simplified without being misleading.
-                </p>
-              </CardContent>
-            </Card>
+            <LearningApproachDialog approach="interactive" />
+            <LearningApproachDialog approach="scaffolded" />
+            <LearningApproachDialog approach="achievement" />
+            <LearningApproachDialog approach="cognitive" />
+            <LearningApproachDialog approach="creative" />
+            <LearningApproachDialog approach="scientific" />
           </div>
         </div>
 
