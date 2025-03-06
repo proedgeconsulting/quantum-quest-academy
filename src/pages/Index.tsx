@@ -2,17 +2,14 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Atom, Brain, CircuitBoard, GraduationCap, Play, Users } from "lucide-react";
+import { Atom, Brain, CircuitBoard, Play, GraduationCap } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FeaturedCoursesSection from "@/components/home/FeaturedCoursesSection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import WhyQuantumQuestSection from "@/components/home/WhyQuantumQuestSection";
 
 const Index = () => {
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 }
-  };
-  
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -42,7 +39,8 @@ const Index = () => {
                 
                 <motion.h1 
                   className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-quantum-600 to-energy-500 text-transparent bg-clip-text"
-                  {...fadeIn}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   Quantum Quest
@@ -50,7 +48,8 @@ const Index = () => {
                 
                 <motion.p 
                   className="text-xl md:text-2xl mb-8 text-quantum-800 dark:text-quantum-200"
-                  {...fadeIn}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   From Basics to Machine Learning:<br />
@@ -107,60 +106,11 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Features Section */}
-        <section className="py-16 bg-white dark:bg-quantum-900">
-          <div className="container mx-auto px-4">
-            <motion.div 
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2 className="text-3xl font-bold mb-4">The Quantum Learning Journey</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                A 9-month adventure from quantum fundamentals to cutting-edge applications, 
-                designed for curious minds of all ages.
-              </p>
-            </motion.div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: <Atom className="h-10 w-10 text-quantum-500" />,
-                  title: "Level 1: Quantum Explorer",
-                  description: "Begin your journey with playful activities and visual concepts that make quantum physics approachable and fun.",
-                  delay: 0
-                },
-                {
-                  icon: <CircuitBoard className="h-10 w-10 text-quantum-500" />,
-                  title: "Level 2: Quantum Builder",
-                  description: "Create your first quantum circuits and understand the building blocks of quantum computing through hands-on projects.",
-                  delay: 0.1
-                },
-                {
-                  icon: <Brain className="h-10 w-10 text-quantum-500" />,
-                  title: "Level 3: Quantum Innovator",
-                  description: "Apply quantum concepts to machine learning and explore how quantum computing is changing the world.",
-                  delay: 0.2
-                }
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="quantum-card p-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: feature.delay + 0.3 }}
-                >
-                  <div className="mb-4 p-3 bg-quantum-100 dark:bg-quantum-800 rounded-full inline-block">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Why Quantum Quest Section */}
+        <WhyQuantumQuestSection />
+        
+        {/* Featured Courses Section */}
+        <FeaturedCoursesSection />
         
         {/* Stats Section */}
         <section className="py-16 bg-quantum-100 dark:bg-quantum-900/70">
@@ -188,6 +138,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+        
+        {/* Testimonials Section */}
+        <TestimonialsSection />
         
         {/* CTA Section */}
         <section className="py-16 bg-gradient-to-r from-quantum-500 to-energy-500 text-white">
