@@ -11,13 +11,39 @@ function classNames(...classes: string[]) {
 }
 
 const QuantumSimulator = () => {
+  const [selectedTab, setSelectedTab] = useState(0);
   const [measurements, setMeasurements] = useState<Array<0 | 1>>([]);
+  const [coinFlips, setCoinFlips] = useState<Array<"H" | "T">>([]);
+  
+  // Title and mode based on selected tab
+  const getSimulatorTitle = () => {
+    switch(selectedTab) {
+      case 0: return "Qubit State Simulator";
+      case 1: return "Quantum Coin Simulator";
+      case 2: return "Quantum Random Number Generator";
+      default: return "Quantum Simulator";
+    }
+  };
+  
+  const getSimulatorMode = () => {
+    switch(selectedTab) {
+      case 0: return "state";
+      case 1: return "coin";
+      case 2: return "circuit";
+      default: return "state";
+    }
+  };
   
   return (
     <div className="bg-white dark:bg-quantum-950 rounded-lg shadow-lg overflow-hidden">
-      <SimulatorHeader />
+      <div className="p-4">
+        <SimulatorHeader 
+          title={getSimulatorTitle()} 
+          mode={getSimulatorMode()} 
+        />
+      </div>
       
-      <Tab.Group>
+      <Tab.Group onChange={setSelectedTab}>
         <Tab.List className="flex space-x-1 p-1 bg-quantum-100 dark:bg-quantum-900">
           <Tab
             className={({ selected }) =>
@@ -61,13 +87,22 @@ const QuantumSimulator = () => {
         </Tab.List>
         <Tab.Panels className="p-4">
           <Tab.Panel>
-            <QubitStateSimulator />
+            <QubitStateSimulator 
+              measurements={measurements} 
+              setMeasurements={setMeasurements} 
+            />
           </Tab.Panel>
           <Tab.Panel>
-            <QuantumCoinSimulator />
+            <QuantumCoinSimulator 
+              coinFlips={coinFlips} 
+              setCoinFlips={setCoinFlips} 
+            />
           </Tab.Panel>
           <Tab.Panel>
-            <RandomNumberSimulator measurements={measurements} setMeasurements={setMeasurements} />
+            <RandomNumberSimulator 
+              measurements={measurements} 
+              setMeasurements={setMeasurements} 
+            />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
