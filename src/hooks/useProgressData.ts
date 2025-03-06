@@ -25,15 +25,26 @@ export const useProgressData = (userId: string | undefined) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!userId) return;
+      if (!userId) {
+        console.log("No user ID provided to useProgressData");
+        setLoading(false);
+        return;
+      }
 
+      console.log("Fetching progress data for user:", userId);
+      
       try {
         // Fetch achievements
         const { data: achievementsData, error: achievementsError } = await supabase
           .from("achievements")
           .select("*");
 
-        if (achievementsError) throw achievementsError;
+        if (achievementsError) {
+          console.error("Error fetching achievements:", achievementsError);
+          throw achievementsError;
+        }
+
+        console.log("Fetched achievements:", achievementsData?.length || 0);
 
         // Fetch user's earned achievements
         const { data: userAchievementsData, error: userAchievementsError } = await supabase
@@ -41,7 +52,12 @@ export const useProgressData = (userId: string | undefined) => {
           .select("achievement_id, earned_at")
           .eq("user_id", userId);
 
-        if (userAchievementsError) throw userAchievementsError;
+        if (userAchievementsError) {
+          console.error("Error fetching user achievements:", userAchievementsError);
+          throw userAchievementsError;
+        }
+
+        console.log("Fetched user achievements:", userAchievementsData?.length || 0);
 
         // Combine the data
         const userAchievementsMap = new Map(
@@ -68,7 +84,12 @@ export const useProgressData = (userId: string | undefined) => {
           .select("*")
           .eq("user_id", userId);
 
-        if (progressError) throw progressError;
+        if (progressError) {
+          console.error("Error fetching user progress:", progressError);
+          throw progressError;
+        }
+
+        console.log("Fetched user progress entries:", progressData?.length || 0);
 
         // Process the data to get course progress
         const progressByCourseLessons = progressData?.reduce((acc: Record<string, string[]>, item) => {
@@ -80,6 +101,9 @@ export const useProgressData = (userId: string | undefined) => {
           }
           return acc;
         }, {}) || {};
+
+        console.log("Progress by course:", Object.keys(progressByCourseLessons).length);
+        console.log("All courses count:", allCourses.length);
 
         // Map the progress data to courses
         const courseProgressData = allCourses.map(course => {
@@ -113,6 +137,7 @@ export const useProgressData = (userId: string | undefined) => {
         });
 
         setCourseProgress(courseProgressData);
+        console.log("Course progress data prepared:", courseProgressData.length);
       } catch (error: any) {
         console.error("Error loading progress data:", error);
         toast({
@@ -120,6 +145,11 @@ export const useProgressData = (userId: string | undefined) => {
           description: error.message || "Failed to load your progress",
           variant: "destructive",
         });
+        
+        // Set default empty data on error
+        setAchievements([]);
+        setCourseProgress([]);
+        setTotalPoints(0);
       } finally {
         setLoading(false);
       }
