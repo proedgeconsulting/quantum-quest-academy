@@ -10,6 +10,18 @@ export interface Lesson {
   duration: number; // in minutes
   points: number;
   interactiveComponent?: string;
+  interactiveOptions?: {
+    simulatorType?: string;
+    datasetOptions?: string[];
+    maxCircuitDepth?: number;
+    armOptions?: number[];
+    distributionTypes?: string[];
+    visibleUnits?: number[];
+    hiddenUnitOptions?: number[];
+    timelineRange?: number[];
+    impactCategories?: string[];
+    policyOptions?: string[];
+  };
 }
 
 export interface Module {
