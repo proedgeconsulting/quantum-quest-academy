@@ -3,12 +3,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CourseGrid from "./CourseGrid";
 import { level1Courses } from "@/data/courses/level1Courses";
 import { level2Courses } from "@/data/courses/level2Courses";
-import { level3Courses } from "@/data/coursesData";
+import { level3Courses } from "@/data/courses/level3Courses";
 import { Course } from "@/data/types/courseTypes";
 
 const CourseTabs = () => {
   // Combine all courses for the "All" tab
-  const allCourses = [...level1Courses, ...level2Courses, ...level3Courses];
+  const allCourses: Course[] = [...level1Courses, ...level2Courses, ...level3Courses];
   
   return (
     <Tabs defaultValue="all" className="w-full">

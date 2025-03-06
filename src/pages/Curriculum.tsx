@@ -6,7 +6,7 @@ import HeroSection from "@/components/curriculum/HeroSection";
 import TeachingMethodology from "@/components/curriculum/TeachingMethodology";
 import { level1Courses } from "@/data/courses/level1Courses";
 import { level2Courses } from "@/data/courses/level2Courses";
-import { level3Courses } from "@/data/coursesData";
+import { level3Courses } from "@/data/courses/level3Courses";
 
 const Curriculum = () => {
   return (
