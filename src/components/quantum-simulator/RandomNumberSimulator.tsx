@@ -99,9 +99,9 @@ const RandomNumberSimulator = ({ measurements, setMeasurements }: RandomNumberSi
             
             {measurements.length > 0 && (
               <div className="mt-4">
-                <p className="text-sm text-quantum-700 dark:text-quantum-300 mb-2">
+                <div className="text-sm text-quantum-700 dark:text-quantum-300 mb-2">
                   Generated values:
-                </p>
+                </div>
                 <div className="flex gap-2 flex-wrap">
                   {Array.from({ length: Math.floor(measurements.length / numQubits) }).map((_, groupIndex) => {
                     const start = measurements.length - (groupIndex + 1) * numQubits;

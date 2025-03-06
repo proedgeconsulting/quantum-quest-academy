@@ -94,16 +94,20 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
               );
             } else {
               // Render markdown for non-iframe parts
-              return <ReactMarkdown key={`markdown-${index}`}>{part}</ReactMarkdown>;
+              return <div key={`markdown-${index}`}>
+                <ReactMarkdown>{part}</ReactMarkdown>
+              </div>;
             }
           })}
         </div>
       );
     } else {
-      // Regular markdown rendering
+      // Regular markdown rendering - wrap in div instead of directly in prose div
       return (
         <div className="prose dark:prose-invert max-w-none">
-          <ReactMarkdown>{lesson.content}</ReactMarkdown>
+          <div>
+            <ReactMarkdown>{lesson.content}</ReactMarkdown>
+          </div>
         </div>
       );
     }

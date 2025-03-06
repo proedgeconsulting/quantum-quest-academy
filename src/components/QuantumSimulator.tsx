@@ -1,61 +1,77 @@
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import SimulatorHeader from "./quantum-simulator/SimulatorHeader";
-import QubitStateSimulator from "./quantum-simulator/QubitStateSimulator";
-import QuantumCoinSimulator from "./quantum-simulator/QuantumCoinSimulator";
-import RandomNumberSimulator from "./quantum-simulator/RandomNumberSimulator";
+import { Tab } from "@headlessui/react";
+import QubitStateSimulator from "@/components/quantum-simulator/QubitStateSimulator";
+import QuantumCoinSimulator from "@/components/quantum-simulator/QuantumCoinSimulator";
+import RandomNumberSimulator from "@/components/quantum-simulator/RandomNumberSimulator";
+import SimulatorHeader from "@/components/quantum-simulator/SimulatorHeader";
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ');
+}
 
 const QuantumSimulator = () => {
   const [measurements, setMeasurements] = useState<Array<0 | 1>>([]);
-  const [simulatorMode, setSimulatorMode] = useState<"state" | "coin" | "circuit">("state");
-  const [coinFlips, setCoinFlips] = useState<Array<"H" | "T">>([]);
   
   return (
-    <motion.div 
-      className="w-full rounded-lg overflow-hidden bg-white dark:bg-quantum-900 border border-quantum-200 dark:border-quantum-800 p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <SimulatorHeader 
-        title="Quantum Simulator" 
-        mode={simulatorMode} 
-      />
+    <div className="bg-white dark:bg-quantum-950 rounded-lg shadow-lg overflow-hidden">
+      <SimulatorHeader />
       
-      <Tabs value={simulatorMode} onValueChange={(value) => setSimulatorMode(value as "state" | "coin" | "circuit")}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="state">Qubit State</TabsTrigger>
-          <TabsTrigger value="coin">Quantum Coin</TabsTrigger>
-          <TabsTrigger value="circuit">Random Numbers</TabsTrigger>
-        </TabsList>
-        
-        {/* Qubit State Simulator */}
-        <TabsContent value="state" className="space-y-6">
-          <QubitStateSimulator 
-            measurements={measurements}
-            setMeasurements={setMeasurements}
-          />
-        </TabsContent>
-        
-        {/* Quantum Coin Flipper */}
-        <TabsContent value="coin" className="space-y-6">
-          <QuantumCoinSimulator 
-            coinFlips={coinFlips}
-            setCoinFlips={setCoinFlips}
-          />
-        </TabsContent>
-        
-        {/* Random Number Generator */}
-        <TabsContent value="circuit" className="space-y-6">
-          <RandomNumberSimulator 
-            measurements={measurements}
-            setMeasurements={setMeasurements}
-          />
-        </TabsContent>
-      </Tabs>
-    </motion.div>
+      <Tab.Group>
+        <Tab.List className="flex space-x-1 p-1 bg-quantum-100 dark:bg-quantum-900">
+          <Tab
+            className={({ selected }) =>
+              classNames(
+                'w-full py-2.5 text-sm font-medium rounded-md',
+                'focus:outline-none focus:ring-2 ring-offset-2 ring-offset-quantum-400 ring-white ring-opacity-60',
+                selected
+                  ? 'bg-white dark:bg-quantum-800 shadow text-quantum-700 dark:text-quantum-200'
+                  : 'text-quantum-500 hover:bg-white/[0.12] hover:text-quantum-600 dark:hover:text-quantum-300'
+              )
+            }
+          >
+            Qubit State
+          </Tab>
+          <Tab
+            className={({ selected }) =>
+              classNames(
+                'w-full py-2.5 text-sm font-medium rounded-md',
+                'focus:outline-none focus:ring-2 ring-offset-2 ring-offset-quantum-400 ring-white ring-opacity-60',
+                selected
+                  ? 'bg-white dark:bg-quantum-800 shadow text-quantum-700 dark:text-quantum-200'
+                  : 'text-quantum-500 hover:bg-white/[0.12] hover:text-quantum-600 dark:hover:text-quantum-300'
+              )
+            }
+          >
+            Quantum Coin
+          </Tab>
+          <Tab
+            className={({ selected }) =>
+              classNames(
+                'w-full py-2.5 text-sm font-medium rounded-md',
+                'focus:outline-none focus:ring-2 ring-offset-2 ring-offset-quantum-400 ring-white ring-opacity-60',
+                selected
+                  ? 'bg-white dark:bg-quantum-800 shadow text-quantum-700 dark:text-quantum-200'
+                  : 'text-quantum-500 hover:bg-white/[0.12] hover:text-quantum-600 dark:hover:text-quantum-300'
+              )
+            }
+          >
+            Random Numbers
+          </Tab>
+        </Tab.List>
+        <Tab.Panels className="p-4">
+          <Tab.Panel>
+            <QubitStateSimulator />
+          </Tab.Panel>
+          <Tab.Panel>
+            <QuantumCoinSimulator />
+          </Tab.Panel>
+          <Tab.Panel>
+            <RandomNumberSimulator measurements={measurements} setMeasurements={setMeasurements} />
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
+    </div>
   );
 };
 
