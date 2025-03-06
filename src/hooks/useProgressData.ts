@@ -6,9 +6,18 @@ import { CourseProgressItem } from "@/components/progress/CourseProgressSection"
 import { Achievement } from "@/components/progress/AchievementsSection";
 import { level1Courses, level2Courses, level3Courses } from "@/data/courseData";
 
+export interface Recommendation {
+  id: string;
+  course_id: string;
+  relevance_score: number;
+  reason: string;
+  created_at: string;
+}
+
 export interface ProgressData {
   achievements: Achievement[];
   courseProgress: CourseProgressItem[];
+  recommendations: Recommendation[];
   totalPoints: number;
   loading: boolean;
 }
@@ -16,12 +25,52 @@ export interface ProgressData {
 export const useProgressData = (userId: string | undefined) => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [courseProgress, setCourseProgress] = useState<CourseProgressItem[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   // Combine all courses for processing
   const allCourses = [...level1Courses, ...level2Courses, ...level3Courses];
+
+  // Generate recommendations
+  const generateRecommendations = async () => {
+    if (!userId) return;
+    
+    try {
+      // Call the edge function to generate recommendations
+      const { error } = await supabase.functions.invoke('generate-recommendations');
+      
+      if (error) {
+        console.error("Error generating recommendations:", error);
+        throw error;
+      }
+      
+      console.log("Recommendations generated successfully");
+      
+      // Fetch the newly generated recommendations
+      const { data: recommendationsData, error: fetchError } = await supabase
+        .from("recommendations")
+        .select("*")
+        .eq("user_id", userId)
+        .order("relevance_score", { ascending: false });
+        
+      if (fetchError) {
+        console.error("Error fetching recommendations:", fetchError);
+        throw fetchError;
+      }
+      
+      setRecommendations(recommendationsData || []);
+      console.log("Fetched recommendations:", recommendationsData?.length || 0);
+    } catch (error: any) {
+      console.error("Error in recommendation process:", error);
+      toast({
+        title: "Error generating recommendations",
+        description: error.message || "Failed to generate course recommendations",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -138,6 +187,26 @@ export const useProgressData = (userId: string | undefined) => {
 
         setCourseProgress(courseProgressData);
         console.log("Course progress data prepared:", courseProgressData.length);
+        
+        // Fetch recommendations
+        const { data: recommendationsData, error: recommendationsError } = await supabase
+          .from("recommendations")
+          .select("*")
+          .eq("user_id", userId)
+          .order("relevance_score", { ascending: false });
+          
+        if (recommendationsError) {
+          console.error("Error fetching recommendations:", recommendationsError);
+          throw recommendationsError;
+        }
+        
+        setRecommendations(recommendationsData || []);
+        console.log("Fetched recommendations:", recommendationsData?.length || 0);
+        
+        // If no recommendations exist, generate them
+        if (!recommendationsData || recommendationsData.length === 0) {
+          await generateRecommendations();
+        }
       } catch (error: any) {
         console.error("Error loading progress data:", error);
         toast({
@@ -149,6 +218,7 @@ export const useProgressData = (userId: string | undefined) => {
         // Set default empty data on error
         setAchievements([]);
         setCourseProgress([]);
+        setRecommendations([]);
         setTotalPoints(0);
       } finally {
         setLoading(false);
@@ -165,7 +235,9 @@ export const useProgressData = (userId: string | undefined) => {
   return {
     achievements,
     courseProgress,
+    recommendations,
     totalPoints,
     loading,
+    refreshRecommendations: generateRecommendations
   };
 };

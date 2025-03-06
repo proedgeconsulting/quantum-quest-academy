@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -13,6 +13,7 @@ import CourseProgressSection from "@/components/progress/CourseProgressSection";
 import PointsSummarySection from "@/components/progress/PointsSummarySection";
 import AchievementsSection from "@/components/progress/AchievementsSection";
 import LearningStatsSection from "@/components/progress/LearningStatsSection";
+import RecommendationsSection from "@/components/progress/RecommendationsSection";
 import ProgressPageLoading from "@/components/progress/ProgressPageLoading";
 
 // Custom hook for fetching progress data
@@ -21,8 +22,41 @@ import { useToast } from "@/hooks/use-toast";
 
 const Progress = () => {
   const { user, loading: authLoading } = useAuth();
-  const { achievements, courseProgress, totalPoints, loading } = useProgressData(user?.id);
+  const { 
+    achievements, 
+    courseProgress, 
+    recommendations,
+    totalPoints, 
+    loading,
+    refreshRecommendations
+  } = useProgressData(user?.id);
   const { toast } = useToast();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Create a mapping of course IDs to names
+  const courseNames = courseProgress.reduce((acc, course) => {
+    acc[course.course_id] = course.course_name;
+    return acc;
+  }, {} as Record<string, string>);
+
+  // Handle refresh of recommendations
+  const handleRefreshRecommendations = async () => {
+    if (!user) return;
+    
+    setIsRefreshing(true);
+    try {
+      await refreshRecommendations();
+      toast({
+        title: "Recommendations updated",
+        description: "Your personalized recommendations have been refreshed.",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Error refreshing recommendations:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     console.log("Progress page render:", { 
@@ -116,6 +150,21 @@ const Progress = () => {
                 />
               </motion.div>
             </div>
+
+            {/* Recommendations */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="mt-8"
+            >
+              <RecommendationsSection 
+                recommendations={recommendations} 
+                courseNames={courseNames}
+                onRefresh={handleRefreshRecommendations}
+                isRefreshing={isRefreshing}
+              />
+            </motion.div>
 
             {/* Achievements */}
             <motion.div

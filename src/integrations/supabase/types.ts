@@ -60,6 +60,36 @@ export type Database = {
         }
         Relationships: []
       }
+      recommendations: {
+        Row: {
+          course_id: string
+          created_at: string | null
+          id: string
+          reason: string | null
+          relevance_score: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          relevance_score: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          relevance_score?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_achievements: {
         Row: {
           achievement_id: string
