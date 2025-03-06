@@ -89,10 +89,10 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     );
   };
   
-  // Function to safely render paragraphs as spans for proper DOM nesting
+  // Function to safely render paragraphs as div elements
   const renderParagraphs = (content: string) => {
     return content.split('\n\n').map((paragraph, index) => (
-      <span key={index} className="block mb-4">{paragraph}</span>
+      <div key={index} className="mb-4">{paragraph}</div>
     ));
   };
   

@@ -1,82 +1,83 @@
 
 import { Course } from "@/data/types/courseTypes";
 
-// Level 3 Course: Quantum Machine Learning Basics
+// Level 3 Course: Quantum Machine Learning
 export const quantumMachineLearningCourse: Course = {
   id: "3.1",
-  title: "Quantum Machine Learning Basics",
-  description: "Discover how quantum computing can supercharge AI.",
+  title: "Quantum Machine Learning",
+  description: "Explore the intersection of quantum computing and machine learning.",
   level: 3,
-  duration: "4 weeks",
+  duration: "6 weeks",
   icon: "brain",
-  weeks: 4,
+  weeks: 6,
   modules: [
     {
       id: "3.1.1",
-      title: "Introduction to Quantum Machine Learning",
-      description: "Learn the fundamentals of quantum approaches to machine learning.",
+      title: "Fundamentals of Quantum Machine Learning",
+      description: "Understand the key concepts at the intersection of quantum computing and machine learning.",
       lessons: [
         {
           id: "3.1.1.1",
-          title: "Classical vs. Quantum Machine Learning",
-          description: "Understanding the key differences between classical and quantum approaches to ML.",
-          content: "This lesson explores the fundamental differences between classical and quantum machine learning approaches. Classical machine learning algorithms process information encoded in classical bits, which can be either 0 or 1. In contrast, quantum machine learning leverages quantum bits (qubits) that can exist in superpositions of states, allowing for potentially exponential speedups for certain problems.\n\nOne of the key advantages of quantum machine learning is the ability to explore vast solution spaces simultaneously through quantum parallelism. This property makes quantum computers particularly promising for complex optimization problems, feature spaces with high dimensionality, and certain types of pattern recognition tasks.\n\nHowever, quantum machine learning also faces significant challenges, including decoherence, noise sensitivity, and the limited number of qubits in current quantum computers. These limitations require creative approaches to algorithm design and problem encoding.",
-          type: "reading",
-          duration: 15,
-          points: 10
-        },
-        {
-          id: "3.1.1.2",
-          title: "Quantum Data Encoding Strategies",
-          description: "Learn how to encode classical data into quantum states.",
-          content: "Encoding classical data into quantum states is a crucial step in quantum machine learning. This lesson covers several approaches to quantum data encoding.\n\nBasis encoding: The simplest approach is to encode classical bit strings directly into computational basis states. For example, the classical string '101' would be encoded as the quantum state |101⟩. This approach is straightforward but doesn't leverage quantum superposition.\n\nAmplitude encoding: This method encodes classical data into the amplitudes of a quantum state. This is more efficient in terms of qubit usage, allowing n qubits to represent 2^n classical values. However, preparing such states efficiently can be challenging.\n\nQuantum feature maps: These are quantum circuits that map classical data into quantum states in a way that helps separate different classes of data, similar to kernel methods in classical machine learning. The goal is to map the data into a higher-dimensional Hilbert space where patterns become more apparent.",
+          title: "Introduction to Quantum Machine Learning",
+          description: "Explore the fundamentals and potential of quantum-enhanced machine learning.",
+          content: "Quantum Machine Learning (QML) is an exciting interdisciplinary field that combines quantum computing with machine learning techniques. In this lesson, we'll explore what QML is, why it's promising, and how it differs from classical machine learning.\n\nWe'll discuss the key advantages quantum computing might bring to machine learning, including:\n\n1. Quantum speedups for specific machine learning algorithms\n2. Ability to process quantum data natively\n3. Access to larger feature spaces through quantum embedding\n4. Potential for more expressive models in some contexts\n\nWe'll also examine the realistic near-term applications of QML versus more speculative long-term possibilities, and identify which parts of the machine learning pipeline might benefit most from quantum enhancement.",
           type: "reading",
           duration: 20,
           points: 15
         },
         {
-          id: "3.1.1.3",
-          title: "Quantum ML Quiz",
-          description: "Test your understanding of quantum machine learning concepts.",
-          content: "Let's test your understanding of the key concepts in quantum machine learning. Answer the following questions to assess your knowledge.",
-          type: "quiz",
-          duration: 10,
+          id: "3.1.1.2",
+          title: "Linear Algebra for QML",
+          description: "Review the essential linear algebra concepts for quantum machine learning.",
+          content: "Quantum computing and machine learning both rely heavily on linear algebra. In this lesson, we'll review the key concepts that form the mathematical foundation of QML.\n\nWe'll cover:\n\n1. Vector spaces and Hilbert spaces in the quantum context\n2. Hermitian and unitary operators and their significance\n3. Tensor products and their role in representing multi-qubit states\n4. Eigenvalues and eigenvectors in quantum algorithms\n5. Matrix decompositions relevant to QML algorithms\n\nWe'll connect these mathematical concepts to both quantum computing operations and machine learning techniques, showing how the same underlying mathematics appears in both fields. This shared mathematical language is part of what makes the integration of quantum computing and machine learning so natural.",
+          type: "video",
+          duration: 25,
           points: 20
+        },
+        {
+          id: "3.1.1.3",
+          title: "Quantum Data Encoding",
+          description: "Learn how to encode classical data into quantum states for processing.",
+          content: "A fundamental challenge in quantum machine learning is efficiently encoding classical data into quantum states. This process, known as quantum feature encoding or quantum embedding, is crucial for any QML algorithm.\n\nIn this lesson, we'll explore different encoding strategies, including:\n\n1. Basis encoding: Representing data in the computational basis states\n2. Amplitude encoding: Encoding data in the amplitudes of a quantum state\n3. Angle encoding: Using rotation angles in quantum gates to encode features\n4. Hamiltonian encoding: Encoding data in the time evolution of quantum systems\n\nWe'll discuss the trade-offs between these methods in terms of the number of qubits required, circuit depth, and how well they preserve the structure of the original data. We'll also examine how different encodings affect the types of patterns that quantum algorithms can efficiently recognize.",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 30,
+          points: 25
         }
       ]
     },
     {
       id: "3.1.2",
       title: "Quantum Neural Networks",
-      description: "Explore how quantum computing can enhance neural networks.",
+      description: "Learn about quantum versions of neural networks and how they differ from classical networks.",
       lessons: [
         {
           id: "3.1.2.1",
-          title: "Quantum Neural Network Architecture",
-          description: "Understanding the structure of quantum neural networks.",
-          content: "Quantum Neural Networks (QNNs) represent a fascinating intersection of quantum computing and neural network principles. Unlike classical neural networks that process discrete values through mathematical operations, QNNs operate on quantum states through unitary transformations.\n\nA typical QNN architecture consists of several key components:\n\n1. Input encoding layer: Transforms classical data into quantum states\n2. Quantum processing layers: Series of parameterized quantum gates that are trainable\n3. Measurement layer: Extracts classical information from the quantum state\n\nThe power of QNNs comes from their ability to explore exponentially large feature spaces with relatively few qubits. The trainable parameters in a QNN are adjusted through gradient-based optimization, similar to backpropagation in classical neural networks, although calculating gradients for quantum circuits presents unique challenges.",
-          type: "reading",
-          duration: 15,
-          points: 15
-        },
-        {
-          id: "3.1.2.2",
-          title: "Training Quantum Neural Networks",
-          description: "Learn about optimization techniques for quantum neural networks.",
-          content: "Training a Quantum Neural Network (QNN) shares some similarities with classical neural network training, but also introduces unique challenges due to the quantum nature of the computations.\n\nThe first challenge is defining a suitable cost function that can be minimized to optimize the network parameters. Common approaches include measuring the difference between the desired output and the actual output of the quantum circuit.\n\nParameter optimization typically uses gradient-based methods. The parameter-shift rule is a widely used technique for calculating gradients of quantum circuits, as it avoids the need for complex differentiation. It works by evaluating the circuit at different parameter values and using these evaluations to estimate the gradient.\n\nAnother important consideration is barren plateaus - regions of the optimization landscape where gradients vanish exponentially with the number of qubits. This phenomenon can make training deep quantum neural networks particularly challenging. Techniques to mitigate this include carefully initializing parameters, using layer-wise training approaches, and designing cost functions that avoid flat regions in the optimization landscape.",
+          title: "Parametrized Quantum Circuits",
+          description: "Understand the building blocks of quantum neural networks.",
+          content: "Parametrized Quantum Circuits (PQCs), also known as variational quantum circuits, are the quantum analog of neural networks. In this lesson, we'll explore how these circuits work and how they can be trained to perform machine learning tasks.\n\nWe'll cover:\n\n1. The structure of PQCs: encoding layers, variational layers, and measurement\n2. Common ansatz designs: hardware-efficient, problem-inspired, and expressibility-focused\n3. The barren plateau problem and strategies to mitigate it\n4. Expressivity and trainability trade-offs in circuit design\n\nWe'll also discuss how PQCs differ from classical neural networks in terms of their expressivity, trainability, and the types of functions they can efficiently represent. Understanding these differences is key to designing effective quantum machine learning models.",
           type: "reading",
           duration: 20,
           points: 15
         },
         {
+          id: "3.1.2.2",
+          title: "Training Quantum Neural Networks",
+          description: "Learn optimization techniques for quantum machine learning models.",
+          content: "Training quantum neural networks presents unique challenges compared to classical neural networks. In this lesson, we'll explore the optimization techniques used to train parametrized quantum circuits.\n\nWe'll cover:\n\n1. Calculating gradients for quantum circuits using parameter shift rules\n2. Hybrid quantum-classical optimization loops\n3. Navigating barren plateaus and rugged loss landscapes\n4. Strategies to reduce the number of circuit evaluations needed\n5. Transfer learning and warm-starting techniques for quantum models\n\nWe'll also discuss how noise in current quantum hardware affects training and how techniques like noise-aware training can help mitigate these effects. By the end of this lesson, you'll understand the practical considerations involved in training quantum machine learning models on both simulators and real quantum hardware.",
+          type: "video",
+          duration: 25,
+          points: 20
+        },
+        {
           id: "3.1.2.3",
-          title: "QNN Interactive Simulation",
-          description: "Interact with a simplified quantum neural network model.",
-          content: "In this interactive session, you'll explore a simplified simulation of a quantum neural network. You can adjust parameters and see how they affect the network's performance on a classification task.\n\nThe simulation provides a visual representation of how quantum neural networks process information and make predictions. While this is a simplified model running on classical hardware, it illustrates the key principles behind quantum neural networks.",
+          title: "Quantum Convolutional Neural Networks",
+          description: "Explore quantum versions of convolutional neural networks for pattern recognition.",
+          content: "Quantum Convolutional Neural Networks (QCNNs) adapt the highly successful convolutional architecture from classical deep learning to the quantum domain. In this lesson, we'll explore how QCNNs work and their potential applications.\n\nWe'll cover:\n\n1. The structure of QCNNs: quantum convolutional layers, pooling operations, and measurement\n2. How QCNNs process quantum data while respecting its structure\n3. The relationship between QCNNs and quantum error correction codes\n4. Applications of QCNNs in quantum data classification and quantum error detection\n\nWe'll implement a simple QCNN on a quantum simulator and train it to recognize patterns in quantum data. We'll analyze its performance and compare it to classical CNNs on similar tasks to understand the potential advantages and limitations of the quantum approach.",
           type: "interactive",
+          interactiveComponent: "AtomSimulation",
           duration: 30,
-          points: 25,
-          interactiveComponent: "AtomSimulation"
+          points: 25
         }
       ]
     }

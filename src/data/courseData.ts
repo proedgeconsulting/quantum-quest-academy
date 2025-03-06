@@ -15,14 +15,14 @@ export {
   quantumEntanglementCourse,
   quantumErrorCorrectionCourse,
   level2Courses 
-} from "@/data/courses/level2/index";
+} from "@/data/courses/level2";
 
 export { 
   quantumMachineLearningCourse,
   realWorldQuantumAICourse,
   quantumFutureCourse,
   level3Courses 
-} from "@/data/courses/level3/index";
+} from "@/data/courses/level3";
 
 // Re-export services
 export { getCourseById } from "@/data/services/courseService";
