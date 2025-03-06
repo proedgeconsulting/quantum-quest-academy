@@ -11,7 +11,7 @@ import {
   Play,
   GraduationCap, 
   CircuitBoard, 
-  Wave
+  Waves
 } from "lucide-react";
 
 interface CourseCardProps {
@@ -50,7 +50,7 @@ const CourseCard = ({
       case "circuit":
         return <CircuitBoard className="h-6 w-6" />;
       case "wave":
-        return <Wave className="h-6 w-6" />;
+        return <Waves className="h-6 w-6" />;
       default:
         return <Atom className="h-6 w-6" />;
     }

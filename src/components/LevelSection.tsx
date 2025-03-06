@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import CourseCard from "./CourseCard";
-import { Atom, Brain, CircuitBoard, Code, GraduationCap, Wave } from "lucide-react";
+import { Atom, Brain, CircuitBoard, Code, GraduationCap, Waves } from "lucide-react";
 
 interface LevelSectionProps {
   level: number;
