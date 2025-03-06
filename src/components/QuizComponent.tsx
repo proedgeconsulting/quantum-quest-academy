@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle, ChevronRight, XCircle, HelpCircle, Trophy } from "lucide-react";
 import { circuitsQuizQuestions, algorithmsQuizQuestions } from "@/data/quizzes/level2Quizzes";
+import { quantumMLQuizQuestions, quantumAIApplicationsQuizQuestions, quantumFutureQuizQuestions } from "@/data/quizzes/level3Quizzes";
 
 interface QuizComponentProps {
   lessonId: string;
@@ -23,10 +24,19 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
   
   // Determine which quiz questions to use based on the lesson ID
   const getQuizQuestions = () => {
+    // Level 2 quizzes
     if (lessonId.startsWith("2.1.1")) {
       return circuitsQuizQuestions;
     } else if (lessonId.startsWith("2.1.2")) {
       return algorithmsQuizQuestions;
+    } 
+    // Level 3 quizzes
+    else if (lessonId.startsWith("3.1.1")) {
+      return quantumMLQuizQuestions;
+    } else if (lessonId.startsWith("3.2.1")) {
+      return quantumAIApplicationsQuizQuestions;
+    } else if (lessonId.startsWith("3.3.1")) {
+      return quantumFutureQuizQuestions;
     } else {
       // Default to the original quiz questions for level 1
       return [
