@@ -5,5 +5,7 @@ import { level2Courses } from "@/data/courses/level2Courses";
 import { level3Courses } from "@/data/courses/level3Courses";
 
 export const getCourseById = (courseId: string): Course | undefined => {
-  return [...level1Courses, ...level2Courses, ...level3Courses].find(course => course.id === courseId);
+  const allCourses = [...level1Courses, ...level2Courses, ...level3Courses];
+  const course = allCourses.find(course => course.id === courseId);
+  return course;
 };
