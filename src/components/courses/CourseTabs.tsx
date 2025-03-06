@@ -1,9 +1,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CourseGrid from "./CourseGrid";
-import { level1Courses } from "@/data/courseData";
-import { level2Courses } from "@/data/courseData";
-import { level3Courses } from "@/data/courseData";
+import { level1Courses, level2Courses, level3Courses } from "@/data/courseData";
 import { Course } from "@/data/types/courseTypes";
 
 const CourseTabs = () => {
