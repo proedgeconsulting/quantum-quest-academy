@@ -13,41 +13,86 @@ export const quantumPlaygroundCourse: Course = {
   modules: [
     {
       id: "1.2.1",
-      title: "Quantum Games",
-      description: "Learn quantum principles through engaging games and puzzles.",
+      title: "Quantum Games & Simulations",
+      description: "Learn quantum principles through interactive simulations and games.",
       lessons: [
         {
           id: "1.2.1.1",
-          title: "Quantum Tic-Tac-Toe",
-          description: "Play a quantum version of the classic game where pieces exist in superposition.",
-          content: "# Quantum Tic-Tac-Toe\n\nWelcome to Quantum Tic-Tac-Toe, where the classic game gets a quantum twist!\n\n## How It Works\n\nIn classical Tic-Tac-Toe, you place an X or O in one square. But in the quantum version, your move creates a **quantum mark** that exists in *superposition* across two squares at once.\n\n## Game Rules\n\n1. On your turn, select TWO squares to place your quantum mark (X or O)\n2. This creates a superposition - your mark exists in both squares simultaneously\n3. When a **quantum collapse** occurs (when moves create a cycle), marks resolve to specific squares\n4. Win by getting three of your marks in a row after collapses\n\n## What You'll Learn\n\n- **Superposition**: How quantum particles exist in multiple states simultaneously\n- **Entanglement**: How quantum marks become correlated across the board\n- **Measurement**: How observation forces quantum systems to choose specific states\n\nTry playing a few rounds against the computer to see these quantum principles in action!",
+          title: "Quantum Superposition Simulator",
+          description: "Experiment with quantum states and superposition through an interactive visualization.",
+          content: `# Quantum Superposition Simulator
+
+## Understanding Quantum Superposition
+
+Quantum superposition is one of the most fascinating aspects of quantum mechanics - the principle that quantum systems can exist in multiple states simultaneously until measured.
+
+## Simulator Overview
+
+In this interactive simulator, you can experiment with quantum bits (qubits) and see how they behave in superposition. The simulator below visualizes a qubit on the Bloch sphere, where:
+
+- The north pole represents state |0⟩
+- The south pole represents state |1⟩
+- Points on the sphere represent superpositions of these states
+
+## How to Use the Simulator
+
+1. Adjust the sliders to change the probability amplitudes
+2. Observe how the quantum state vector moves on the Bloch sphere
+3. Click "Measure" to collapse the superposition into either state |0⟩ or |1⟩
+4. Notice how probabilities affect measurement outcomes when repeated
+
+## External Simulator
+
+<iframe src="https://phet.colorado.edu/sims/html/quantum-bound-states/latest/quantum-bound-states_en.html" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+This simulator, developed by PhET Interactive Simulations at the University of Colorado Boulder, allows you to visualize quantum states and explore the fundamental principles of quantum mechanics.
+
+Experiment with different parameters and observe how quantum states behave!`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
+          interactiveComponent: "BuildAtomActivity",
           duration: 30,
           points: 25
         },
         {
           id: "1.2.1.2",
-          title: "Quantum Coin Flip Challenge",
-          description: "Experiment with quantum randomness through virtual coin flips.",
-          content: "# Quantum Coin Flip Challenge\n\n## Not Just Heads or Tails\n\nA quantum coin is nothing like the coins in your pocket! In this activity, you'll flip a special quantum coin that demonstrates the weird and wonderful properties of quantum mechanics.\n\n## Your Challenge\n\n1. **Predict the Pattern**: Can you predict the outcome of quantum coin flips?\n2. **Create Interference**: Use quantum gates to manipulate the probability of heads vs. tails\n3. **Build a Quantum Random Number Generator**: Use quantum coin flips to generate truly random numbers\n\n## The Science\n\nIn quantum mechanics, a coin can be in a **superposition** of both heads AND tails until measured. By applying different quantum operations before measurement, you can control the probabilities of each outcome.\n\nThis isn't just a game - quantum random number generators are used today in cryptography and security applications because they produce truly unpredictable results unlike classical computer algorithms.\n\nFlip the quantum coin 50 times and see if you can identify patterns in truly random quantum events!",
+          title: "Quantum Billiards Game",
+          description: "Play with quantum particles in a gamified billiard simulation.",
+          content: `# Quantum Billiards Game
+
+## Quantum Mechanics as a Game
+
+Welcome to Quantum Billiards, where the familiar game of billiards takes on quantum mechanical properties!
+
+## Game Concept
+
+In classical billiards, balls follow predictable paths based on Newton's laws of motion. But in quantum billiards, particles behave according to quantum mechanics:
+
+- Particles exist as probability waves
+- They can tunnel through barriers
+- They demonstrate interference patterns
+- Measurement collapses their wave function
+
+## How to Play
+
+1. Launch the "quantum ball" with varying energy levels
+2. Observe how it behaves differently from a classical ball
+3. Create barriers and see quantum tunneling in action
+4. Score points by getting the quantum ball to reach target positions
+
+## External Game
+
+<iframe src="https://lab.quantumflytrap.com/lab/quantum-billiards" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+This interactive game developed by Quantum Flytrap allows you to experience quantum mechanics in an intuitive, game-like environment.
+
+Challenge yourself to predict the quantum behavior and beat the levels!`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
-          duration: 25,
-          points: 20
-        },
-        {
-          id: "1.2.1.3",
-          title: "Quantum Maze Explorer",
-          description: "Navigate through a maze using quantum tunneling and superposition.",
-          content: "# Quantum Maze Explorer\n\n## Escape Using Quantum Powers\n\nIn this quantum maze game, you'll navigate through barriers that would be impossible to cross in the classical world!\n\n## Quantum Abilities\n\n1. **Quantum Tunneling**: Pass through certain barriers that would block classical objects\n2. **Superposition Walking**: Explore multiple paths simultaneously\n3. **Quantum Teleportation**: Transport across entangled maze locations\n\n## Game Mechanics\n\nYour character exists as a quantum particle with wave-like properties. As you navigate the maze:\n\n- **Energy levels** determine your tunneling ability\n- **Entangled gates** allow instant transportation between distant points\n- **Measurement zones** collapse your superposition to a single location\n\n## The Science Behind the Fun\n\nThis game illustrates real quantum phenomena like the **wave-particle duality** that allows electrons to tunnel through energy barriers, and the principle of **quantum walks** where particles explore multiple paths simultaneously.\n\nCan you find the quickest path through the quantum maze using these strange quantum properties?",
-          type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component as placeholder
+          interactiveComponent: "AtomSimulation",
           duration: 35,
           points: 30
         },
         {
-          id: "1.2.1.4",
+          id: "1.2.1.3",
           title: "Quantum Games Quiz",
           description: "Test your understanding of quantum game concepts.",
           content: "Let's check what you've learned about quantum games and their connection to quantum principles.",
@@ -59,44 +104,89 @@ export const quantumPlaygroundCourse: Course = {
     },
     {
       id: "1.2.2",
-      title: "Quantum Puzzles & Paradoxes",
-      description: "Solve mind-bending quantum puzzles and explore famous quantum paradoxes.",
+      title: "Quantum Circuit Puzzles",
+      description: "Build and experiment with simple quantum circuits to solve puzzles.",
       lessons: [
         {
           id: "1.2.2.1",
-          title: "Schrödinger's Cat Escape Room",
-          description: "Help the quantum cat escape its famous paradoxical box.",
-          content: "# Schrödinger's Cat Escape Room\n\n## Save the Quantum Cat!\n\nIn this interactive puzzle, you must help Schrödinger's cat escape from its paradoxical predicament before time runs out!\n\n## The Setup\n\nYou've entered a virtual escape room representing the famous thought experiment:\n\n- A cat is trapped in a box with a radioactive atom\n- If the atom decays, a poison is released\n- According to quantum mechanics, until observed, the atom exists in a superposition of decayed and not-decayed states\n- Therefore, the cat is theoretically both alive and dead simultaneously\n\n## Your Mission\n\n1. Manipulate quantum states to keep the cat alive\n2. Solve quantum puzzles to prevent atom decay\n3. Find the observer key that opens the box without collapsing the wave function in the wrong state\n\n## What You'll Learn\n\nThis puzzle illustrates the famous **measurement problem** in quantum mechanics - how quantum superpositions appear to collapse into definite states when observed, and the paradoxes this creates when applied to macroscopic objects.\n\nCan you save the quantum cat by cleverly using quantum principles?",
+          title: "Quantum Circuit Sandbox",
+          description: "Learn the basics of quantum circuits through an interactive sandbox environment.",
+          content: `# Quantum Circuit Sandbox
+
+## Introduction to Quantum Circuits
+
+Quantum circuits are the foundation of quantum computing. Just as classical computers use logic gates to process bits, quantum computers use quantum gates to manipulate qubits.
+
+## Sandbox Features
+
+In this interactive sandbox, you can:
+
+1. Add qubits to your quantum register
+2. Apply various quantum gates (X, H, CNOT, etc.)
+3. Measure the results and see probabilities
+4. Run simple quantum algorithms
+
+## How to Use the Sandbox
+
+- Drag and drop gates onto the circuit
+- Connect gates to create your circuit
+- Click "Run" to simulate the quantum computation
+- Observe the output probabilities
+
+## External Quantum Circuit Simulator
+
+<iframe src="https://quantumjavascript.app/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+This browser-based quantum circuit simulator allows you to build and experiment with quantum circuits directly in your browser.
+
+Try recreating basic quantum algorithms like Bell state preparation or Deutsch's algorithm!`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
-          duration: 30,
-          points: 25
-        },
-        {
-          id: "1.2.2.2",
-          title: "Double-Slit Experiment Game",
-          description: "Control particles and waves to reveal quantum wave-particle duality.",
-          content: "# Double-Slit Experiment Game\n\n## Wave or Particle? You Decide!\n\nIn this interactive simulation, you'll control the famous double-slit experiment that revolutionized physics and revealed the wave-particle duality of matter.\n\n## Game Controls\n\n1. **Source Control**: Adjust particle emission rate and type (electrons, photons, etc.)\n2. **Detector Setup**: Position detectors to observe which slit particles pass through\n3. **Screen Analysis**: Examine the pattern that forms on the detection screen\n\n## The Challenge\n\nYour mission is to create specific patterns on the detection screen by manipulating the experimental setup. Can you:\n\n- Create a classic two-band particle pattern?\n- Generate a wave interference pattern?\n- Make the pattern change by observing the particles?\n\n## The Mind-Bending Science\n\nThe double-slit experiment demonstrates that quantum entities like electrons behave as waves when not observed, creating an interference pattern, but act as particles when measured. This strange behavior is at the heart of quantum mechanics.\n\nAs physicist Richard Feynman said, this experiment contains \"the only mystery\" of quantum mechanics. Can you solve the mystery by playing with the variables yourself?",
-          type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
+          interactiveComponent: "BuildAtomActivity",
           duration: 40,
           points: 30
         },
         {
-          id: "1.2.2.3",
-          title: "Quantum Entanglement Puzzle",
-          description: "Solve puzzles using 'spooky action at a distance' between entangled particles.",
-          content: "# Quantum Entanglement Puzzle\n\n## Master \"Spooky Action at a Distance\"\n\nIn this mind-bending puzzle game, you'll manipulate entangled particles to solve increasingly challenging puzzles.\n\n## Game Mechanics\n\n1. **Create Entangled Pairs**: Generate particles that remain connected regardless of distance\n2. **Measure Properties**: When you measure one particle, its entangled partner instantly reflects complementary properties\n3. **Solve the Puzzles**: Use entanglement to trigger mechanisms and unlock solutions\n\n## Puzzle Examples\n\n- **The Bell Test**: Arrange detectors to prove entanglement is real\n- **Quantum Teleportation**: Transfer information using entangled particles\n- **Entanglement Swapping**: Create connections between particles that never interacted\n\n## The Science\n\nEntanglement is what Einstein famously called \"spooky action at a distance.\" When two particles become entangled, their properties become correlated in such a way that measuring one instantly affects the other, regardless of the distance separating them.\n\nThis isn't just theoretical - entanglement is the key resource enabling quantum computers, quantum cryptography, and quantum teleportation protocols.\n\nCan you harness the power of entanglement to solve all the puzzles?",
+          id: "1.2.2.2",
+          title: "Quantum Logic Puzzles",
+          description: "Solve puzzles using quantum gates and quantum logic.",
+          content: `# Quantum Logic Puzzles
+
+## Thinking in Quantum
+
+Quantum logic differs fundamentally from classical logic. In these puzzles, you'll need to think "quantumly" to find solutions!
+
+## Puzzle Concepts
+
+You'll work with several quantum concepts:
+- Superposition and interference
+- Quantum entanglement
+- The no-cloning theorem
+- Quantum measurement
+
+## How to Play
+
+1. Each puzzle presents a quantum circuit with missing gates
+2. Your goal is to complete the circuit to achieve the target output state
+3. Choose from available quantum gates to fill in the blanks
+4. Test your solution by running the completed circuit
+
+## External Quantum Puzzle Game
+
+<iframe src="https://helloquantum.mybluemix.net/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+Hello Quantum is a puzzle game based on real quantum computing principles, developed by IBM Research. Each puzzle requires you to manipulate qubits to achieve a specific target state.
+
+Can you solve all the puzzles and master quantum logic?`,
           type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component as placeholder
+          interactiveComponent: "AtomSimulation",
           duration: 35,
           points: 30
         },
         {
-          id: "1.2.2.4",
-          title: "Quantum Paradoxes Quiz",
-          description: "Test your understanding of quantum paradoxes and thought experiments.",
-          content: "Let's check what you've learned about quantum paradoxes and thought experiments.",
+          id: "1.2.2.3",
+          title: "Quantum Circuit Puzzles Quiz",
+          description: "Test your understanding of quantum circuits and quantum logic.",
+          content: "Let's check what you've learned about quantum circuits and logic.",
           type: "quiz",
           duration: 15,
           points: 15
@@ -105,34 +195,88 @@ export const quantumPlaygroundCourse: Course = {
     },
     {
       id: "1.2.3",
-      title: "Quantum Art & Music",
-      description: "Create art and music using quantum principles and randomness.",
+      title: "Quantum Particle Simulation",
+      description: "Visualize and interact with quantum particles and their wave-like behavior.",
       lessons: [
         {
           id: "1.2.3.1",
-          title: "Quantum Generative Art",
-          description: "Create unique artwork using quantum randomness and superposition.",
-          content: "# Quantum Generative Art\n\n## Paint with Quantum Probability\n\nIn this creative activity, you'll make beautiful digital art using quantum principles as your brush!\n\n## Your Quantum Art Studio\n\n1. **Quantum Random Number Generator**: Creates truly random values for colors and positions\n2. **Superposition Brush**: Paint in multiple locations simultaneously\n3. **Entanglement Effects**: Link different elements of your artwork\n4. **Interference Patterns**: Create wave-like visual effects\n\n## Creative Challenges\n\n- Create a \"quantum landscape\" where elements exist in multiple states\n- Design a symmetrical pattern using entangled quantum bits\n- Generate an abstract composition using quantum randomness\n\n## The Science Behind the Art\n\nQuantum systems produce truly random results unlike classical computers, which use pseudo-random algorithms. Artists and designers are increasingly using quantum computers to generate unique patterns and explore new creative possibilities.\n\nYour artwork will visualize quantum probabilities and demonstrate how quantum indeterminism can be harnessed for creative expression.\n\nShare your quantum masterpiece when you're done!",
+          title: "Double-Slit Experiment Simulator",
+          description: "Experience the famous experiment that demonstrates wave-particle duality.",
+          content: `# Double-Slit Experiment Simulator
+
+## The Experiment That Changed Physics
+
+The double-slit experiment is perhaps the most iconic demonstration of quantum mechanics, showing how particles like electrons behave as both particles and waves.
+
+## What You'll See
+
+This simulator allows you to:
+1. Fire individual particles (electrons, photons) through a double-slit barrier
+2. Observe the interference pattern that forms over time
+3. Place detectors at the slits to observe the "measurement effect"
+4. Compare quantum behavior with classical particles
+
+## The Quantum Mystery
+
+The key quantum mystery you'll observe:
+- When unobserved, particles create an interference pattern (wave behavior)
+- When observed at the slits, the interference pattern disappears (particle behavior)
+- This demonstrates the fundamental role of measurement in quantum mechanics
+
+## External Simulator
+
+<iframe src="https://www.physicsclassroom.com/Physics-Interactives/Wave-Basics/Double-Slit/Double-Slit-Experiment-Interactive" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+This interactive simulator from The Physics Classroom lets you reproduce the famous double-slit experiment and observe the quantum weirdness firsthand.
+
+Try different configurations and see how measurement affects the outcome!`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
-          duration: 30,
-          points: 25
-        },
-        {
-          id: "1.2.3.2",
-          title: "Quantum Music Composer",
-          description: "Compose music using quantum algorithms and probability.",
-          content: "# Quantum Music Composer\n\n## Compose with Quantum Harmonies\n\nIn this musical activity, you'll create unique compositions using quantum principles to generate melodies, harmonies, and rhythms.\n\n## Your Quantum Studio\n\n1. **Quantum Dice**: Generate truly random musical notes and patterns\n2. **Superposition Sequencer**: Create musical phrases that explore multiple possibilities simultaneously\n3. **Entanglement Harmonizer**: Link different musical elements that respond to each other\n4. **Wave Function Mixer**: Blend musical elements according to quantum probability distributions\n\n## Composition Challenges\n\n- Create a quantum melody that never repeats the same way twice\n- Design a rhythm section using entangled quantum beats\n- Compose a piece that changes based on quantum measurement outcomes\n\n## The Science Behind the Music\n\nQuantum randomness and probability distributions offer new ways to think about musical composition. Rather than deterministic patterns, quantum music explores probability spaces and the emergence of patterns from quantum uncertainty.\n\nProfessional musicians and researchers are already exploring how quantum computing can inspire new forms of generative music and sound design.\n\nShare your quantum composition when you're finished!",
-          type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component as placeholder
+          interactiveComponent: "BuildAtomActivity",
           duration: 35,
           points: 30
         },
         {
+          id: "1.2.3.2",
+          title: "Quantum Wave Function Explorer",
+          description: "Visualize quantum wave functions and probability distributions.",
+          content: `# Quantum Wave Function Explorer
+
+## Visualizing the Invisible
+
+Quantum wave functions are mathematical descriptions of quantum states that can't be directly observed. This explorer helps you visualize them and build intuition.
+
+## Explorer Features
+
+With this interactive tool, you can:
+1. Create and manipulate quantum wave functions
+2. See how they evolve over time
+3. Observe how measurement collapses the wave function
+4. Experiment with quantum tunneling and barriers
+
+## Key Concepts
+
+- Wave functions and probability amplitudes
+- Born rule for calculating probabilities
+- Wave function collapse upon measurement
+- Time evolution according to Schrödinger's equation
+
+## External Wave Function Simulator
+
+<iframe src="https://falstad.com/qm1d/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+This quantum wave simulation by Paul Falstad allows you to see how quantum wave functions behave in different potential wells, demonstrating fundamental quantum mechanical principles.
+
+Experiment with different initial states and potential shapes to see how quantum systems evolve!`,
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 30,
+          points: 25
+        },
+        {
           id: "1.2.3.3",
-          title: "Quantum Art & Music Quiz",
-          description: "Test your understanding of quantum-inspired creative techniques.",
-          content: "Let's check what you've learned about applying quantum concepts to art and music.",
+          title: "Quantum Particle Simulation Quiz",
+          description: "Test your understanding of quantum particle behavior and wave functions.",
+          content: "Let's check what you've learned about quantum particles and their wave-like properties.",
           type: "quiz",
           duration: 15,
           points: 15
@@ -142,43 +286,87 @@ export const quantumPlaygroundCourse: Course = {
     {
       id: "1.2.4",
       title: "Quantum Games Tournament",
-      description: "Test your skills in competitive quantum games against friends or AI.",
+      description: "Apply your quantum knowledge in competitive quantum games.",
       lessons: [
         {
           id: "1.2.4.1",
-          title: "Quantum Battle Ships",
-          description: "Play a quantum version of the classic game with ships in superposition.",
-          content: "# Quantum Battle Ships\n\n## Naval Combat with a Quantum Twist\n\nIn this quantum version of the classic Battleship game, your fleet exists in a superposition of multiple positions until measured!\n\n## Game Rules\n\n1. **Quantum Ship Placement**: Ships exist in multiple possible positions simultaneously\n2. **Probability Shots**: Target locations with varying probabilities of hitting\n3. **Wave Function Collapse**: Ships only settle into definite positions when successfully hit\n4. **Entanglement Mines**: Special weapons that can affect multiple board locations\n\n## Strategy Tips\n\n- Use quantum probability to your advantage when placing ships\n- Track enemy shot patterns to predict their ship superpositions\n- Use strategic measurements to force enemy ships to collapse in predictable positions\n\n## The Science\n\nThis game illustrates quantum superposition (ships existing in multiple places), measurement collapse (ships settling into definite positions when hit), and how probability works in quantum systems.\n\nCompete against the AI or challenge a friend to see who can master quantum naval tactics!",
+          title: "Quantum Chess",
+          description: "Play chess with quantum moves and superposition.",
+          content: `# Quantum Chess
+
+## Chess with a Quantum Twist
+
+Quantum Chess adds quantum mechanical principles to the traditional game of chess, creating entirely new strategic possibilities.
+
+## Quantum Rules
+
+In Quantum Chess:
+- Pieces can exist in superposition across multiple squares
+- Quantum moves allow pieces to be in two places at once
+- Measurement occurs when pieces interact
+- Entanglement can link the fate of different pieces
+
+## How to Play
+
+1. Make classical moves as in regular chess
+2. Use quantum moves to place pieces in superposition
+3. Strategic measurement forces pieces to resolve to definite positions
+4. Win by checkmating the opponent's king
+
+## External Quantum Chess Game
+
+<iframe src="https://quantumchess.net/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+Quantum Chess, developed by Quantum Realm Games, is a fully playable quantum variation of chess where you can experience quantum mechanics through a familiar game.
+
+Challenge yourself against the AI or play with friends to master this quantum version of the classic game!`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
-          duration: 30,
-          points: 25
-        },
-        {
-          id: "1.2.4.2",
-          title: "Quantum Card Tournament",
-          description: "Play quantum card games where cards exist in multiple states.",
-          content: "# Quantum Card Tournament\n\n## Cards in Superposition\n\nWelcome to the Quantum Card Tournament, where the cards in your hand exist in multiple states until played!\n\n## Game Mechanics\n\n1. **Quantum Cards**: Each card exists as a superposition of multiple possible values\n2. **Entangled Pairs**: Some cards are entangled - playing one affects the state of others\n3. **Measurement Rules**: Playing a card forces it to collapse to a specific value\n4. **Probability Strategy**: Success depends on understanding quantum probability\n\n## Tournament Challenges\n\n- **Quantum Poker**: Play poker where cards exist in multiple states\n- **Entanglement Rummy**: Form sets with entangled cards\n- **Superposition Bridge**: Team play with quantum cards\n\n## The Science\n\nThese games demonstrate how quantum systems maintain multiple possible states simultaneously, how measurement affects quantum systems, and how entanglement creates correlations between separate quantum objects.\n\nAdvance through the tournament levels to become the Quantum Card Champion!",
-          type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component as placeholder
-          duration: 35,
-          points: 30
-        },
-        {
-          id: "1.2.4.3",
-          title: "Quantum Tournament Final Challenge",
-          description: "Compete in the ultimate quantum game that combines all quantum principles.",
-          content: "# Quantum Tournament Final Challenge\n\n## The Ultimate Quantum Game\n\nCongratulations on reaching the Quantum Tournament Finals! This ultimate challenge combines all the quantum principles you've learned into one comprehensive game.\n\n## Game Elements\n\n1. **Quantum Resource Management**: Collect and utilize quantum resources like entanglement, superposition, and interference\n2. **Multi-dimensional Strategy**: Plan moves across probability spaces, not just physical spaces\n3. **Quantum Advantage Zones**: Areas where quantum tactics provide special advantages\n4. **Wave Function Engineering**: Shape probability distributions to increase your chances of success\n\n## Winning Strategies\n\n- Balance observation (which collapses quantum states) with maintaining useful superpositions\n- Use entanglement to coordinate actions across the game board\n- Apply quantum tunneling to bypass obstacles\n- Create constructive interference to amplify your probability of success\n\n## The Science\n\nThis final challenge integrates all major quantum principles - superposition, entanglement, interference, measurement, and tunneling - into a comprehensive game that demonstrates how these concepts work together in quantum systems.\n\nDo you have what it takes to become the Quantum Tournament Champion?",
-          type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
+          interactiveComponent: "BuildAtomActivity",
           duration: 40,
           points: 35
         },
         {
-          id: "1.2.4.4",
-          title: "Quantum Tournament Quiz",
-          description: "Test your mastery of all quantum gaming concepts.",
-          content: "Let's check your mastery of quantum gaming concepts and strategies.",
+          id: "1.2.4.2",
+          title: "Quantum Tic-Tac-Toe",
+          description: "Play tic-tac-toe with quantum moves and entanglement.",
+          content: `# Quantum Tic-Tac-Toe
+
+## A Quantum Twist on a Simple Game
+
+Quantum Tic-Tac-Toe transforms the simple game of Tic-Tac-Toe by adding quantum mechanical principles, making it much more complex and strategically rich.
+
+## Game Rules
+
+1. Players make quantum marks that exist in superposition across two squares
+2. Each move creates entanglement between squares
+3. When a cycle of entanglement forms, a "quantum collapse" occurs
+4. Win by getting three classical marks in a row after collapses
+
+## Strategic Thinking
+
+Quantum Tic-Tac-Toe requires:
+- Thinking about probabilities and possibilities
+- Creating advantageous entanglements
+- Forcing collapses at strategically beneficial times
+- Planning several moves ahead with branching possibilities
+
+## External Quantum Tic-Tac-Toe Game
+
+<iframe src="https://ducky.org/quantum-tictactoe" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+
+This online implementation of Quantum Tic-Tac-Toe lets you play against friends or an AI opponent, experiencing quantum game principles firsthand.
+
+Can you master the quantum strategy and become unbeatable?`,
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 30,
+          points: 25
+        },
+        {
+          id: "1.2.4.3",
+          title: "Quantum Games Tournament Quiz",
+          description: "Test your understanding of quantum gaming strategies and concepts.",
+          content: "Let's check what you've learned about quantum gaming principles and strategies.",
           type: "quiz",
           duration: 15,
           points: 15

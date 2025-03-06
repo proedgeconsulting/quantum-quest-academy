@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Play } from "lucide-react";
 import BuildAtomActivity from "@/components/BuildAtomActivity";
 import AtomSimulation from "@/components/AtomSimulation";
+import QuantumSimulator from "@/components/QuantumSimulator";
 import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 
 interface LessonContentProps {
   lesson?: {
@@ -68,6 +70,18 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
             </div>
           </div>
         );
+      case "QuantumSimulator":
+        return (
+          <div className="interactive-component-wrapper">
+            <QuantumSimulator />
+            <div className="mt-6 flex justify-center">
+              <Button onClick={onComplete} className="gap-2">
+                <CheckCircle size={16} />
+                Complete Simulation
+              </Button>
+            </div>
+          </div>
+        );
       default:
         return (
           <div className="p-6 text-center bg-quantum-50 dark:bg-quantum-900 rounded-lg">
@@ -89,40 +103,61 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
     );
   };
   
-  // Function to safely render paragraphs 
-  const renderParagraphs = (content: string) => {
-    return content.split('\n\n').map((paragraph, index) => (
-      <p key={index} className="mb-4">{paragraph}</p>
-    ));
+  // Check if content has iframe
+  const hasIframe = lesson.content.includes('<iframe');
+  
+  // Function to render markdown with iframe support
+  const renderContent = () => {
+    if (hasIframe) {
+      // Split content by iframe tags and render each part
+      const parts = lesson.content.split(/(<iframe.*?<\/iframe>)/s);
+      
+      return (
+        <div className="prose dark:prose-invert max-w-none">
+          {parts.map((part, index) => {
+            if (part.startsWith('<iframe')) {
+              // Extract iframe src and attributes
+              return (
+                <div key={index} className="my-6 rounded-lg overflow-hidden border border-quantum-200 dark:border-quantum-700">
+                  <div dangerouslySetInnerHTML={{ __html: part }} />
+                </div>
+              );
+            } else {
+              // Render markdown for non-iframe parts
+              return <ReactMarkdown key={index}>{part}</ReactMarkdown>;
+            }
+          })}
+        </div>
+      );
+    } else {
+      // Regular markdown rendering
+      return (
+        <div className="prose dark:prose-invert max-w-none">
+          <ReactMarkdown>{lesson.content}</ReactMarkdown>
+        </div>
+      );
+    }
   };
   
   return (
     <div className="space-y-6">
       {/* Reading Content */}
-      {lesson.type === "reading" && (
-        <div className="prose dark:prose-invert max-w-none">
-          {renderParagraphs(lesson.content)}
-        </div>
-      )}
+      {lesson.type === "reading" && renderContent()}
       
       {/* Video Content */}
       {lesson.type === "video" && (
         <>
           {renderVideo()}
-          <div className="prose dark:prose-invert max-w-none">
-            {renderParagraphs(lesson.content)}
-          </div>
+          {renderContent()}
         </>
       )}
       
       {/* Interactive Content */}
       {lesson.type === "interactive" && (
         <>
-          <div className="prose dark:prose-invert max-w-none mb-6">
-            {renderParagraphs(lesson.content)}
-          </div>
+          {renderContent()}
           
-          {renderInteractiveComponent()}
+          {!hasIframe && renderInteractiveComponent()}
         </>
       )}
       
