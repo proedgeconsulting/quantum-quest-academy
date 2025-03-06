@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Atom, GraduationCap, HelpCircle, Info, LogOut, Settings, Tool, Trophy, User } from "lucide-react";
+import { Atom, GraduationCap, HelpCircle, Info, LogOut, Settings, Wrench, Trophy, User } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
