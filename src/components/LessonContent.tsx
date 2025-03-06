@@ -157,7 +157,9 @@ const LessonContent = ({ lesson, onComplete, isCompleted }: LessonContentProps) 
         <>
           {renderContent()}
           
-          {!hasIframe && renderInteractiveComponent()}
+          <div className="mt-8">
+            {renderInteractiveComponent()}
+          </div>
         </>
       )}
       
