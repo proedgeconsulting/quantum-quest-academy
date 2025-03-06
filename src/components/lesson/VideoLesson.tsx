@@ -17,23 +17,32 @@ export const MarkdownContent = ({ content }: { content: string }) => {
 export const VideoLesson = ({ lesson }: VideoLessonProps) => {
   // Extract video ID from YouTube URL if it's a YouTube video
   const getYoutubeVideoId = (url: string): string | null => {
-    // Handle both embed links and watch links
-    const embedRegex = /embed\/([a-zA-Z0-9_-]+)/;
-    const watchRegex = /v=([a-zA-Z0-9_-]+)/;
+    if (!url) return null;
     
-    let match = url.match(embedRegex);
-    if (match) return match[1];
+    // Handle various YouTube URL formats
+    const patterns = [
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/i,
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]+)/i,
+      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/i
+    ];
     
-    match = url.match(watchRegex);
-    if (match) return match[1];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) return match[1];
+    }
     
     return null;
   };
 
   const renderVideo = () => {
-    if (!lesson.videoUrl) return null;
+    if (!lesson.videoUrl) return (
+      <div className="flex items-center justify-center h-full bg-quantum-100 dark:bg-quantum-800 rounded-lg">
+        <p className="text-quantum-600 dark:text-quantum-300">No video available</p>
+      </div>
+    );
     
     const videoId = getYoutubeVideoId(lesson.videoUrl);
+    
     // If we have a YouTube video ID, use the proper embed format
     if (videoId) {
       return (

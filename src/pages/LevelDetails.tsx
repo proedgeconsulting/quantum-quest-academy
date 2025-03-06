@@ -137,26 +137,39 @@ const LevelDetails = () => {
               {levelNumber ? `Level ${levelNumber} Courses` : 'Recommended Courses'}
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-              {levelData.courses.map((course, index) => (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.3 }}
-                >
-                  <CourseCard
-                    id={course.id}
-                    title={course.title}
-                    description={course.description}
-                    level={levelNumber as 1 | 2 | 3}
-                    progress={course.progress || 0}
-                    duration={course.duration}
-                    icon={course.icon}
-                    weeks={course.weeks}
-                  />
-                </motion.div>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              {levelData.courses.length > 0 ? (
+                levelData.courses.map((course, index) => (
+                  <motion.div
+                    key={course.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                  >
+                    <CourseCard
+                      id={course.id}
+                      title={course.title}
+                      description={course.description}
+                      level={levelNumber as 1 | 2 | 3}
+                      progress={course.progress || 0}
+                      duration={course.duration}
+                      icon={course.icon}
+                      weeks={course.weeks}
+                    />
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-lg text-quantum-600 dark:text-quantum-300">
+                    No courses available for this level yet. Check back soon!
+                  </p>
+                  <Button className="mt-4" asChild>
+                    <Link to="/curriculum">
+                      Return to Curriculum
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </section>
