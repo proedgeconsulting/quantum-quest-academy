@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Atom, Heart } from "lucide-react";
+import { Atom, Heart, Facebook, Twitter, Instagram, Youtube, Github } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -17,6 +17,30 @@ const Footer = () => {
             <p className="text-sm text-quantum-600 dark:text-quantum-300">
               Making quantum computing accessible and fun for learners of all ages.
             </p>
+            
+            {/* Social Media Icons */}
+            <div className="flex mt-4 space-x-4">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-quantum-600 hover:text-quantum-500 dark:text-quantum-400 dark:hover:text-quantum-300 transition-colors">
+                <Facebook size={20} />
+                <span className="sr-only">Facebook</span>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-quantum-600 hover:text-quantum-500 dark:text-quantum-400 dark:hover:text-quantum-300 transition-colors">
+                <Twitter size={20} />
+                <span className="sr-only">Twitter</span>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-quantum-600 hover:text-quantum-500 dark:text-quantum-400 dark:hover:text-quantum-300 transition-colors">
+                <Instagram size={20} />
+                <span className="sr-only">Instagram</span>
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-quantum-600 hover:text-quantum-500 dark:text-quantum-400 dark:hover:text-quantum-300 transition-colors">
+                <Youtube size={20} />
+                <span className="sr-only">YouTube</span>
+              </a>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-quantum-600 hover:text-quantum-500 dark:text-quantum-400 dark:hover:text-quantum-300 transition-colors">
+                <Github size={20} />
+                <span className="sr-only">GitHub</span>
+              </a>
+            </div>
           </div>
           
           <div>
