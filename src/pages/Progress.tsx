@@ -15,9 +15,12 @@ import AchievementsSection from "@/components/progress/AchievementsSection";
 import LearningStatsSection from "@/components/progress/LearningStatsSection";
 import RecommendationsSection from "@/components/progress/RecommendationsSection";
 import ProgressPageLoading from "@/components/progress/ProgressPageLoading";
+import ProgressAnalyticsSection from "@/components/progress/ProgressAnalyticsSection";
+import StreakNotification from "@/components/progress/StreakNotification";
 
-// Custom hook for fetching progress data
+// Custom hooks
 import { useProgressData } from "@/hooks/useProgressData";
+import { useLearningAnalytics } from "@/hooks/useLearningAnalytics";
 import { useToast } from "@/hooks/use-toast";
 
 const Progress = () => {
@@ -31,8 +34,17 @@ const Progress = () => {
     newAchievements,
     refreshRecommendations
   } = useProgressData(user?.id);
+  
+  const {
+    analytics,
+    loading: analyticsLoading,
+    streakInfo,
+    trackActivity
+  } = useLearningAnalytics(user?.id);
+  
   const { toast } = useToast();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showStreakNotification, setShowStreakNotification] = useState(true);
 
   // Create a mapping of course IDs to names
   const courseNames = courseProgress.reduce((acc, course) => {
@@ -58,6 +70,13 @@ const Progress = () => {
       setIsRefreshing(false);
     }
   };
+
+  // Track page visit for learning streak when user views progress page
+  useEffect(() => {
+    if (user?.id && !loading) {
+      trackActivity('progress_view');
+    }
+  }, [user?.id, loading]);
 
   useEffect(() => {
     console.log("Progress page render:", { 
@@ -168,11 +187,24 @@ const Progress = () => {
               />
             </motion.div>
 
-            {/* Achievements */}
+            {/* Progress Analytics - NEW SECTION */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              className="mt-8"
+            >
+              <ProgressAnalyticsSection 
+                analytics={analytics} 
+                loading={analyticsLoading} 
+              />
+            </motion.div>
+
+            {/* Achievements */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
               className="mt-8"
             >
               <AchievementsSection achievements={achievements} />
@@ -189,6 +221,12 @@ const Progress = () => {
             </motion.div>
           </>
         )}
+
+        {/* Learning Streak Notification */}
+        <StreakNotification 
+          streakInfo={streakInfo} 
+          onClose={() => setShowStreakNotification(false)} 
+        />
       </div>
       <Footer />
     </div>

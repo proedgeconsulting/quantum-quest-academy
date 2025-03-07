@@ -59,3 +59,25 @@ export interface PeerInfo {
   match_type?: string;
   connection_id?: string;
 }
+
+export interface LearningStreak {
+  id: string;
+  user_id: string;
+  current_streak: number;
+  longest_streak: number;
+  last_activity_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LearningAnalytics {
+  user_id: string;
+  total_time_spent: number;
+  average_time_per_session: number;
+  most_active_day: string;
+  most_active_time: string;
+  completion_rate: number;
+  learning_pattern: string;
+  created_at: string;
+  updated_at: string;
+}

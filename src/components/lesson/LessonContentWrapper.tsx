@@ -7,6 +7,7 @@ import InteractiveLesson from "./InteractiveLesson";
 import CompletionStatus from "./CompletionStatus";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
+import { useLearningAnalytics } from "@/hooks/useLearningAnalytics";
 
 interface LessonContentWrapperProps {
   lesson?: Lesson;
@@ -17,6 +18,7 @@ interface LessonContentWrapperProps {
 const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContentWrapperProps) => {
   const [showComplete, setShowComplete] = useState(false);
   const { user } = useAuth();
+  const { trackActivity } = useLearningAnalytics(user?.id);
   
   // Auto-show complete button after 80% of the estimated reading time
   useEffect(() => {
@@ -37,15 +39,18 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContent
     // First trigger the regular completion logic
     onComplete();
     
-    // Then check for achievements
+    // Then check for achievements and track learning activity
     if (user) {
       try {
         // Call the achievement check function silently
         await supabase.functions.invoke('check-achievements', {
           body: { user_id: user.id }
         });
+        
+        // Track this activity for learning streak
+        await trackActivity('lesson_completed');
       } catch (error) {
-        console.error("Error checking achievements after lesson completion:", error);
+        console.error("Error after lesson completion:", error);
       }
     }
   };
