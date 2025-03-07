@@ -62,6 +62,7 @@ serve(async (req) => {
       longest_streak: 7,
       last_week_activity: 5,
       learning_pattern: "Consistent",
+      learning_activity: progressData || [] // Include the progress data as learning activity
     };
 
     return new Response(

@@ -13,6 +13,7 @@ export interface LearningAnalytics {
   longest_streak: number;
   last_week_activity: number;
   learning_pattern: string;
+  learning_activity?: any[]; // Add this property to fix the type error
 }
 
 export interface StreakInfo {

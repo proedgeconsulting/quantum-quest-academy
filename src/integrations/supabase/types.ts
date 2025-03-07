@@ -186,6 +186,57 @@ export type Database = {
           },
         ]
       }
+      user_certificates: {
+        Row: {
+          certificate_id: string
+          course_id: string
+          course_name: string
+          id: string
+          issued_at: string
+          user_id: string
+        }
+        Insert: {
+          certificate_id: string
+          course_id: string
+          course_name: string
+          id?: string
+          issued_at?: string
+          user_id: string
+        }
+        Update: {
+          certificate_id?: string
+          course_id?: string
+          course_name?: string
+          id?: string
+          issued_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_learning_interactions: {
+        Row: {
+          concept: string
+          created_at: string
+          id: string
+          interaction_type: string
+          user_id: string
+        }
+        Insert: {
+          concept: string
+          created_at?: string
+          id?: string
+          interaction_type: string
+          user_id: string
+        }
+        Update: {
+          concept?: string
+          created_at?: string
+          id?: string
+          interaction_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           completed: boolean | null
