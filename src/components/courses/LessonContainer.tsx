@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Clock, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Clock, Star, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { Lesson } from "@/data/courseData";
 import LessonContent from "@/components/LessonContent";
 import QuizComponent from "@/components/QuizComponent";
@@ -88,6 +88,7 @@ const LessonContainer = ({
               lesson={currentLesson} 
               onComplete={() => handleLessonComplete(currentLesson.id, true)}
               isCompleted={!!userProgress[currentLesson.id]?.completed}
+              isLastLesson={isLastLesson}
             />
           )}
         </CardContent>
@@ -103,13 +104,23 @@ const LessonContainer = ({
           Previous Lesson
         </Button>
         
-        <Button 
-          onClick={handleNextLesson}
-          disabled={isLastLesson}
-        >
-          Next Lesson
-          <ChevronRight className="ml-1" size={16} />
-        </Button>
+        {isLastLesson && userProgress[currentLesson.id]?.completed ? (
+          <Button 
+            variant="default"
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Trophy className="mr-2" size={16} />
+            Module Completed
+          </Button>
+        ) : (
+          <Button 
+            onClick={handleNextLesson}
+            disabled={isLastLesson}
+          >
+            Next Lesson
+            <ChevronRight className="ml-1" size={16} />
+          </Button>
+        )}
       </div>
     </>
   );

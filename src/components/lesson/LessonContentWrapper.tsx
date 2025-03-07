@@ -14,9 +14,10 @@ interface LessonContentWrapperProps {
   lesson?: Lesson;
   onComplete: () => void;
   isCompleted: boolean;
+  isLastLesson?: boolean;
 }
 
-const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContentWrapperProps) => {
+const LessonContentWrapper = ({ lesson, onComplete, isCompleted, isLastLesson = false }: LessonContentWrapperProps) => {
   const [showComplete, setShowComplete] = useState(false);
   const { user } = useAuth();
   const { trackActivity } = useLearningAnalytics(user?.id);
@@ -68,16 +69,23 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContent
       
       {/* Interactive Content */}
       {lesson.type === "interactive" && (
-        <InteractiveLesson lesson={lesson} onComplete={handleComplete} />
+        <InteractiveLesson 
+          lesson={lesson} 
+          onComplete={handleComplete} 
+          isLastLesson={isLastLesson} 
+        />
       )}
       
       {/* Complete Button or Completed Status */}
-      <CompletionStatus
-        isCompleted={isCompleted}
-        showComplete={showComplete}
-        type={lesson.type}
-        onComplete={handleComplete}
-      />
+      {lesson.type !== "interactive" && (
+        <CompletionStatus
+          isCompleted={isCompleted}
+          showComplete={showComplete}
+          type={lesson.type}
+          onComplete={handleComplete}
+          isLastLesson={isLastLesson}
+        />
+      )}
       
       {/* AI Assistant */}
       <AIAssistant 
