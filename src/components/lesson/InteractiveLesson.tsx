@@ -11,7 +11,7 @@ interface InteractiveLessonProps {
 
 const InteractiveLesson = ({ lesson, onComplete }: InteractiveLessonProps) => {
   return (
-    <>
+    <div className="interactive-lesson">
       <MarkdownContent content={lesson.content} />
       
       <div className="mt-8">
@@ -34,7 +34,7 @@ const InteractiveLesson = ({ lesson, onComplete }: InteractiveLessonProps) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
