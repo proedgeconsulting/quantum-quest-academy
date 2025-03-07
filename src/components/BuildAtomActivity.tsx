@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import AtomVisualizer from "./atom-builder/AtomVisualizer";
-import ParticleControls from "./atom-builder/ParticleControls";
 import ElementDetails from "./atom-builder/ElementDetails";
+import BuildAtomControls from "./atom-builder/BuildAtomControls";
+import ActivityIntroduction from "./atom-builder/ActivityIntroduction";
 import { getElement } from "./atom-builder/AtomData";
 
 interface BuildAtomActivityProps {
@@ -97,16 +98,12 @@ const BuildAtomActivity = ({
   
   return (
     <div className="p-6 quantum-card">
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
-      <p className="text-muted-foreground mb-6">
-        {superpositionMode ? 
-          "Create atoms in quantum superposition states - existing in multiple configurations simultaneously." :
-         animalTheme ?
-          "Design quantum animals with special properties based on different elements." :
-         creativeMode ?
-          "Use your creativity to design unique atomic structures with special properties." :
-          "Balance protons and electrons to create stable atoms. Atoms are stable when they have equal numbers of protons and electrons."}
-      </p>
+      <ActivityIntroduction 
+        title={title} 
+        superpositionMode={superpositionMode} 
+        animalTheme={animalTheme} 
+        creativeMode={creativeMode} 
+      />
       
       <div className="flex flex-col md:flex-row gap-8">
         <AtomVisualizer 
@@ -118,33 +115,15 @@ const BuildAtomActivity = ({
         />
         
         <div className="flex-1 flex flex-col">
-          <ParticleControls 
+          <BuildAtomControls 
             protons={protons}
             electrons={electrons}
+            superpositionMode={superpositionMode}
+            superpositionActive={superpositionActive}
             onProtonChange={handleProtonChange}
             onElectronChange={handleElectronChange}
+            toggleSuperposition={toggleSuperposition}
           />
-          
-          {superpositionMode && (
-            <div className="my-4 p-3 border border-purple-300 dark:border-purple-700 rounded-md bg-purple-50 dark:bg-purple-900/30">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Quantum Superposition</span>
-                <button 
-                  onClick={toggleSuperposition}
-                  className={`px-3 py-1 rounded-md text-xs font-medium ${
-                    superpositionActive 
-                      ? 'bg-purple-500 text-white' 
-                      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                  }`}
-                >
-                  {superpositionActive ? 'Active' : 'Inactive'}
-                </button>
-              </div>
-              <p className="mt-2 text-xs text-purple-600 dark:text-purple-400">
-                When active, your atom exists in multiple states simultaneously.
-              </p>
-            </div>
-          )}
           
           <ElementDetails 
             element={currentElement}
