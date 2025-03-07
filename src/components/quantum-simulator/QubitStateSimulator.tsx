@@ -8,12 +8,20 @@ import { Badge } from "@/components/ui/badge";
 interface QubitStateSimulatorProps {
   measurements: Array<0 | 1>;
   setMeasurements: React.Dispatch<React.SetStateAction<Array<0 | 1>>>;
+  initialState?: "superposition" | "entangled" | "standard";
 }
 
-const QubitStateSimulator = ({ measurements, setMeasurements }: QubitStateSimulatorProps) => {
+const QubitStateSimulator = ({ 
+  measurements, 
+  setMeasurements, 
+  initialState = "standard" 
+}: QubitStateSimulatorProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [probability, setProbability] = useState(50);
+  const [probability, setProbability] = useState(
+    initialState === "superposition" ? 50 : 
+    initialState === "entangled" ? 100 : 0
+  );
   const [animating, setAnimating] = useState(false);
   
   // Draw the Bloch sphere visualization
@@ -37,7 +45,7 @@ const QubitStateSimulator = ({ measurements, setMeasurements }: QubitStateSimula
     // Draw Bloch sphere
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = "#9B87F5";
+    ctx.strokeStyle = initialState === "entangled" ? "#D946EF" : "#9B87F5";
     ctx.lineWidth = 1;
     ctx.stroke();
     
@@ -52,7 +60,7 @@ const QubitStateSimulator = ({ measurements, setMeasurements }: QubitStateSimula
     
     // Draw state labels
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#805AD5";
+    ctx.fillStyle = initialState === "entangled" ? "#D946EF" : "#805AD5";
     ctx.textAlign = "center";
     ctx.fillText("|0⟩", centerX, centerY - radius - 15);
     ctx.fillText("|1⟩", centerX, centerY + radius + 25);
@@ -66,14 +74,21 @@ const QubitStateSimulator = ({ measurements, setMeasurements }: QubitStateSimula
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(vectorX, vectorY);
-    ctx.strokeStyle = !isCollapsed ? "#6B46C1" : (vectorY < centerY ? "#22C55E" : "#EF4444");
+    
+    const vectorColor = initialState === "entangled" 
+      ? "#D946EF" 
+      : !isCollapsed 
+        ? "#6B46C1" 
+        : (vectorY < centerY ? "#22C55E" : "#EF4444");
+        
+    ctx.strokeStyle = vectorColor;
     ctx.lineWidth = 3;
     ctx.stroke();
     
     // Draw vector arrowhead
     ctx.beginPath();
     ctx.arc(vectorX, vectorY, 6, 0, Math.PI * 2);
-    ctx.fillStyle = !isCollapsed ? "#6B46C1" : (vectorY < centerY ? "#22C55E" : "#EF4444");
+    ctx.fillStyle = vectorColor;
     ctx.fill();
     
     // Draw probability text
@@ -83,7 +98,22 @@ const QubitStateSimulator = ({ measurements, setMeasurements }: QubitStateSimula
     ctx.fillText(`Prob(|0⟩): ${100 - probability}%`, centerX - radius, centerY + radius + 40);
     ctx.fillText(`Prob(|1⟩): ${probability}%`, centerX - radius, centerY + radius + 60);
     
-  }, [probability, isCollapsed]);
+    // Add entanglement visualization if needed
+    if (initialState === "entangled" && !isCollapsed) {
+      ctx.beginPath();
+      ctx.setLineDash([5, 3]);
+      ctx.arc(centerX, centerY, radius * 0.7, 0, Math.PI * 2);
+      ctx.strokeStyle = "#D946EF88";
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      ctx.font = "12px Arial";
+      ctx.fillStyle = "#D946EF";
+      ctx.textAlign = "center";
+      ctx.fillText("Entangled", centerX, centerY + radius * 0.8);
+    }
+    
+  }, [probability, isCollapsed, initialState]);
 
   const handleMeasure = () => {
     setAnimating(true);
@@ -101,7 +131,10 @@ const QubitStateSimulator = ({ measurements, setMeasurements }: QubitStateSimula
 
   const handleReset = () => {
     setIsCollapsed(false);
-    setProbability(50);
+    setProbability(
+      initialState === "superposition" ? 50 : 
+      initialState === "entangled" ? 100 : 0
+    );
   };
   
   return (

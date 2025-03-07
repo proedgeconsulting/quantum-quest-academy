@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 interface SimulatorHeaderProps {
   title: string;
-  mode: "state" | "coin" | "circuit";
+  mode: "state" | "coin" | "circuit" | "creative";
   isCollapsed?: boolean;
 }
 
@@ -18,6 +18,7 @@ const SimulatorHeader = ({ title, mode, isCollapsed }: SimulatorHeaderProps) => 
           {mode === "state" && (isCollapsed ? "Measured" : "Superposition")}
           {mode === "coin" && "Quantum Coin"}
           {mode === "circuit" && "Quantum Circuit"}
+          {mode === "creative" && "Quantum Creative"}
         </Badge>
         <motion.div
           whileHover={{ scale: 1.05 }}
