@@ -5,25 +5,39 @@ import { Module } from "@/data/types/courseTypes";
 export const quantumAIApplicationsModule: Module = {
   id: "3.2.1",
   title: "Quantum AI Applications",
-  description: "Explore real-world applications of quantum AI.",
+  description: "Discover real-world applications of quantum AI in various fields.",
   lessons: [
     {
       id: "3.2.1.1",
-      title: "Quantum AI in Drug Discovery",
-      description: "How quantum computing is accelerating pharmaceutical research.",
-      content: "Quantum computing offers revolutionary potential in drug discovery and pharmaceutical research. Traditional drug discovery involves screening millions of compounds for potential therapeutic effects, a process that can take years and cost billions of dollars.\n\nQuantum computers can significantly accelerate this process by efficiently simulating molecular interactions and predicting how potential drug candidates might bind to target proteins. This is particularly valuable because classical computers struggle to accurately model complex quantum mechanical behavior of molecules, which is essential for understanding drug interactions.\n\nQuantum machine learning algorithms can identify patterns in vast chemical spaces, predicting which molecules have desired properties without needing to synthesize and test each one physically. This capability could potentially reduce the drug discovery timeline from years to months.",
+      title: "Introduction to Real-World Quantum AI",
+      description: "Learn about exciting applications of quantum AI in the real world.",
+      content: "Welcome to the Real-World Quantum AI course! In this first lesson, we'll explore how quantum computers are being used with artificial intelligence to solve real problems that are too difficult for regular computers.\n\nWe'll look at cool examples like helping scientists discover new medicines, making self-driving cars safer, creating better weather forecasts, and even helping find planets in space! Get ready to discover how quantum AI is changing our world in amazing ways.",
       type: "reading",
       duration: 20,
-      points: 15
+      points: 50
     },
     {
       id: "3.2.1.2",
-      title: "Quantum AI for Climate Modeling",
-      description: "Using quantum machine learning to improve climate predictions.",
-      content: "Climate modeling represents one of the most computationally intensive scientific challenges of our time. The complex, nonlinear systems involved in climate science create enormous computational demands that classical computers struggle to meet.\n\nIn this lesson, we explore how quantum machine learning algorithms can potentially revolutionize climate science by:\n\n1. Processing and analyzing massive climate datasets more efficiently\n\n2. Modeling complex atmospheric and oceanic interactions with higher precision\n\n3. Simulating quantum many-body systems that are relevant for understanding certain climate phenomena\n\n4. Optimizing resource allocation for climate mitigation strategies\n\nWe'll examine current research collaborations between climate scientists and quantum computing experts, early proof-of-concept applications, and the challenges that need to be overcome before quantum advantage can be achieved in this domain.",
-      type: "video",
+      title: "Quantum Game: AI Challenge",
+      description: "Play a game where you compete against a quantum AI to solve puzzles.",
+      content: "It's game time! In this fun activity, you'll play against a quantum AI in a series of puzzles and challenges. The AI uses quantum computing to think about many possible moves at once, making it a tough opponent!\n\nAs you play, you'll learn how quantum AI thinks differently from regular computer AI, and you'll discover strategies to solve problems in new ways. Can you outsmart the quantum AI? Let's find out!",
+      type: "interactive",
       duration: 25,
-      points: 20
+      points: 100,
+      interactiveComponent: "QuantumSimulator"
+    },
+    {
+      id: "3.2.1.3",
+      title: "Design Your Quantum AI App",
+      description: "Get creative and design your own quantum AI application to solve a problem you care about.",
+      content: "Now it's your turn to be an inventor! In this creative challenge, you'll design your own quantum AI application to solve a problem that matters to you. Maybe you want to help protect endangered animals, create amazing music, or build the ultimate video game.\n\nYou'll learn about the special powers of quantum AI and how to apply them to your idea. Then you'll create a simple design for your application and explain how it would work. Who knows - your idea might be the next big quantum breakthrough!",
+      type: "interactive",
+      duration: 30,
+      points: 120,
+      interactiveComponent: "BuildAtomActivity"
     }
   ]
 };
+
+// For backwards compatibility
+export const module1 = quantumAIApplicationsModule;

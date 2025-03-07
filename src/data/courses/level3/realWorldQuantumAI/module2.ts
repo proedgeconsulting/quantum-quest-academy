@@ -5,26 +5,39 @@ import { Module } from "@/data/types/courseTypes";
 export const quantumAIImplementationModule: Module = {
   id: "3.2.2",
   title: "Quantum AI Implementation",
-  description: "Learn how to implement quantum AI solutions for real-world problems.",
+  description: "Learn how to implement basic quantum AI algorithms through interactive examples.",
   lessons: [
     {
       id: "3.2.2.1",
-      title: "Quantum Feature Maps",
-      description: "Encoding classical data into quantum states for machine learning.",
-      content: "A fundamental challenge in quantum machine learning is finding effective ways to encode classical data into quantum states. This lesson explores quantum feature maps - the quantum analog of feature engineering in classical machine learning.\n\nWe'll cover:\n\n1. Data Encoding Strategies: Different approaches to mapping classical data to quantum states, including basis encoding, amplitude encoding, and angle encoding\n\n2. Quantum Feature Spaces: How quantum circuits can implicitly map data into exponentially large feature spaces, potentially offering advantages for certain classification tasks\n\n3. Circuit Design Principles: Practical guidelines for designing quantum feature maps that preserve relevant data relationships\n\n4. Hardware Considerations: Adapting encoding strategies to the constraints of current quantum processors\n\nThe lesson includes worked examples using real quantum computing frameworks and discusses how to evaluate the effectiveness of different quantum feature maps for specific data types and problem domains.",
+      title: "Building Blocks of Quantum AI",
+      description: "Explore the basic components needed to create quantum AI systems.",
+      content: "What makes quantum AI different from regular AI? In this lesson, we'll explore the special building blocks that make quantum AI work. You'll learn about quantum bits (qubits), quantum gates, and how they work together to process information in amazing new ways.\n\nWe'll use colorful animations and simple examples to show how quantum AI can explore many possibilities at the same time - something regular computers can't do! By the end of this lesson, you'll understand the magic ingredients that make quantum AI so powerful.",
       type: "reading",
-      duration: 25,
-      points: 20
+      duration: 20,
+      points: 50
     },
     {
       id: "3.2.2.2",
-      title: "Hybrid Quantum-Classical Architectures",
-      description: "Building effective systems that combine quantum and classical components.",
-      content: "Most practical quantum AI applications in the near term will use hybrid approaches that combine quantum processing with classical computing. This lesson explores optimal architectures for these hybrid systems.\n\nWe'll examine:\n\n1. Variational Quantum Algorithms: How these algorithms delegate optimization to classical computers while using quantum circuits for the most computationally intensive tasks\n\n2. Data Preprocessing: Classical techniques to prepare and filter data before quantum encoding\n\n3. Result Postprocessing: Classical methods to interpret and refine quantum outputs\n\n4. Feedback Loops: How classical optimizers can guide quantum circuit parameters\n\n5. Distributed Computing Models: Architectures for integrating quantum processing units into larger computing infrastructures\n\nThe lesson presents case studies of successful hybrid implementations and practical considerations for designing systems that maximize the advantages of both computing paradigms while minimizing their respective limitations.",
+      title: "Quantum Pattern Detector",
+      description: "Create a simple quantum AI that can find patterns in data.",
+      content: "Time to build your first quantum AI tool! In this hands-on activity, you'll create a quantum pattern detector that can spot hidden patterns in data much faster than regular computers.\n\nYou'll use a friendly drag-and-drop interface to connect quantum components and train your AI to recognize different patterns. Then you'll test your creation on increasingly complex challenges. Can your quantum AI find the hidden melody in musical notes or spot the secret pattern in star constellations? Let's find out!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      duration: 25,
+      points: 100,
+      interactiveComponent: "QuantumSimulator"
+    },
+    {
+      id: "3.2.2.3",
+      title: "Quantum vs. Classical Challenge",
+      description: "Compare quantum and classical AI approaches through a series of fun challenges.",
+      content: "It's time for the ultimate showdown: Quantum AI vs. Classical AI! In this exciting challenge, you'll solve the same problems using both quantum and classical approaches to see which works better.\n\nYou'll race to find solutions to mazes, spot patterns in pictures, and solve optimization puzzles. For each challenge, you'll see how the quantum approach might solve problems differently - sometimes much faster! You'll also learn that quantum isn't always better and discover when classical AI might still be the right choice.",
+      type: "interactive",
       duration: 30,
-      points: 25
+      points: 120,
+      interactiveComponent: "AtomSimulation"
     }
   ]
 };
+
+// For backwards compatibility
+export const module2 = quantumAIImplementationModule;

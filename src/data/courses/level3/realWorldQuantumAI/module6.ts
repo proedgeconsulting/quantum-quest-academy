@@ -1,45 +1,43 @@
 
 import { Module } from "@/data/types/courseTypes";
 
-// Module 6: Quantum AI Ethics and Future Directions
+// Module 6: Quantum AI Ethics
 export const quantumAIEthicsModule: Module = {
   id: "3.2.6",
-  title: "Quantum AI Ethics and Future Directions",
-  description: "Exploring ethical considerations and future possibilities in quantum AI.",
+  title: "Quantum AI Ethics",
+  description: "Explore the ethical considerations of powerful quantum AI technologies.",
   lessons: [
     {
       id: "3.2.6.1",
-      title: "Ethical Considerations in Quantum AI",
-      description: "Understanding the unique ethical challenges of quantum machine learning.",
-      content: "As quantum AI develops, it brings unique ethical considerations beyond those of classical AI. This lesson examines the ethical dimensions specific to quantum machine learning.\n\nWe'll explore:\n\n1. Quantum Privacy Concerns: How quantum algorithms might impact data privacy and encryption\n\n2. Access and Inequality: Addressing the potential 'quantum divide' in AI capabilities\n\n3. Transparency and Explainability: The unique challenges of interpreting quantum models\n\n4. Dual-Use Concerns: Potential misuse of advanced quantum AI capabilities\n\n5. Governance Frameworks: Emerging approaches to responsible quantum AI development\n\nThe lesson presents perspectives from ethicists, policymakers, and quantum computing researchers on creating responsible governance frameworks for quantum AI technologies as they mature.",
+      title: "The Power and Responsibility of Quantum AI",
+      description: "Learn about ethical considerations when using powerful quantum AI technology.",
+      content: "With great power comes great responsibility! Quantum AI is incredibly powerful, which means we need to think carefully about how we use it. In this thought-provoking lesson, we'll explore the ethical questions that come with quantum AI technology.\n\nYou'll learn about important issues like privacy, fairness, and transparency. We'll discuss questions like: Who should have access to quantum AI? How do we make sure it's used fairly? What happens when quantum AI makes decisions that affect people's lives? Through interactive scenarios and group discussions, you'll develop your own ethical framework for responsible quantum AI.",
       type: "reading",
-      duration: 25,
-      points: 20
+      duration: 20,
+      points: 50
     },
     {
       id: "3.2.6.2",
-      title: "Quantum AI Roadmap: The Next Decade",
-      description: "Projecting the evolution of quantum AI in the coming years.",
-      content: "This lesson provides a roadmap of quantum AI development, from near-term applications to long-range possibilities. We'll examine expert projections on how quantum machine learning will evolve as quantum hardware improves.\n\nTopics include:\n\n1. Near-term Applications (1-3 years): What's realistic on current and imminent hardware\n\n2. Mid-term Developments (3-7 years): Emerging capabilities as error correction improves\n\n3. Long-term Possibilities (7+ years): Potential paradigm shifts with fault-tolerant quantum computing\n\n4. Key Research Challenges: Critical problems that must be solved to advance the field\n\n5. Industry Adaptation Timeline: How different sectors will likely adopt quantum AI\n\nThe lesson integrates perspectives from leading quantum computing companies, academic researchers, and industry analysts to provide a balanced view of realistic timelines and expectations.",
-      type: "video",
-      duration: 30,
-      points: 25
+      title: "Quantum Ethics Simulator",
+      description: "Navigate ethical dilemmas in a simulation game featuring quantum AI scenarios.",
+      content: "Put your ethical thinking to the test in the Quantum Ethics Simulator! In this interactive game, you'll face a series of scenarios involving quantum AI technology and have to make difficult decisions.\n\nShould a quantum AI be allowed to make medical decisions? How much privacy should people give up for better quantum AI services? Should quantum AI be used in military applications? There are no perfect answers, but your choices will have consequences in the simulation. See how your decisions affect different stakeholders and compare your choices with other players!",
+      type: "interactive",
+      duration: 25,
+      points: 100,
+      interactiveComponent: "QuantumSimulator"
     },
     {
       id: "3.2.6.3",
-      title: "Quantum AI Impact Simulator",
-      description: "Simulating the potential impacts of quantum AI technologies.",
-      content: "This interactive simulation lets you explore the potential societal and economic impacts of quantum AI technologies under different development scenarios.\n\nThe simulator allows you to:\n\n1. Adjust variables related to quantum hardware development timelines\n\n2. Set parameters for adoption rates across different industries\n\n3. Explore various regulatory frameworks and their effects\n\n4. Visualize projected impacts on employment, economic growth, and scientific advancement\n\n5. Compare different strategic approaches to quantum AI development\n\nThrough this simulation, you'll gain insights into the complex interplay of technological, economic, and policy factors that will shape how quantum AI affects society over the coming decades.",
+      title: "Design Your Quantum AI Guidelines",
+      description: "Create a set of ethical guidelines for a quantum AI application of your choice.",
+      content: "Now it's your turn to become an ethics expert! In this creative challenge, you'll develop a set of ethical guidelines for a quantum AI application of your choice. Maybe you're creating guidelines for a quantum medical diagnosis system, a quantum criminal justice AI, or a quantum-powered social media platform.\n\nYou'll think about who might be affected by your quantum AI, what risks it might create, and how to make it fair and transparent. Then you'll create a simple 'code of ethics' that explains how your quantum AI should be designed and used. Your guidelines might help shape the future of responsible quantum AI!",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
-      duration: 35,
-      points: 30,
-      interactiveOptions: {
-        simulatorType: "impactSimulator",
-        timelineRange: [5, 10, 20],
-        impactCategories: ["economic", "scientific", "social"],
-        policyOptions: ["minimal", "balanced", "restrictive"]
-      }
+      duration: 30,
+      points: 120,
+      interactiveComponent: "BuildAtomActivity"
     }
   ]
 };
+
+// For backwards compatibility
+export const module6 = quantumAIEthicsModule;

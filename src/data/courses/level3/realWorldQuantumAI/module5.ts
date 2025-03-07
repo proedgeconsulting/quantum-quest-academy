@@ -5,41 +5,39 @@ import { Module } from "@/data/types/courseTypes";
 export const quantumGenerativeModelsModule: Module = {
   id: "3.2.5",
   title: "Quantum Generative Models",
-  description: "Creating and training quantum generative models for real-world data.",
+  description: "Learn how quantum computers can help AI create new content and designs.",
   lessons: [
     {
       id: "3.2.5.1",
-      title: "Quantum Generative Adversarial Networks",
-      description: "Implementing QGANs for data generation and modeling.",
-      content: "Quantum Generative Adversarial Networks (QGANs) adapt the successful GAN framework to quantum computing. This lesson explores how quantum generators and discriminators can work together to create high-quality synthetic data.\n\nWe'll cover:\n\n1. Quantum Generator Architecture: How to design quantum circuits that generate data samples\n\n2. Quantum and Classical Discriminators: Comparing approaches for the adversarial component\n\n3. Training Dynamics: The challenges of adversarial training in quantum systems\n\n4. Applications: From generating quantum states to creating classical datasets\n\nThis lesson includes examples of early QGAN implementations and their results on synthetic and real-world datasets, as well as an analysis of the current state of the field and potential future developments.",
+      title: "Creative Quantum AI",
+      description: "Discover how quantum generative models can create art, music, and more.",
+      content: "Can AI be creative? In this fascinating lesson, we'll explore how quantum computers are helping AI generate new content that's never existed before! From artwork and music to new molecular designs, quantum generative models are pushing the boundaries of AI creativity.\n\nYou'll learn how quantum computers can explore vastly more possibilities than classical computers, helping AI come up with more unique and innovative creations. We'll look at examples of quantum-enhanced art, music composition, and even drug discovery, showing how these creative AIs might change our world.",
       type: "reading",
-      duration: 25,
-      points: 20
+      duration: 20,
+      points: 50
     },
     {
       id: "3.2.5.2",
-      title: "Quantum Boltzmann Machines",
-      description: "Leveraging quantum effects for enhanced generative modeling.",
-      content: "Quantum Boltzmann Machines (QBMs) are natural quantum extensions of classical Boltzmann machines, with potential advantages in representational power and training efficiency. This interactive lesson lets you experiment with a simulated QBM.\n\nThe simulator allows you to:\n\n1. Design a QBM architecture for simple generative tasks\n\n2. Train the model on pattern recognition problems\n\n3. Visualize the energy landscapes of quantum and classical models\n\n4. Generate samples from the trained model\n\nExperiment with different configurations to understand how quantum effects like entanglement and superposition can potentially enhance the model's capabilities for capturing complex data distributions.",
+      title: "Quantum Music Composer",
+      description: "Create a quantum AI that can compose original music in different styles.",
+      content: "Become a quantum music producer! In this fun activity, you'll build a quantum generative model that can compose original music in different styles, from classical to pop to electronic.\n\nYour quantum AI will learn patterns from existing music and then use quantum superposition to explore countless musical possibilities simultaneously. You can guide your AI by selecting instruments, tempo, and musical style, then listen to the unique compositions it creates. Will your quantum composer create the next hit song? Let's make some quantum music!",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
-      duration: 35,
-      points: 30,
-      interactiveOptions: {
-        simulatorType: "quantumBoltzmann",
-        visibleUnits: [4, 8, 16],
-        hiddenUnitOptions: [2, 4, 8],
-        datasetOptions: ["binary", "categorical", "custom"]
-      }
+      duration: 25,
+      points: 100,
+      interactiveComponent: "QuantumSimulator"
     },
     {
       id: "3.2.5.3",
-      title: "Variational Quantum Generators",
-      description: "Creating diverse data with variational quantum circuits.",
-      content: "Variational Quantum Generators represent a flexible approach to quantum generative modeling using parameterized quantum circuits. This lesson explores how these circuits can be trained to generate various types of data.\n\nWe'll cover:\n\n1. Circuit Design for Generation: Architectural considerations for different data types\n\n2. Training Methodologies: How to optimize circuit parameters for generation tasks\n\n3. Evaluation Metrics: Assessing the quality and diversity of generated samples\n\n4. Applications: From scientific simulation to creative content generation\n\nThe lesson includes case studies of variational quantum generators applied to molecular structure generation, financial time series simulation, and artistic pattern creation. We'll discuss both the theoretical advantages and practical limitations of current implementations.",
-      type: "video",
+      title: "Quantum Fashion Designer",
+      description: "Use quantum generative models to create unique fashion designs.",
+      content: "Step into the shoes of a quantum fashion designer! In this creative challenge, you'll use quantum generative models to create unique clothing designs that have never been seen before.\n\nYour quantum AI will analyze thousands of existing fashion designs and then use quantum computing to explore new combinations of colors, patterns, and styles. You can guide the creative process by selecting different design elements and seeing what your quantum AI comes up with. Who knows - your quantum-generated design might become the next fashion trend!",
+      type: "interactive",
       duration: 30,
-      points: 25
+      points: 120,
+      interactiveComponent: "AtomSimulation"
     }
   ]
 };
+
+// For backwards compatibility
+export const module5 = quantumGenerativeModelsModule;

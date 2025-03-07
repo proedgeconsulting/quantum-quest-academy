@@ -5,40 +5,39 @@ import { Module } from "@/data/types/courseTypes";
 export const quantumNeuralNetworksModule: Module = {
   id: "3.2.3",
   title: "Quantum Neural Networks",
-  description: "Explore quantum versions of neural network architectures.",
+  description: "Discover how quantum computing enhances neural networks for better pattern recognition.",
   lessons: [
     {
       id: "3.2.3.1",
-      title: "Parametrized Quantum Circuits",
-      description: "Understanding the building blocks of quantum neural networks.",
-      content: "Parametrized quantum circuits (PQCs) form the foundation of quantum neural networks. Unlike classical neural networks that use weighted connections between neurons, quantum neural networks encode information in quantum states and process it through quantum gates with adjustable parameters.\n\nThis lesson covers:\n\n1. The basic structure of PQCs: input encoding, parameterized gates, and measurement\n\n2. Common gate patterns used in quantum neural networks, including layers of rotation gates and entangling operations\n\n3. The relationship between circuit depth, expressivity, and trainability\n\n4. Practical considerations when designing PQCs for specific machine learning tasks\n\n5. Techniques for initializing circuit parameters to avoid barren plateaus\n\nWe'll walk through several example circuits and demonstrate how they can be used for classification and regression tasks.",
+      title: "Neural Networks: The Quantum Upgrade",
+      description: "Learn how quantum properties can make neural networks more powerful.",
+      content: "Neural networks are like the brain of AI - they help computers learn from examples just like you learn from experience. In this lesson, we'll explore how adding quantum properties gives neural networks superpowers!\n\nUsing simple examples and colorful visuals, you'll learn how quantum neural networks can process information in entirely new ways. We'll see how they can find connections that regular neural networks might miss, and how scientists are using them to solve complex problems in science, medicine, and more.",
       type: "reading",
-      duration: 25,
-      points: 20
+      duration: 20,
+      points: 50
     },
     {
       id: "3.2.3.2",
-      title: "QNN Training Strategies",
-      description: "Techniques for effectively training quantum neural networks.",
-      content: "Training quantum neural networks poses unique challenges compared to classical networks. This lesson explores best practices for QNN training.\n\nWe'll cover:\n\n1. Parameter Shift Rules: Computing gradients of quantum circuits without backpropagation\n\n2. Cost Function Design: Constructing objective functions suited for quantum optimization\n\n3. Handling Barren Plateaus: Techniques to address vanishing gradients in quantum circuits\n\n4. Circuit Structure Optimization: How architecture impacts trainability\n\n5. Quantum Transfer Learning: Leveraging pre-trained classical or quantum models\n\nThe lesson includes practical examples of training quantum neural networks on actual datasets and discusses the current limitations and future directions in this rapidly evolving field.",
-      type: "video",
-      duration: 30,
-      points: 25
+      title: "Train Your Quantum Neural Network",
+      description: "Build and train a simple quantum neural network to recognize patterns.",
+      content: "Get ready to train your very own quantum neural network! In this interactive lesson, you'll build a simple quantum neural network that can recognize different shapes and patterns.\n\nYou'll feed your network example images to train it, and then test how well it can identify new images it hasn't seen before. You'll discover how quantum properties like superposition and entanglement help your network learn more efficiently. Can your quantum neural network tell the difference between cats and dogs, or recognize handwritten numbers? Let's find out!",
+      type: "interactive",
+      duration: 25,
+      points: 100,
+      interactiveComponent: "QuantumSimulator"
     },
     {
       id: "3.2.3.3",
-      title: "Quantum Convolutional Networks",
-      description: "Applying quantum principles to image and pattern recognition.",
-      content: "Quantum Convolutional Neural Networks (QCNNs) adapt the powerful pattern recognition capabilities of classical CNNs to quantum computing. This interactive lesson lets you experiment with a QCNN on simple image recognition tasks.\n\nThe simulator demonstrates:\n\n1. Quantum encoding of image data\n\n2. Applying quantum convolutional layers\n\n3. Pooling operations in quantum circuits\n\n4. Feature extraction and classification\n\nTry different circuit architectures and parameters to improve recognition accuracy. The visualization shows the quantum state transformations at each layer and how they contribute to the final classification decision.",
+      title: "Quantum Image Detective",
+      description: "Use a quantum neural network to find hidden details in images that classical networks miss.",
+      content: "Become a quantum image detective and find details that regular computers might miss! In this fun activity, you'll use a quantum neural network to analyze images with hidden features or patterns.\n\nYour mission is to detect objects in blurry satellite photos, find camouflaged animals in nature scenes, or spot tiny details in medical images. The quantum neural network can consider many possibilities at once, helping you find things that might be invisible to classical AI. Put your detective skills to the test and see what you can discover!",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
-      duration: 35,
-      points: 30,
-      interactiveOptions: {
-        simulatorType: "quantumCNN",
-        datasetOptions: ["digits", "shapes", "letters"],
-        maxCircuitDepth: 8
-      }
+      duration: 30,
+      points: 120,
+      interactiveComponent: "AtomSimulation"
     }
   ]
 };
+
+// For backwards compatibility
+export const module3 = quantumNeuralNetworksModule;
