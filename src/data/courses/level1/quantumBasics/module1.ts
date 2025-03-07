@@ -21,7 +21,7 @@ export const module1: Module = {
       title: "The Building Blocks of Reality",
       description: "Explore atoms, electrons, and the fundamental particles.",
       content: "Everything in our universe is made up of tiny building blocks called atoms. But what are atoms made of? In this lesson, we'll dive into the subatomic world to discover protons, neutrons, and electrons.\n\nWe'll learn how these particles come together to form atoms, and how atoms combine to create everything from the air we breathe to the stars in the sky.",
-      type: "reading",
+      type: "video",
       duration: 15,
       points: 10,
       videoUrl: "https://www.youtube.com/embed/HpNMT6x-Hls"

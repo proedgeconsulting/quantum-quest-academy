@@ -35,20 +35,25 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
   };
 
   const renderVideo = () => {
-    if (!lesson.videoUrl) return (
-      <div className="flex items-center justify-center h-full bg-quantum-100 dark:bg-quantum-800 rounded-lg">
-        <p className="text-quantum-600 dark:text-quantum-300">No video available</p>
-      </div>
-    );
+    if (!lesson.videoUrl) {
+      // Log for debugging
+      console.log("No videoUrl provided for lesson:", lesson.id, lesson.title);
+      return (
+        <div className="flex items-center justify-center h-64 bg-quantum-100 dark:bg-quantum-800 rounded-lg">
+          <p className="text-quantum-600 dark:text-quantum-300">No video available</p>
+        </div>
+      );
+    }
     
     const videoId = getYoutubeVideoId(lesson.videoUrl);
+    console.log("Video URL:", lesson.videoUrl, "Extracted ID:", videoId);
     
     // If we have a YouTube video ID, use the proper embed format
     if (videoId) {
       return (
         <iframe
           src={`https://www.youtube.com/embed/${videoId}`}
-          className="w-full h-full"
+          className="w-full aspect-video"
           title={lesson.title}
           frameBorder="0"
           allowFullScreen
@@ -61,7 +66,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     return (
       <iframe
         src={lesson.videoUrl}
-        className="w-full h-full"
+        className="w-full aspect-video"
         title={lesson.title}
         frameBorder="0"
         allowFullScreen
@@ -72,7 +77,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
 
   return (
     <div className="space-y-8">
-      <div className="aspect-video overflow-hidden rounded-lg shadow-sm">
+      <div className="overflow-hidden rounded-lg shadow-sm">
         {renderVideo()}
       </div>
       
