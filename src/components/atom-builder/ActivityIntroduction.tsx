@@ -19,7 +19,7 @@ const ActivityIntroduction: React.FC<ActivityIntroductionProps> = ({
       <h3 className="text-xl font-bold mb-4">{title}</h3>
       <p className="text-muted-foreground mb-6">
         {superpositionMode ? 
-          "Create atoms in quantum superposition states - existing in multiple configurations simultaneously." :
+          "Explore Heisenberg's Uncertainty Principle through this interactive simulator. Observe how particles in quantum superposition states have inherently uncertain properties - the more precisely you know a particle's position, the less precisely you can know its momentum, and vice versa." :
          animalTheme ?
           "Design quantum animals with special properties based on different elements." :
          creativeMode ?

@@ -79,20 +79,56 @@ const AtomVisualizer: React.FC<AtomVisualizerProps> = ({
               >
                 <motion.div
                   className={`absolute w-4 h-4 bg-${electronColor} rounded-full shadow-md`}
-                  style={{ top: "-8px", left: "calc(50% - 8px)" }}
+                  style={{ 
+                    top: "-8px", 
+                    left: "calc(50% - 8px)",
+                    // Add position uncertainty when in superposition mode
+                    filter: superposition ? "blur(2px)" : "none"
+                  }}
                   animate={{
                     rotate: [0, 360],
+                    // In superposition mode, add a slight position randomness to simulate uncertainty
+                    top: superposition ? ["-8px", "-10px", "-6px", "-8px"] : "-8px",
+                    left: superposition ? ["calc(50% - 8px)", "calc(50% - 10px)", "calc(50% - 6px)", "calc(50% - 8px)"] : "calc(50% - 8px)"
                   }}
                   transition={{
-                    duration: superposition ? speed * 0.5 : speed,
-                    repeat: Infinity,
-                    ease: "linear"
+                    rotate: {
+                      duration: superposition ? speed * 0.8 : speed,
+                      repeat: Infinity,
+                      ease: "linear"
+                    },
+                    top: {
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    },
+                    left: {
+                      duration: 2.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
                   }}
                 />
               </motion.div>
             );
           })}
         </AnimatePresence>
+        
+        {/* Uncertainty visualization */}
+        {superposition && (
+          <motion.div 
+            className="absolute inset-0 rounded-full bg-purple-500/5 dark:bg-purple-500/10"
+            animate={{
+              scale: [1, 1.05, 1, 0.95, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        )}
       </motion.div>
       
       <div className="mt-4 text-center">
@@ -103,7 +139,7 @@ const AtomVisualizer: React.FC<AtomVisualizerProps> = ({
               : "bg-red-100 text-red-900 border border-red-500"
           }`}
         >
-          {superposition ? "Quantum Superposition" : isStable ? "Stable" : "Unstable"}
+          {superposition ? "Quantum Uncertainty" : isStable ? "Stable" : "Unstable"}
         </div>
       </div>
     </div>
