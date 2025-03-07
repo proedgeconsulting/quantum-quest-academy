@@ -37,6 +37,13 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted, isLastLesson = 
     return () => clearTimeout(timer);
   }, [lesson, isCompleted, lesson?.duration, lesson?.type]);
   
+  // Log when rendering video lesson for debugging
+  useEffect(() => {
+    if (lesson?.type === "video") {
+      console.log("Rendering video lesson:", lesson.title, "Video URL:", lesson.videoUrl);
+    }
+  }, [lesson]);
+  
   const handleComplete = async () => {
     // First trigger the regular completion logic
     onComplete();
@@ -65,7 +72,14 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted, isLastLesson = 
       {lesson.type === "reading" && <ReadingLesson lesson={lesson} />}
       
       {/* Video Content */}
-      {lesson.type === "video" && <VideoLesson lesson={lesson} />}
+      {lesson.type === "video" && (
+        <>
+          <VideoLesson lesson={lesson} />
+          <div className="text-sm text-gray-500 dark:text-gray-400 italic mt-2">
+            If the video doesn't load, please check your internet connection or try refreshing the page.
+          </div>
+        </>
+      )}
       
       {/* Interactive Content */}
       {lesson.type === "interactive" && (
@@ -97,3 +111,4 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted, isLastLesson = 
 };
 
 export default LessonContentWrapper;
+
