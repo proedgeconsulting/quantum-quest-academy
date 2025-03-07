@@ -22,6 +22,22 @@ export interface Lesson {
     timelineRange?: number[];
     impactCategories?: string[];
     policyOptions?: string[];
+    waveColor?: string;
+    showParticles?: boolean;
+    showUncertaintyBands?: boolean;
+    showBarrier?: boolean;
+    barrierHeight?: number;
+    gameMode?: boolean;
+    drawingMode?: boolean;
+    colorOptions?: string[];
+    creativeMode?: boolean;
+    animalTheme?: boolean;
+    timeReversalMode?: boolean;
+    inventionMode?: boolean;
+    maxQubits?: number;
+    initialState?: string;
+    treasureMode?: boolean;
+    superpositionMode?: boolean;
   };
 }
 

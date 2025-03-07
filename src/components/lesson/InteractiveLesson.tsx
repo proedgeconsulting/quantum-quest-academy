@@ -14,9 +14,8 @@ interface InteractiveLessonProps {
 const InteractiveLesson = ({ lesson, onComplete }: InteractiveLessonProps) => {
   // Get the appropriate simulator component based on lesson ID
   const InteractiveComponent = useMemo(() => {
-    const SimulatorComponent = getSimulatorForLesson(lesson.id);
-    return <SimulatorComponent />;
-  }, [lesson.id]);
+    return getSimulatorForLesson(lesson.id, lesson);
+  }, [lesson.id, lesson]);
   
   return (
     <>
