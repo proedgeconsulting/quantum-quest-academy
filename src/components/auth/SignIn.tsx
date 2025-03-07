@@ -7,7 +7,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
 
@@ -20,7 +19,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { setUser } = useAuth();
+  const { signIn } = useAuth();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -33,20 +32,9 @@ const SignIn = () => {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (error) throw error;
-      
-      if (authData?.user) {
-        setUser(authData.user);
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
-      }
+      await signIn(data.email, data.password);
+      // Note: No need to manually set user or show toast here
+      // The signIn method in AuthContext already handles those operations
     } catch (error: any) {
       console.error("Sign in error:", error);
       toast({
