@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 1: Introduction to Quantum Circuits
@@ -23,7 +22,8 @@ export const module1: Module = {
       content: "Quantum gates are the building blocks of quantum circuits, analogous to logical gates in classical computing. However, unlike classical gates, quantum gates are reversible operations represented by unitary matrices.\n\nIn this lesson, we'll explore the most common quantum gates including:\n\n- The Hadamard (H) gate, which creates superposition\n\n- The Pauli-X, Y, and Z gates, which perform rotations\n\n- The CNOT (Controlled-NOT) gate, which entangles qubits\n\n- The Toffoli gate, which is universal for classical computation",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
+      videoUrl: "https://www.youtube.com/watch?v=HzlZt2TqSzU"
     },
     {
       id: "2.1.1.3",

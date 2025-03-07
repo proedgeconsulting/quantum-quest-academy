@@ -152,4 +152,3 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
 };
 
 export default VideoLesson;
-

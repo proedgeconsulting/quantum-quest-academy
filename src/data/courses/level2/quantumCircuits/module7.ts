@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 7: Quantum Circuit Builder
@@ -34,7 +33,7 @@ export const module7: Module = {
       type: "video",
       duration: 15,
       points: 15,
-      videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
+      videoUrl: "https://www.youtube.com/watch?v=HzlZt2TqSzU"
     },
     {
       id: "2.1.7.4",
