@@ -9,7 +9,6 @@ import { module6 } from "./module6";
 import { module7 } from "./module7";
 import { module8 } from "./module8";
 import { module9 } from "./module9";
-import { module10 } from "./module10";
 import { module11 } from "./module11";
 import { module12 } from "./module12";
 
@@ -21,7 +20,7 @@ export const quantumBasicsCourse: Course = {
   level: 1,
   duration: "8 weeks",
   icon: "atom",
-  weeks: 12,
+  weeks: 11,
   modules: [
     module1,
     module2,
@@ -32,7 +31,6 @@ export const quantumBasicsCourse: Course = {
     module7,
     module8,
     module9,
-    module10,
     module11,
     module12
   ]
