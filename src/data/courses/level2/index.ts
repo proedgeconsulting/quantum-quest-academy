@@ -1,7 +1,7 @@
 
 import { Course } from "@/data/types/courseTypes";
 import { quantumCircuitsCourse } from "./quantumCircuits";
-import { quantumEntanglementCourse } from "./quantumEntanglement";
+import { quantumEntanglementCourse } from "./quantumEntanglement/index";
 import { quantumErrorCorrectionCourse } from "./quantumErrorCorrection";
 
 // All Level 2 courses
