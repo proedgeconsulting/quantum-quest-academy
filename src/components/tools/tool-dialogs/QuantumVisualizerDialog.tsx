@@ -1,7 +1,7 @@
 
 import React from "react";
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import QuantumSimulator from "@/components/QuantumSimulator";
+import QuantumWaveVisualizer from "@/components/quantum-simulator/QuantumWaveVisualizer";
 
 const QuantumVisualizerDialog: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ const QuantumVisualizerDialog: React.FC = () => {
         </DialogDescription>
       </DialogHeader>
       <div className="py-4">
-        <QuantumSimulator />
+        <QuantumWaveVisualizer />
       </div>
     </>
   );

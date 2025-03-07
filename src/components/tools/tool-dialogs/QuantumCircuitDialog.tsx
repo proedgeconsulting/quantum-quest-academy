@@ -1,7 +1,7 @@
 
 import React from "react";
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import QuantumSimulator from "@/components/QuantumSimulator";
+import QuantumCircuitSimulator from "@/components/quantum-simulator/QuantumCircuitSimulator";
 
 const QuantumCircuitDialog: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ const QuantumCircuitDialog: React.FC = () => {
         </DialogDescription>
       </DialogHeader>
       <div className="py-4">
-        <QuantumSimulator />
+        <QuantumCircuitSimulator />
       </div>
     </>
   );
