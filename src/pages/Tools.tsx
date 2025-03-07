@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,8 +36,10 @@ const Tools = () => {
                 Build and explore atomic structures with protons, neutrons, and electrons
               </DialogDescription>
             </DialogHeader>
-            <div className="py-4">
-              <AtomSimulation />
+            <div className="py-4 w-full flex justify-center">
+              <div className="w-full">
+                <AtomSimulation />
+              </div>
             </div>
           </>
         );
@@ -367,7 +368,7 @@ const Tools = () => {
 
       {/* Tool Dialog */}
       <Dialog open={!!activeToolDialog} onOpenChange={(isOpen) => !isOpen && closeToolDialog()}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="w-full max-w-5xl">
           {renderToolContent()}
         </DialogContent>
       </Dialog>
