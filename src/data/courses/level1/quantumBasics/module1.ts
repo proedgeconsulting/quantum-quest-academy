@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 1: Introduction to Quantum World
@@ -24,7 +23,7 @@ export const module1: Module = {
       type: "video",
       duration: 15,
       points: 10,
-      videoUrl: "https://www.youtube.com/embed/HpNMT6x-Hls"
+      videoUrl: "https://www.youtube.com/watch?v=HpNMT6x-Hls"
     },
     {
       id: "1.1.1.3",

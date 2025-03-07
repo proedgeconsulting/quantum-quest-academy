@@ -1,6 +1,7 @@
 
 import ReactMarkdown from "react-markdown";
 import { Lesson } from "@/data/types/courseTypes";
+import { useState, useEffect } from "react";
 
 interface VideoLessonProps {
   lesson: Lesson;
@@ -15,6 +16,8 @@ export const MarkdownContent = ({ content }: { content: string }) => {
 };
 
 export const VideoLesson = ({ lesson }: VideoLessonProps) => {
+  const [videoError, setVideoError] = useState(false);
+
   // Extract video ID from YouTube URL if it's a YouTube video
   const getYoutubeVideoId = (url: string): string | null => {
     if (!url) return null;
@@ -34,10 +37,20 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     return null;
   };
 
+  // Reset video error state when lesson changes
+  useEffect(() => {
+    setVideoError(false);
+  }, [lesson.id]);
+
+  const handleVideoError = () => {
+    console.error("Video failed to load:", lesson.videoUrl);
+    setVideoError(true);
+  };
+
   const renderVideo = () => {
-    if (!lesson.videoUrl) {
+    if (!lesson.videoUrl || videoError) {
       // Log for debugging
-      console.log("No videoUrl provided for lesson:", lesson.id, lesson.title);
+      console.log("No videoUrl provided for lesson or video error:", lesson.id, lesson.title);
       return (
         <div className="flex items-center justify-center h-64 bg-quantum-100 dark:bg-quantum-800 rounded-lg">
           <p className="text-quantum-600 dark:text-quantum-300">No video available</p>
@@ -48,16 +61,17 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     const videoId = getYoutubeVideoId(lesson.videoUrl);
     console.log("Video URL:", lesson.videoUrl, "Extracted ID:", videoId);
     
-    // If we have a YouTube video ID, use the proper embed format with additional parameters
+    // If we have a YouTube video ID, use the proper embed format with additional parameters for better compatibility
     if (videoId) {
       return (
         <iframe
-          src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
-          className="w-full aspect-video"
+          src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&origin=${window.location.origin}`}
+          className="w-full aspect-video rounded-lg"
           title={lesson.title}
           frameBorder="0"
           allowFullScreen
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          onError={handleVideoError}
         ></iframe>
       );
     }
@@ -66,11 +80,12 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     return (
       <iframe
         src={lesson.videoUrl}
-        className="w-full aspect-video"
+        className="w-full aspect-video rounded-lg"
         title={lesson.title}
         frameBorder="0"
         allowFullScreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        onError={handleVideoError}
       ></iframe>
     );
   };
