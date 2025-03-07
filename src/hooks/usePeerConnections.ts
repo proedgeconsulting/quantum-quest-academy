@@ -2,66 +2,45 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
-export interface PeerRecommendation {
-  id: string;
-  user_id: string;
-  peer_id: string;
-  similarity_score: number;
-  complementarity_score: number;
-  match_score: number;
-  match_type: string;
-  created_at: string;
-  peer_username?: string;
-  peer_avatar_url?: string;
-}
-
-export interface PeerConnection {
-  id: string;
-  user_id: string;
-  peer_id: string;
-  status: 'pending' | 'accepted' | 'declined';
-  created_at: string;
-  updated_at: string;
-  peer_username?: string;
-  peer_avatar_url?: string;
-}
+import { PeerInfo } from "../components/social/types";
 
 export const usePeerConnections = (userId: string | undefined) => {
-  const [recommendations, setRecommendations] = useState<PeerRecommendation[]>([]);
-  const [connections, setConnections] = useState<PeerConnection[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<PeerConnection[]>([]);
+  const [recommendations, setRecommendations] = useState<PeerInfo[]>([]);
+  const [connections, setConnections] = useState<PeerInfo[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<PeerInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   // Generate peer recommendations
   const generateRecommendations = async () => {
     if (!userId) return;
+    
     setLoading(true);
-
     try {
       // Call the edge function to generate recommendations
-      const { data, error } = await supabase.functions.invoke('match-learning-peers', {
-        body: { user_id: userId },
+      const { error } = await supabase.functions.invoke('match-learning-peers', {
+        body: { user_id: userId }
       });
-
+      
       if (error) {
+        console.error("Error generating peer recommendations:", error);
         throw error;
       }
-
-      console.log('Peer recommendations generated:', data);
-      toast({
-        title: "Peer recommendations updated",
-        description: `Found ${data.count} learning peers for you.`,
-      });
-
-      // Fetch the updated recommendations
+      
+      console.log("Peer recommendations generated successfully");
+      
+      // Fetch the newly generated recommendations
       await fetchRecommendations();
+      
+      toast({
+        title: "Recommendations Updated",
+        description: "Your peer recommendations have been updated.",
+      });
     } catch (error: any) {
-      console.error('Error generating peer recommendations:', error);
+      console.error("Error in recommendation process:", error);
       toast({
         title: "Error generating recommendations",
-        description: error.message || "Could not find peer matches",
+        description: error.message || "Failed to generate peer recommendations",
         variant: "destructive",
       });
     } finally {
@@ -69,299 +48,232 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Fetch peer recommendations from database
+  // Fetch recommendations
   const fetchRecommendations = async () => {
     if (!userId) return;
-
+    
     try {
-      // Get recommendations
-      const { data: recommendationsData, error: recommendationsError } = await supabase
-        .from('peer_recommendations')
-        .select(`
-          id, user_id, peer_id, similarity_score, 
-          complementarity_score, match_score, match_type, created_at
-        `)
-        .eq('user_id', userId);
-
-      if (recommendationsError) throw recommendationsError;
-
-      // Fetch profile data for each peer
-      if (recommendationsData && recommendationsData.length > 0) {
-        const peerIds = recommendationsData.map(rec => rec.peer_id);
-        
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, username, avatar_url')
-          .in('id', peerIds);
-          
-        if (profilesError) throw profilesError;
-        
-        // Merge profile data with recommendations
-        const enhancedRecommendations = recommendationsData.map(rec => {
-          const peerProfile = profilesData?.find(p => p.id === rec.peer_id);
-          return {
-            ...rec,
-            peer_username: peerProfile?.username || 'Quantum Learner',
-            peer_avatar_url: peerProfile?.avatar_url || null,
-          };
-        });
-        
-        setRecommendations(enhancedRecommendations);
-      } else {
-        setRecommendations([]);
+      // Fetch all peers details and recommendations
+      const { data, error } = await supabase.rpc('get_peer_recommendations', { 
+        user_id: userId 
+      });
+      
+      if (error) {
+        console.error("Error fetching peer recommendations:", error);
+        throw error;
       }
+      
+      // Process recommendations
+      setRecommendations(data || []);
+      console.log("Fetched peer recommendations:", data?.length || 0);
     } catch (error: any) {
-      console.error('Error fetching peer recommendations:', error);
+      console.error("Error fetching peer recommendations:", error);
       toast({
         title: "Error fetching recommendations",
-        description: error.message || "Could not load peer recommendations",
+        description: error.message || "Failed to load peer recommendations",
         variant: "destructive",
       });
       setRecommendations([]);
     }
   };
 
-  // Fetch peer connections from database
+  // Fetch connections
   const fetchConnections = async () => {
     if (!userId) return;
-
+    
     try {
-      // Get established connections (where user is either side of the connection)
-      const { data: connectionsData, error: connectionsError } = await supabase
-        .from('peer_connections')
-        .select(`
-          id, user_id, peer_id, status, created_at, updated_at
-        `)
-        .or(`user_id.eq.${userId},peer_id.eq.${userId}`)
-        .eq('status', 'accepted');
-
-      if (connectionsError) throw connectionsError;
-
-      // Get pending requests sent to this user
-      const { data: pendingData, error: pendingError } = await supabase
-        .from('peer_connections')
-        .select(`
-          id, user_id, peer_id, status, created_at, updated_at
-        `)
-        .eq('peer_id', userId)
-        .eq('status', 'pending');
-
-      if (pendingError) throw pendingError;
-
-      // Fetch profile data for peers
-      if ((connectionsData && connectionsData.length > 0) || (pendingData && pendingData.length > 0)) {
-        // Collect all peer IDs
-        const connectionPeerIds = connectionsData
-          ? connectionsData.map(conn => conn.user_id === userId ? conn.peer_id : conn.user_id)
-          : [];
-          
-        const pendingPeerIds = pendingData 
-          ? pendingData.map(req => req.user_id)
-          : [];
-          
-        const allPeerIds = [...new Set([...connectionPeerIds, ...pendingPeerIds])];
-        
-        // Fetch profiles
-        const { data: profilesData, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, username, avatar_url')
-          .in('id', allPeerIds);
-          
-        if (profilesError) throw profilesError;
-        
-        // Enhance connections with profile data
-        const enhancedConnections = connectionsData
-          ? connectionsData.map(conn => {
-              const peerId = conn.user_id === userId ? conn.peer_id : conn.user_id;
-              const peerProfile = profilesData?.find(p => p.id === peerId);
-              return {
-                ...conn,
-                peer_id: peerId,
-                user_id: userId, // normalize so user_id is always the current user
-                peer_username: peerProfile?.username || 'Quantum Learner',
-                peer_avatar_url: peerProfile?.avatar_url || null,
-              };
-            })
-          : [];
-        
-        // Enhance pending requests with profile data
-        const enhancedPending = pendingData
-          ? pendingData.map(req => {
-              const peerProfile = profilesData?.find(p => p.id === req.user_id);
-              return {
-                ...req,
-                peer_username: peerProfile?.username || 'Quantum Learner',
-                peer_avatar_url: peerProfile?.avatar_url || null,
-              };
-            })
-          : [];
-        
-        setConnections(enhancedConnections);
-        setPendingRequests(enhancedPending);
-      } else {
-        setConnections([]);
-        setPendingRequests([]);
+      // Fetch accepted connections
+      const { data, error } = await supabase.rpc('get_peer_connections', { 
+        user_id: userId,
+        status_filter: 'accepted'
+      });
+      
+      if (error) {
+        console.error("Error fetching peer connections:", error);
+        throw error;
       }
+      
+      setConnections(data || []);
+      console.log("Fetched peer connections:", data?.length || 0);
     } catch (error: any) {
-      console.error('Error fetching peer connections:', error);
+      console.error("Error fetching peer connections:", error);
       toast({
         title: "Error fetching connections",
-        description: error.message || "Could not load peer connections",
+        description: error.message || "Failed to load peer connections",
         variant: "destructive",
       });
       setConnections([]);
+    }
+  };
+
+  // Fetch pending connection requests
+  const fetchPendingRequests = async () => {
+    if (!userId) return;
+    
+    try {
+      // Fetch pending connection requests
+      const { data, error } = await supabase.rpc('get_peer_connections', { 
+        user_id: userId,
+        status_filter: 'pending'
+      });
+      
+      if (error) {
+        console.error("Error fetching pending requests:", error);
+        throw error;
+      }
+      
+      setPendingRequests(data || []);
+      console.log("Fetched pending requests:", data?.length || 0);
+    } catch (error: any) {
+      console.error("Error fetching pending requests:", error);
       setPendingRequests([]);
     }
   };
 
-  // Send connection request to a peer
+  // Send connection request to peer
   const sendConnectionRequest = async (peerId: string) => {
     if (!userId) return;
-
+    
     try {
-      const { data, error } = await supabase
-        .from('peer_connections')
-        .insert({
-          user_id: userId,
-          peer_id: peerId,
-          status: 'pending'
-        })
-        .select();
-
-      if (error) throw error;
-
-      toast({
-        title: "Connection request sent",
-        description: "Your learning partner request has been sent.",
+      // Insert a new connection request
+      const { data, error } = await supabase.rpc('create_peer_connection', {
+        user_id: userId,
+        peer_id: peerId
       });
-
-      // Refresh recommendations and connections
+      
+      if (error) {
+        console.error("Error sending connection request:", error);
+        throw error;
+      }
+      
+      toast({
+        title: "Connection Request Sent",
+        description: "Your connection request has been sent.",
+      });
+      
+      // Refresh recommendations to update UI
       await fetchRecommendations();
-      await fetchConnections();
-
-      return data;
     } catch (error: any) {
-      console.error('Error sending connection request:', error);
+      console.error("Error sending connection request:", error);
       toast({
         title: "Error sending request",
-        description: error.message || "Could not send connection request",
+        description: error.message || "Failed to send connection request",
         variant: "destructive",
       });
-      return null;
     }
   };
 
-  // Accept a connection request
+  // Accept connection request
   const acceptConnectionRequest = async (connectionId: string) => {
     if (!userId) return;
-
+    
     try {
-      const { data, error } = await supabase
-        .from('peer_connections')
-        .update({ status: 'accepted', updated_at: new Date().toISOString() })
-        .eq('id', connectionId)
-        .eq('peer_id', userId) // Make sure this user is the recipient
-        .select();
-
-      if (error) throw error;
-
-      toast({
-        title: "Connection accepted",
-        description: "You've added a new learning partner.",
+      // Update connection status to accepted
+      const { error } = await supabase.rpc('update_connection_status', {
+        connection_id: connectionId,
+        new_status: 'accepted'
       });
-
-      // Refresh connections list
-      await fetchConnections();
-
-      return data;
+      
+      if (error) {
+        console.error("Error accepting connection request:", error);
+        throw error;
+      }
+      
+      toast({
+        title: "Connection Accepted",
+        description: "You have accepted the connection request.",
+      });
+      
+      // Refresh connections and pending requests
+      await Promise.all([fetchConnections(), fetchPendingRequests()]);
     } catch (error: any) {
-      console.error('Error accepting connection request:', error);
+      console.error("Error accepting connection request:", error);
       toast({
         title: "Error accepting request",
-        description: error.message || "Could not accept connection request",
+        description: error.message || "Failed to accept connection request",
         variant: "destructive",
       });
-      return null;
     }
   };
 
-  // Decline a connection request
+  // Decline connection request
   const declineConnectionRequest = async (connectionId: string) => {
     if (!userId) return;
-
+    
     try {
-      const { data, error } = await supabase
-        .from('peer_connections')
-        .update({ status: 'declined', updated_at: new Date().toISOString() })
-        .eq('id', connectionId)
-        .eq('peer_id', userId) // Make sure this user is the recipient
-        .select();
-
-      if (error) throw error;
-
-      toast({
-        title: "Connection declined",
-        description: "The learning partner request has been declined.",
+      // Update connection status to declined
+      const { error } = await supabase.rpc('update_connection_status', {
+        connection_id: connectionId,
+        new_status: 'declined'
       });
-
-      // Refresh connections list
-      await fetchConnections();
-
-      return data;
+      
+      if (error) {
+        console.error("Error declining connection request:", error);
+        throw error;
+      }
+      
+      toast({
+        title: "Connection Declined",
+        description: "You have declined the connection request.",
+      });
+      
+      // Refresh pending requests
+      await fetchPendingRequests();
     } catch (error: any) {
-      console.error('Error declining connection request:', error);
+      console.error("Error declining connection request:", error);
       toast({
         title: "Error declining request",
-        description: error.message || "Could not decline connection request",
+        description: error.message || "Failed to decline connection request",
         variant: "destructive",
       });
-      return null;
     }
   };
 
-  // Remove an existing connection
+  // Remove connection
   const removeConnection = async (connectionId: string) => {
     if (!userId) return;
-
+    
     try {
-      const { error } = await supabase
-        .from('peer_connections')
-        .delete()
-        .eq('id', connectionId)
-        .or(`user_id.eq.${userId},peer_id.eq.${userId}`);
-
-      if (error) throw error;
-
-      toast({
-        title: "Connection removed",
-        description: "Learning partner has been removed.",
+      // Delete the connection
+      const { error } = await supabase.rpc('delete_peer_connection', {
+        connection_id: connectionId
       });
-
-      // Refresh connections list
+      
+      if (error) {
+        console.error("Error removing connection:", error);
+        throw error;
+      }
+      
+      toast({
+        title: "Connection Removed",
+        description: "The connection has been removed.",
+      });
+      
+      // Refresh connections
       await fetchConnections();
-
-      return true;
     } catch (error: any) {
-      console.error('Error removing connection:', error);
+      console.error("Error removing connection:", error);
       toast({
         title: "Error removing connection",
-        description: error.message || "Could not remove learning partner",
+        description: error.message || "Failed to remove connection",
         variant: "destructive",
       });
-      return false;
     }
   };
 
-  // Initial fetch on component mount
+  // Initial data fetch
   useEffect(() => {
     if (userId) {
-      const fetchData = async () => {
-        setLoading(true);
-        await Promise.all([fetchRecommendations(), fetchConnections()]);
-        setLoading(false);
-      };
-      fetchData();
+      setLoading(true);
+      Promise.all([
+        fetchRecommendations(),
+        fetchConnections(),
+        fetchPendingRequests()
+      ]).finally(() => setLoading(false));
     } else {
+      setRecommendations([]);
+      setConnections([]);
+      setPendingRequests([]);
       setLoading(false);
     }
   }, [userId]);
@@ -375,8 +287,6 @@ export const usePeerConnections = (userId: string | undefined) => {
     sendConnectionRequest,
     acceptConnectionRequest,
     declineConnectionRequest,
-    removeConnection,
-    refreshConnections: fetchConnections,
-    refreshRecommendations: fetchRecommendations
+    removeConnection
   };
 };

@@ -36,6 +36,66 @@ export type Database = {
         }
         Relationships: []
       }
+      peer_connections: {
+        Row: {
+          created_at: string
+          id: string
+          peer_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          peer_id: string
+          status: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          peer_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      peer_recommendations: {
+        Row: {
+          complementarity_score: number
+          created_at: string
+          id: string
+          match_score: number
+          match_type: string
+          peer_id: string
+          similarity_score: number
+          user_id: string
+        }
+        Insert: {
+          complementarity_score: number
+          created_at?: string
+          id?: string
+          match_score: number
+          match_type: string
+          peer_id: string
+          similarity_score: number
+          user_id: string
+        }
+        Update: {
+          complementarity_score?: number
+          created_at?: string
+          id?: string
+          match_score?: number
+          match_type?: string
+          peer_id?: string
+          similarity_score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
