@@ -35,8 +35,10 @@ export const useLearningAnalytics = (userId: string | undefined) => {
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .rpc('get_learning_analytics', { user_id: userId });
+      // Use a typed function call instead of a direct table query
+      const { data, error } = await supabase.functions.invoke('get-learning-analytics', {
+        body: { user_id: userId }
+      });
 
       if (error) throw error;
       
@@ -68,12 +70,12 @@ export const useLearningAnalytics = (userId: string | undefined) => {
       console.log("Activity tracked:", data);
       
       // Update streak info
-      if (data.streak) {
+      if (data?.streak) {
         setStreakInfo(data.streak);
       }
       
       // Show notification if needed
-      if (data.notification) {
+      if (data?.notification) {
         toast({
           title: data.notification.title,
           description: data.notification.message,
@@ -91,17 +93,19 @@ export const useLearningAnalytics = (userId: string | undefined) => {
     }
   };
 
-  // Fetch notifications
+  // Fetch notifications - temporarily disabled until the table is created
   const fetchNotifications = async () => {
     if (!userId) return;
     
+    // Since the user_notifications table doesn't exist yet, we'll just return an empty array
+    setNotifications([]);
+    
+    // Once the table is created, this code would work:
+    /*
     try {
-      const { data, error } = await supabase
-        .from('user_notifications')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('read', false)
-        .order('created_at', { ascending: false });
+      const { data, error } = await supabase.functions.invoke('get-user-notifications', {
+        body: { user_id: userId }
+      });
         
       if (error) throw error;
       
@@ -109,21 +113,26 @@ export const useLearningAnalytics = (userId: string | undefined) => {
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
+    */
   };
 
-  // Mark notification as read
+  // Mark notification as read - temporarily disabled until the table is created
   const markNotificationAsRead = async (notificationId: string) => {
+    // Since the user_notifications table doesn't exist yet, this is a no-op
+    
+    // Once the table is created, this code would work:
+    /*
     try {
-      await supabase
-        .from('user_notifications')
-        .update({ read: true })
-        .eq('id', notificationId);
+      await supabase.functions.invoke('mark-notification-read', {
+        body: { notification_id: notificationId }
+      });
         
       // Update local state
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
+    */
   };
 
   // Load initial data

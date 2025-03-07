@@ -81,3 +81,20 @@ export interface LearningAnalytics {
   created_at: string;
   updated_at: string;
 }
+
+export interface UserNotification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  created_at: string;
+}
+
+export interface StreakInfo {
+  current_streak: number;
+  longest_streak: number;
+  is_new_streak: boolean;
+  is_continued_streak: boolean;
+}
