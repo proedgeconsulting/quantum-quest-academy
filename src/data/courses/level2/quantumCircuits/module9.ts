@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 9: Quantum Teleportation Adventure
@@ -23,7 +24,7 @@ export const module9: Module = {
       type: "video",
       duration: 20,
       points: 15,
-      videoUrl: "https://www.youtube.com/watch?v=HzlZt2TqSzU"
+      videoUrl: "https://www.youtube.com/watch?v=7MdEHsRZxvo"
     },
     {
       id: "2.1.9.3",

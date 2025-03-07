@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 10: Quantum Detective Agency
@@ -23,7 +24,7 @@ export const module10: Module = {
       type: "video",
       duration: 15,
       points: 15,
-      videoUrl: "https://www.youtube.com/watch?v=HzlZt2TqSzU"
+      videoUrl: "https://www.youtube.com/watch?v=7MdEHsRZxvo"
     },
     {
       id: "2.1.10.3",
