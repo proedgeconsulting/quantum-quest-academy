@@ -18,6 +18,7 @@ import CourseDetails from "./pages/CourseDetails";
 import LearningApproach from "./pages/LearningApproach";
 import LevelDetails from "./pages/LevelDetails";
 import { AuthProvider } from "./context/AuthContext";
+import FloatingChatbot from "./components/chat/FloatingChatbot";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <AppRoutes />
+          <FloatingChatbot />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

@@ -26,18 +26,25 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     // Get request data
-    const { concept, userId, context } = await req.json();
+    const { message, userId, context, chatMode } = await req.json();
     
-    if (!concept) {
+    if (!message) {
       return new Response(
-        JSON.stringify({ error: 'Concept is required' }),
+        JSON.stringify({ error: 'Message is required' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       );
     }
     
-    console.log(`Generating explanation for concept: ${concept}`);
+    console.log(`Processing message: ${message}`);
     
-    // Call OpenAI API for the explanation
+    // Set system message based on chat mode
+    let systemMessage = 'You are a helpful assistant that provides concise and accurate information.';
+    
+    if (chatMode === 'quantum') {
+      systemMessage = 'You are an expert quantum physics tutor. Provide clear, concise explanations with helpful analogies for complex quantum concepts. Make your explanations accessible to learners who are new to the field.';
+    }
+    
+    // Call OpenAI API for the response
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -49,11 +56,11 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are an expert quantum physics tutor. Provide clear, concise explanations with helpful analogies for complex quantum concepts. Make your explanations accessible to learners who are new to the field.'
+            content: systemMessage
           },
           {
             role: 'user',
-            content: `Please explain the concept of "${concept}" in quantum physics. ${context ? `Context: ${context}` : ''}`
+            content: `${message} ${context ? `Context: ${context}` : ''}`
           }
         ],
         temperature: 0.7,
@@ -67,25 +74,25 @@ serve(async (req) => {
     }
     
     const data = await response.json();
-    const explanation = data.choices[0].message.content;
+    const reply = data.choices[0].message.content;
     
     // Log the interaction if userId is provided
     if (userId) {
       await supabase.from('user_learning_interactions').insert({
         user_id: userId,
-        concept: concept,
-        interaction_type: 'explanation_request',
+        concept: message.substring(0, 100), // Store first 100 chars as concept
+        interaction_type: chatMode === 'quantum' ? 'quantum_chat' : 'general_chat',
         created_at: new Date().toISOString()
       }).select();
     }
     
     return new Response(
-      JSON.stringify({ explanation }),
+      JSON.stringify({ reply }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
     
   } catch (error) {
-    console.error('Error generating explanation:', error);
+    console.error('Error generating response:', error);
     
     return new Response(
       JSON.stringify({ error: error.message }),
