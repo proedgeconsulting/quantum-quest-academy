@@ -1,82 +1,36 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Book } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 // Components
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CourseProgressSection from "@/components/progress/CourseProgressSection";
-import PointsSummarySection from "@/components/progress/PointsSummarySection";
-import AchievementsSection from "@/components/progress/AchievementsSection";
-import LearningStatsSection from "@/components/progress/LearningStatsSection";
-import RecommendationsSection from "@/components/progress/RecommendationsSection";
 import ProgressPageLoading from "@/components/progress/ProgressPageLoading";
-import ProgressAnalyticsSection from "@/components/progress/ProgressAnalyticsSection";
-import StreakNotification from "@/components/progress/StreakNotification";
+import ProgressContent from "@/components/progress/ProgressContent";
+import NoProgressContent from "@/components/progress/NoProgressContent";
 
 // Custom hooks
-import { useProgressData } from "@/hooks/useProgressData";
-import { useLearningAnalytics } from "@/hooks/useLearningAnalytics";
-import { useToast } from "@/hooks/use-toast";
+import { useProgressPageData } from "@/hooks/useProgressPageData";
 
 const Progress = () => {
   const { user, loading: authLoading } = useAuth();
-  const { 
-    achievements, 
-    courseProgress, 
-    recommendations,
-    totalPoints, 
-    loading,
-    newAchievements,
-    refreshRecommendations
-  } = useProgressData(user?.id);
+  const { toast } = useToast();
   
   const {
-    analytics,
-    loading: analyticsLoading,
+    achievements,
+    courseProgress,
+    recommendations,
+    totalPoints,
+    loading,
+    newAchievements,
     streakInfo,
-    trackActivity
-  } = useLearningAnalytics(user?.id);
-  
-  const { toast } = useToast();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [showStreakNotification, setShowStreakNotification] = useState(true);
-
-  // Create a mapping of course IDs to names
-  const courseNames = courseProgress.reduce((acc, course) => {
-    acc[course.course_id] = course.course_name;
-    return acc;
-  }, {} as Record<string, string>);
-
-  // Handle refresh of recommendations
-  const handleRefreshRecommendations = async () => {
-    if (!user) return;
-    
-    setIsRefreshing(true);
-    try {
-      await refreshRecommendations();
-      toast({
-        title: "Recommendations updated",
-        description: "Your personalized recommendations have been refreshed.",
-        variant: "default",
-      });
-    } catch (error) {
-      console.error("Error refreshing recommendations:", error);
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
-
-  // Track page visit for learning streak when user views progress page
-  useEffect(() => {
-    if (user?.id && !loading) {
-      trackActivity('progress_view');
-    }
-  }, [user?.id, loading]);
+    isRefreshing,
+    hasNoData,
+    handleRefreshRecommendations
+  } = useProgressPageData(user?.id);
 
   useEffect(() => {
     console.log("Progress page render:", { 
@@ -105,9 +59,6 @@ const Progress = () => {
     return <ProgressPageLoading />;
   }
 
-  const hasNoData = courseProgress.every(course => course.completed_lessons === 0) && 
-                     achievements.filter(a => a.earned_at).length === 0;
-
   return (
     <div className="min-h-screen flex flex-col bg-quantum-50 dark:bg-quantum-950">
       <Navbar />
@@ -127,107 +78,20 @@ const Progress = () => {
         </motion.div>
 
         {hasNoData ? (
-          <motion.div
-            className="text-center py-12 my-12 bg-quantum-100 dark:bg-quantum-900 rounded-xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Book className="h-16 w-16 mx-auto mb-4 text-quantum-400 dark:text-quantum-600" />
-            <h2 className="text-xl font-bold mb-2 text-quantum-800 dark:text-quantum-200">
-              Your progress will appear here
-            </h2>
-            <p className="text-quantum-600 dark:text-quantum-400 max-w-md mx-auto mb-6">
-              Start learning quantum computing concepts to track your progress and earn achievements.
-            </p>
-            <Button asChild>
-              <a href="/curriculum">Start Learning</a>
-            </Button>
-          </motion.div>
+          <NoProgressContent />
         ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Progress Overview */}
-              <motion.div 
-                className="md:col-span-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                <CourseProgressSection courseProgress={courseProgress} />
-              </motion.div>
-
-              {/* Points Summary */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <PointsSummarySection 
-                  totalPoints={totalPoints} 
-                  achievementsEarned={achievements.filter(a => a.earned_at).length} 
-                  totalAchievements={achievements.length}
-                />
-              </motion.div>
-            </div>
-
-            {/* Recommendations */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-              className="mt-8"
-            >
-              <RecommendationsSection 
-                recommendations={recommendations} 
-                courseNames={courseNames}
-                onRefresh={handleRefreshRecommendations}
-                isRefreshing={isRefreshing}
-                newAchievements={newAchievements}
-              />
-            </motion.div>
-
-            {/* Progress Analytics - NEW SECTION */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-8"
-            >
-              <ProgressAnalyticsSection 
-                userId={user?.id || ""}
-                userProgress={analytics?.learning_activity || []} 
-                isLoading={analyticsLoading} 
-              />
-            </motion.div>
-
-            {/* Achievements */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="mt-8"
-            >
-              <AchievementsSection achievements={achievements} />
-            </motion.div>
-
-            {/* Learning Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-8"
-            >
-              <LearningStatsSection courseProgress={courseProgress} totalPoints={totalPoints} />
-            </motion.div>
-          </>
+          <ProgressContent 
+            userId={user?.id || ""}
+            achievements={achievements}
+            courseProgress={courseProgress}
+            recommendations={recommendations}
+            totalPoints={totalPoints}
+            newAchievements={newAchievements}
+            refreshRecommendations={handleRefreshRecommendations}
+            isRefreshing={isRefreshing}
+            streakInfo={streakInfo}
+          />
         )}
-
-        {/* Learning Streak Notification */}
-        <StreakNotification 
-          streakInfo={streakInfo} 
-          onClose={() => setShowStreakNotification(false)} 
-        />
       </div>
       <Footer />
     </div>
