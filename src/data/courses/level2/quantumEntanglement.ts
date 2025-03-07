@@ -6,9 +6,9 @@ export const quantumEntanglementCourse: Course = {
   title: "Quantum Entanglement",
   description: "Explore the phenomenon of quantum entanglement and its applications.",
   level: 2,
-  duration: "9 weeks",
+  duration: "15 weeks",
   icon: "circuit",
-  weeks: 9,
+  weeks: 15,
   modules: [
     {
       id: "2.2.1",
@@ -216,6 +216,276 @@ export const quantumEntanglementCourse: Course = {
           interactiveComponent: "AtomSimulation",
           duration: 45,
           points: 40
+        }
+      ]
+    },
+    {
+      id: "2.2.7",
+      title: "Entanglement Adventures",
+      description: "Join Captain Qubit on exciting adventures through the quantum realm.",
+      lessons: [
+        {
+          id: "2.2.7.1",
+          title: "Meet Captain Qubit",
+          description: "Get introduced to our quantum superhero who uses entanglement as his superpower.",
+          content: "Welcome to the amazing adventures of Captain Qubit! Captain Qubit is a superhero who has a special power - quantum entanglement! In this story, we'll meet Captain Qubit and learn how he uses entanglement to help people and solve problems.\n\nCaptain Qubit can create entangled pairs of quantum particles and use them to communicate instantly across the galaxy! When he touches an object with his left hand, its quantum twin appears in his right hand, no matter how far apart they are!\n\nIn this first adventure, Captain Qubit needs to warn a distant space colony about an approaching meteor shower. How will he use his quantum entanglement powers to save the day? Let's find out!",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.2.7.2",
+          title: "Entangled Rescue Mission",
+          description: "Help Captain Qubit rescue astronauts using his quantum powers.",
+          content: "Oh no! A team of astronauts is trapped in a space station that's losing oxygen, and their communication systems are down! Captain Qubit needs to find a way to rescue them using his quantum entanglement powers.\n\nIn this adventure, you'll help Captain Qubit set up a quantum link between Earth and the space station. By creating entangled particles, he can instantly send messages to the astronauts and coordinate their rescue!\n\nWatch this exciting video to see how Captain Qubit uses quantum entanglement in this thrilling rescue mission!",
+          type: "video",
+          duration: 12,
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/JFSRvAMeLe0"
+        },
+        {
+          id: "2.2.7.3",
+          title: "Captain Qubit's Entanglement Game",
+          description: "Play an exciting game using quantum entanglement principles.",
+          content: "Time to join Captain Qubit on an interactive mission! In this game, you'll help Captain Qubit use quantum entanglement to solve puzzles and complete a mission.\n\nYou control two entangled particles - when one moves up, the other moves down; when one turns left, the other turns right. Use this strange quantum behavior to navigate through mazes, collect quantum energy crystals, and unlock the path to success!\n\nCan you master the mysterious rules of entanglement to help Captain Qubit save the day?",
+          type: "interactive",
+          interactiveComponent: "QuantumSimulator",
+          duration: 20,
+          points: 20
+        },
+        {
+          id: "2.2.7.4",
+          title: "Quantum Adventures Quiz",
+          description: "Test what you've learned from Captain Qubit's adventures.",
+          content: "Let's see what you've learned from Captain Qubit's exciting quantum adventures!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.2.8",
+      title: "Quantum Spooky Action",
+      description: "Explore why Einstein called entanglement 'spooky action at a distance'.",
+      lessons: [
+        {
+          id: "2.2.8.1",
+          title: "Einstein's Spooky Mystery",
+          description: "Learn why Einstein was puzzled by quantum entanglement.",
+          content: "Did you know that even the brilliant Albert Einstein was puzzled by quantum entanglement? He called it 'spooky action at a distance' because he couldn't explain how entangled particles seem to communicate instantly, no matter how far apart they are!\n\nIn this lesson, we'll travel back in time to the 1930s when Einstein and his friends were debating about quantum physics. Einstein thought there must be some hidden explanation for entanglement because he believed nothing could travel faster than light. But quantum physics seemed to say that entangled particles could affect each other instantly across any distance!\n\nThis mystery puzzled Einstein for the rest of his life, and it's one of the most fascinating parts of quantum physics that scientists are still exploring today!",
+          type: "reading",
+          duration: 12,
+          points: 10
+        },
+        {
+          id: "2.2.8.2",
+          title: "Spooky Experiments",
+          description: "Watch scientists prove that entanglement really is 'spooky'!",
+          content: "How do we know that quantum entanglement really is as 'spooky' as Einstein thought? In this video, we'll see the amazing experiments that scientists have done to prove that entanglement is real!\n\nWe'll watch as scientists create pairs of entangled particles and separate them by long distances. Then, when they measure one particle, the other particle instantly shows matching properties, as if by magic! These experiments have been done across rooms, across cities, and even with particles separated by many kilometers!\n\nThese amazing experiments show that Einstein's 'spooky action at a distance' is really happening in our universe, and it's one of the strangest and most exciting discoveries in all of science!",
+          type: "video",
+          duration: 15,
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/ZuvK-od647c"
+        },
+        {
+          id: "2.2.8.3",
+          title: "Spooky Action Game",
+          description: "Play a game to experience the 'spooky' nature of quantum entanglement.",
+          content: "Ready to experience some 'spooky action' for yourself? In this interactive game, you'll control two entangled quantum particles that are separated by a great distance.\n\nYou'll discover that when you measure one particle to have a certain property (like spinning up), the other particle instantly shows the opposite property (spinning down), no matter how far apart they are! It's as if they're communicating faster than light - which is why Einstein found it so spooky!\n\nCan you complete all the challenges and master this strange quantum behavior? Let's find out how 'spooky' quantum entanglement really is!",
+          type: "interactive",
+          interactiveComponent: "QuantumSimulator",
+          duration: 20,
+          points: 20
+        },
+        {
+          id: "2.2.8.4",
+          title: "Spooky Action Quiz",
+          description: "Test your understanding of the 'spooky' nature of quantum entanglement.",
+          content: "Let's test what you've learned about Einstein's 'spooky action at a distance'!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.2.9",
+      title: "Quantum Communication",
+      description: "Discover how quantum entanglement enables super-secure messaging.",
+      lessons: [
+        {
+          id: "2.2.9.1",
+          title: "Secret Quantum Messages",
+          description: "Learn how quantum entanglement can create unbreakable secret codes.",
+          content: "Did you know that quantum entanglement can help us send super-secret messages that no one can spy on? It's true! In this lesson, we'll discover how quantum physics creates the most secure communication method ever invented!\n\nImagine you want to send a secret message to your friend without anyone else being able to read it. With quantum communication, you can use entangled particles to create a special secret key that only you and your friend know. The amazing thing is that if anyone tries to spy on your quantum message, the entanglement breaks and you know immediately that someone is eavesdropping!\n\nScientists and governments are already building quantum communication networks because they're so secure. In the future, your personal messages might be protected by quantum entanglement!",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.2.9.2",
+          title: "Quantum Messaging in Action",
+          description: "See how scientists use quantum entanglement to send secure messages.",
+          content: "Let's see quantum communication in action! In this video, we'll watch scientists use entangled particles to send secure messages that can't be hacked.\n\nFirst, we'll see how they create pairs of entangled photons (particles of light) using special crystals. Then, they'll separate these photons and send them to different locations. When they measure these entangled photons, they get random results that match each other - and these matching random results become their secret key!\n\nThe coolest part? If anyone tries to intercept the photons, the quantum properties change and the sender and receiver can immediately tell that someone is trying to spy on them! This makes quantum communication the most secure way to send messages ever invented!",
+          type: "video",
+          duration: 12,
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/JvgpDTDyvdk"
+        },
+        {
+          id: "2.2.9.3",
+          title: "Quantum Spy Catcher",
+          description: "Play a game to detect quantum spies using entanglement.",
+          content: "It's time to become a quantum security expert! In this interactive game, you'll use quantum entanglement to send secret messages and catch spies who try to intercept them.\n\nYou'll create pairs of entangled particles and use them to establish a secret key with your friend. Then, a spy will try to intercept your quantum message without being detected. Your job is to use the properties of quantum entanglement to figure out when the spy is listening in!\n\nAs you play, you'll learn why quantum communication is considered 'unhackable' and how it could revolutionize cybersecurity in the future. Are you ready to become a quantum spy catcher?",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 20,
+          points: 20
+        },
+        {
+          id: "2.2.9.4",
+          title: "Quantum Communication Quiz",
+          description: "Test your knowledge about quantum communication and security.",
+          content: "Let's check what you've learned about quantum communication and how it can create super-secure messages!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.2.10",
+      title: "Quantum Teleportation",
+      description: "Learn how scientists can 'teleport' quantum information using entanglement.",
+      lessons: [
+        {
+          id: "2.2.10.1",
+          title: "What is Quantum Teleportation?",
+          description: "Discover how quantum information can be 'teleported' using entanglement.",
+          content: "Quantum teleportation sounds like science fiction, but it's real science! In this lesson, we'll learn how scientists can teleport quantum information from one place to another using entanglement.\n\nFirst, let's be clear - quantum teleportation doesn't transport matter like in Star Trek! Instead, it transfers the quantum state of one particle to another particle somewhere else. It's like taking all the information about Particle A and making Particle B become exactly like Particle A was!\n\nThe amazing thing is that this works instantly, no matter how far apart the particles are! Scientists have successfully teleported quantum information between particles separated by mountains, and even between Earth and satellites in space!\n\nQuantum teleportation is a key technology for future quantum computers and the quantum internet, where quantum information will need to be transferred between different quantum processors.",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.2.10.2",
+          title: "Teleportation Experiments",
+          description: "See how scientists perform real quantum teleportation in labs.",
+          content: "Let's watch quantum teleportation happen in real laboratories! In this video, we'll see scientists teleport quantum information from one place to another.\n\nYou'll watch as they create entangled particle pairs and use them to transfer the quantum state of a third particle. It looks simple from the outside - just some lasers, mirrors, and detectors - but what's happening is truly amazing: the complete quantum state of one particle is disappearing from one location and reappearing at another!\n\nThe video will show both simple demonstrations and cutting-edge experiments where scientists have teleported quantum information across cities and even to satellites in space. It's not science fiction - it's real quantum physics happening today!",
+          type: "video",
+          duration: 15,
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/DxQK1WDYI_k"
+        },
+        {
+          id: "2.2.10.3",
+          title: "Quantum Teleportation Game",
+          description: "Master the steps of quantum teleportation in this interactive game.",
+          content: "Ready to try quantum teleportation yourself? In this interactive game, you'll perform all the steps needed to teleport quantum information from one particle to another!\n\nYou'll start by creating an entangled pair of particles, then prepare a third particle with the quantum information you want to teleport. Next, you'll perform special measurements and send the results through a classical communication channel (like a regular phone call).\n\nFinally, you'll apply the right quantum operations to complete the teleportation process. If you've done everything correctly, the quantum information will disappear from the original particle and appear in the target particle!\n\nDon't worry if it seems complicated - the game will guide you through each step and show you how this amazing quantum process works!",
+          type: "interactive",
+          interactiveComponent: "QuantumSimulator",
+          duration: 25,
+          points: 25
+        },
+        {
+          id: "2.2.10.4",
+          title: "Quantum Teleportation Quiz",
+          description: "Test your understanding of quantum teleportation.",
+          content: "Let's check what you've learned about quantum teleportation!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.2.11",
+      title: "Quantum Entanglement in Nature",
+      description: "Explore how plants, animals, and even humans might use quantum entanglement.",
+      lessons: [
+        {
+          id: "2.2.11.1",
+          title: "Quantum Biology",
+          description: "Discover how plants use quantum effects to convert sunlight into energy.",
+          content: "Did you know that plants might be using quantum entanglement to turn sunlight into food? It's true! Scientists have discovered that photosynthesis - the process plants use to make energy from sunlight - may involve quantum effects like entanglement and superposition.\n\nWhen sunlight hits a leaf, particles of light (photons) are captured by special molecules. The energy from these photons needs to travel to the plant's reaction center where it's converted into chemical energy. Scientists have found evidence that this energy travels through the plant like a quantum wave, taking multiple paths simultaneously and using entanglement to find the most efficient route!\n\nThis means that the plants in your garden or park might be using quantum physics every day to survive. Nature figured out how to use quantum effects billions of years before human scientists did!",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.2.11.2",
+          title: "Animal Quantum Powers",
+          description: "Learn how birds and other animals might use quantum entanglement.",
+          content: "Some animals might have quantum superpowers! In this video, we'll explore how certain animals might be using quantum effects like entanglement in amazing ways.\n\nMigratory birds like European robins can navigate accurately over thousands of miles, and scientists think they might be using quantum entanglement to do it! Special molecules in birds' eyes create entangled electron pairs when struck by light, and these entangled particles are sensitive to Earth's magnetic field, giving birds a built-in quantum compass!\n\nWe'll also look at how some insects might use quantum tunneling in their sense of smell, and how certain bacteria might exploit quantum effects. The natural world might be full of quantum physics that we're just beginning to discover!",
+          type: "video",
+          duration: 12,
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/H6HLjpj4Nt4"
+        },
+        {
+          id: "2.2.11.3",
+          title: "Quantum Nature Explorer",
+          description: "Investigate quantum effects in living organisms through interactive simulations.",
+          content: "Time to become a quantum biology explorer! In this interactive activity, you'll investigate how quantum effects like entanglement might be happening in living things.\n\nYou'll simulate how birds might detect Earth's magnetic field using quantum entanglement in their eyes, explore how plant photosynthesis might use quantum waves to efficiently capture sunlight, and investigate how quantum tunneling might help enzymes speed up chemical reactions in your own body!\n\nAs you play with these simulations, you'll discover that the line between the quantum world and the living world isn't as clear as scientists once thought. Nature might be using quantum physics all around us, and you'll be among the explorers uncovering these amazing connections!",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 20,
+          points: 20
+        },
+        {
+          id: "2.2.11.4",
+          title: "Quantum Biology Quiz",
+          description: "Test your knowledge about quantum effects in living organisms.",
+          content: "Let's check what you've learned about quantum entanglement and other quantum effects in nature!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.2.12",
+      title: "Quantum Entanglement Challenge",
+      description: "Put all your quantum entanglement knowledge to the test in exciting challenges.",
+      lessons: [
+        {
+          id: "2.2.12.1",
+          title: "Entanglement Escape Room",
+          description: "Use your quantum knowledge to solve puzzles and escape!",
+          content: "Welcome to the Quantum Entanglement Escape Room! You've been trapped in a special room where the only way out is to solve puzzles using your knowledge of quantum entanglement.\n\nThe room contains various devices that use entangled particles. You'll need to figure out how to use entanglement properties to unlock doors, decode messages, and eventually find your way out!\n\nYou'll need to remember what you've learned about how entangled particles behave, how measuring one affects the other, and how to use this strange quantum connection to your advantage. Good luck, quantum explorer - the clock is ticking!",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.2.12.2",
+          title: "Quantum Game Show",
+          description: "Watch contestants compete in a quantum knowledge competition.",
+          content: "It's time for the Quantum Game Show! In this fun video, we'll watch as contestants compete to answer questions and solve challenges all about quantum entanglement.\n\nContestants will face brain-teasing questions about entangled particles, demonstrate quantum principles using everyday objects, and race to complete quantum experiments before time runs out. The competition gets more challenging with each round!\n\nAs you watch, see if you can answer the questions before the contestants do. How much quantum knowledge have you gained through this course?",
+          type: "video",
+          duration: 15,
+          points: 10,
+          videoUrl: "https://www.youtube.com/embed/wUPBY0Iw9Co"
+        },
+        {
+          id: "2.2.12.3",
+          title: "Ultimate Quantum Challenge",
+          description: "Face the ultimate test of your quantum entanglement knowledge.",
+          content: "Are you ready for the Ultimate Quantum Challenge? This interactive activity combines everything you've learned about quantum entanglement into one epic final challenge!\n\nYou'll navigate through a series of increasingly difficult quantum puzzles, each requiring you to apply different aspects of quantum entanglement. You might need to:  \n\n- Create specific entangled states  \n- Use entanglement to send secure messages  \n- Perform quantum teleportation  \n- Detect quantum 'spies' trying to intercept your particles  \n- Design quantum experiments to test entanglement properties  \n\nThis challenge brings together all the quantum concepts you've mastered throughout the course. Do you have what it takes to become a true Quantum Entanglement Master?",
+          type: "interactive",
+          interactiveComponent: "QuantumSimulator",
+          duration: 30,
+          points: 30
+        },
+        {
+          id: "2.2.12.4",
+          title: "Quantum Entanglement Final Quiz",
+          description: "The ultimate test of everything you've learned about quantum entanglement.",
+          content: "This is it - the final quiz to test everything you've learned about quantum entanglement! This comprehensive quiz covers all aspects of quantum entanglement from across the entire course.",
+          type: "quiz",
+          duration: 15,
+          points: 25
         }
       ]
     }
