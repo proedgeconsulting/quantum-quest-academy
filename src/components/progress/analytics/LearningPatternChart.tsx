@@ -11,7 +11,7 @@ import {
   Legend
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Timeline } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 interface LearningPatternData {
   day: string;
@@ -28,7 +28,7 @@ const LearningPatternChart: React.FC<LearningPatternChartProps> = ({ weeklyData 
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Timeline className="text-energy-500" />
+          <TrendingUp className="text-energy-500" />
           Weekly Learning Pattern
         </CardTitle>
         <CardDescription>Your learning consistency throughout the week</CardDescription>

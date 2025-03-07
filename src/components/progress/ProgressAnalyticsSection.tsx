@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMemo } from "react";
@@ -11,6 +10,10 @@ import CompletionRateChart from "./analytics/CompletionRateChart";
 import LearningPatternChart from "./analytics/LearningPatternChart";
 import StreakWidget from "./analytics/StreakWidget";
 import ActivityMetrics from "./analytics/ActivityMetrics";
+import HourlyDistributionChart from "./analytics/HourlyDistributionChart";
+import MonthlyConsistencyChart from "./analytics/MonthlyConsistencyChart";
+import LearningCalendarHeatmap from "./analytics/LearningCalendarHeatmap";
+import LearningFocusChart from "./analytics/LearningFocusChart";
 
 interface ProgressAnalyticsProps {
   userId: string;
@@ -73,6 +76,74 @@ const ProgressAnalyticsSection = ({ userId, userProgress, isLoading }: ProgressA
       };
     });
   }, [userProgress]);
+  
+  // Generate hourly distribution data (mock data for now)
+  const hourlyData = useMemo(() => {
+    return Array.from({ length: 24 }, (_, i) => {
+      const hour = i.toString().padStart(2, '0');
+      // Generate random number of sessions with a peak during working hours
+      let sessions = Math.floor(Math.random() * 10);
+      if (i >= 9 && i <= 17) {
+        sessions += Math.floor(Math.random() * 15); // More activity during the day
+      }
+      return {
+        hour: `${hour}:00`,
+        sessions
+      };
+    });
+  }, []);
+
+  // Generate monthly consistency data (mock data for now)
+  const monthlyData = useMemo(() => {
+    const last30Days = Array.from({ length: 30 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - (29 - i));
+      return date.toISOString().split('T')[0];
+    });
+    
+    return last30Days.map(date => {
+      const sessionsCount = Math.floor(Math.random() * 5);
+      return {
+        date,
+        sessionsCount,
+        avgSessionsCount: 2.5 // Example average
+      };
+    });
+  }, []);
+
+  // Generate calendar heatmap data (mock data for now)
+  const calendarData = useMemo(() => {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 90); // Last 90 days
+    
+    const days = [];
+    const current = new Date(startDate);
+    
+    while (current <= endDate) {
+      const dateStr = current.toISOString().split('T')[0];
+      // Random intensity level (0-4)
+      const intensity = Math.floor(Math.random() * 5);
+      days.push({
+        date: dateStr,
+        intensity
+      });
+      current.setDate(current.getDate() + 1);
+    }
+    
+    return days;
+  }, []);
+
+  // Generate learning focus data (mock data for now)
+  const focusData = useMemo(() => {
+    return [
+      { name: "Quantum Computing", value: 120, color: "#8884d8" },
+      { name: "Quantum Circuits", value: 90, color: "#82ca9d" },
+      { name: "Quantum Algorithms", value: 60, color: "#ffc658" },
+      { name: "Quantum ML", value: 30, color: "#ff8042" },
+      { name: "Quantum Chemistry", value: 15, color: "#0088fe" }
+    ];
+  }, []);
   
   // Get course IDs from progress
   const courseIds = useMemo(() => {
@@ -150,11 +221,45 @@ const ProgressAnalyticsSection = ({ userId, userProgress, isLoading }: ProgressA
                   lastWeekActivity={analyticsData.last_week_activity}
                 />
                 
-                {/* Charts */}
-                <div className="space-y-4">
-                  <ActivityChart activityData={activityData} />
-                  <LearningPatternChart weeklyData={weeklyPatternData} />
-                </div>
+                {/* Activity Charts */}
+                <Tabs defaultValue="daily" className="w-full">
+                  <TabsList className="grid grid-cols-4 mb-4">
+                    <TabsTrigger value="daily">Daily Activity</TabsTrigger>
+                    <TabsTrigger value="weekly">Weekly Patterns</TabsTrigger>
+                    <TabsTrigger value="hourly">Hourly Distribution</TabsTrigger>
+                    <TabsTrigger value="topics">Topic Focus</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="daily">
+                    <div className="space-y-4">
+                      <ActivityChart activityData={activityData} />
+                      <MonthlyConsistencyChart monthlyData={monthlyData} />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="weekly">
+                    <div className="space-y-4">
+                      <LearningPatternChart weeklyData={weeklyPatternData} />
+                      <LearningCalendarHeatmap 
+                        calendarData={calendarData}
+                        startDate={new Date(new Date().setDate(new Date().getDate() - 90))}
+                        endDate={new Date()}
+                      />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="hourly">
+                    <div className="space-y-4">
+                      <HourlyDistributionChart hourlyData={hourlyData} />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="topics">
+                    <div className="space-y-4">
+                      <LearningFocusChart focusData={focusData} />
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             )}
           </CardContent>
