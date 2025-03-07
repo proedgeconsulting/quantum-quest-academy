@@ -48,12 +48,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Fetch recommendations
+  // Fetch recommendations using the RPC function
   const fetchRecommendations = async () => {
     if (!userId) return;
     
     try {
-      // Fetch all peers details and recommendations
+      // Use the get_peer_recommendations RPC function
       const { data, error } = await supabase.rpc('get_peer_recommendations', { 
         user_id: userId 
       });
@@ -63,7 +63,6 @@ export const usePeerConnections = (userId: string | undefined) => {
         throw error;
       }
       
-      // Process recommendations
       setRecommendations(data || []);
       console.log("Fetched peer recommendations:", data?.length || 0);
     } catch (error: any) {
@@ -77,12 +76,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Fetch connections
+  // Fetch connections using the RPC function
   const fetchConnections = async () => {
     if (!userId) return;
     
     try {
-      // Fetch accepted connections
+      // Use the get_peer_connections RPC function with status 'accepted'
       const { data, error } = await supabase.rpc('get_peer_connections', { 
         user_id: userId,
         status_filter: 'accepted'
@@ -106,12 +105,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Fetch pending connection requests
+  // Fetch pending connection requests using the RPC function
   const fetchPendingRequests = async () => {
     if (!userId) return;
     
     try {
-      // Fetch pending connection requests
+      // Use the get_peer_connections RPC function with status 'pending'
       const { data, error } = await supabase.rpc('get_peer_connections', { 
         user_id: userId,
         status_filter: 'pending'
@@ -130,12 +129,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Send connection request to peer
+  // Send connection request to peer using the RPC function
   const sendConnectionRequest = async (peerId: string) => {
     if (!userId) return;
     
     try {
-      // Insert a new connection request
+      // Use the create_peer_connection RPC function
       const { data, error } = await supabase.rpc('create_peer_connection', {
         user_id: userId,
         peer_id: peerId
@@ -163,12 +162,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Accept connection request
+  // Accept connection request using the RPC function
   const acceptConnectionRequest = async (connectionId: string) => {
     if (!userId) return;
     
     try {
-      // Update connection status to accepted
+      // Use the update_connection_status RPC function
       const { error } = await supabase.rpc('update_connection_status', {
         connection_id: connectionId,
         new_status: 'accepted'
@@ -196,12 +195,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Decline connection request
+  // Decline connection request using the RPC function
   const declineConnectionRequest = async (connectionId: string) => {
     if (!userId) return;
     
     try {
-      // Update connection status to declined
+      // Use the update_connection_status RPC function
       const { error } = await supabase.rpc('update_connection_status', {
         connection_id: connectionId,
         new_status: 'declined'
@@ -229,12 +228,12 @@ export const usePeerConnections = (userId: string | undefined) => {
     }
   };
 
-  // Remove connection
+  // Remove connection using the RPC function
   const removeConnection = async (connectionId: string) => {
     if (!userId) return;
     
     try {
-      // Delete the connection
+      // Use the delete_peer_connection RPC function
       const { error } = await supabase.rpc('delete_peer_connection', {
         connection_id: connectionId
       });

@@ -1,99 +1,81 @@
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { UsersRound, RefreshCw, Users, UserPlus, BrainCircuit } from "lucide-react";
-import type { PeerRecommendation } from "@/hooks/usePeerConnections";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { RefreshCw, UserPlus } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { PeerRecommendationsSectionProps } from './types';
 
-interface PeerRecommendationsSectionProps {
-  recommendations: PeerRecommendation[];
-  onConnect: (peerId: string) => void;
-  onRefresh: () => void;
-  isRefreshing: boolean;
-}
-
-const PeerRecommendationsSection: React.FC<PeerRecommendationsSectionProps> = ({
+const PeerRecommendationsSection = ({
   recommendations,
   onConnect,
   onRefresh,
   isRefreshing
-}) => {
+}: PeerRecommendationsSectionProps) => {
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <UsersRound className="text-energy-500" />
-              Learning Partners
-            </CardTitle>
-            <CardDescription>Connect with peers at a similar level or with complementary skills</CardDescription>
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onRefresh} 
-            disabled={isRefreshing}
-            className="flex items-center gap-1"
-          >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
-            {isRefreshing ? "Finding peers..." : "Find peers"}
-          </Button>
+    <Card className="h-full">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Peer Recommendations</CardTitle>
+          <CardDescription>Connect with learners who match your learning style</CardDescription>
         </div>
+        <Button 
+          variant="outline" 
+          size="icon" 
+          onClick={onRefresh} 
+          disabled={isRefreshing}
+        >
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+        </Button>
       </CardHeader>
-      <CardContent>
-        {recommendations.length > 0 ? (
-          <div className="space-y-4">
-            {recommendations.map((recommendation) => (
-              <div key={recommendation.id} className="flex items-center justify-between border-b pb-4 last:border-0">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={recommendation.peer_avatar_url || ""} />
-                    <AvatarFallback className="bg-quantum-200 text-quantum-700">
-                      {recommendation.peer_username?.substring(0, 2).toUpperCase() || "QS"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h4 className="font-medium text-quantum-900 dark:text-quantum-100">
-                      {recommendation.peer_username || "Quantum Scholar"}
-                    </h4>
-                    <div className="flex items-center mt-1 gap-2">
-                      <Badge variant={recommendation.match_type === 'similar-level' ? "default" : "outline"} className="text-xs">
-                        {recommendation.match_type === 'similar-level' ? (
-                          <Users className="h-3 w-3 mr-1" />
-                        ) : (
-                          <BrainCircuit className="h-3 w-3 mr-1" />
-                        )}
-                        {recommendation.match_type === 'similar-level' ? 'Similar Level' : 'Complementary Skills'}
-                      </Badge>
-                      <span className="text-xs text-quantum-500">
-                        {Math.round(recommendation.match_score * 100)}% match
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => onConnect(recommendation.peer_id)}
-                  className="flex items-center gap-1"
-                >
-                  <UserPlus className="h-4 w-4" />
-                  Connect
-                </Button>
-              </div>
-            ))}
+      <CardContent className="space-y-4">
+        {recommendations.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No recommendations available. Generate some recommendations.</p>
           </div>
         ) : (
-          <div className="text-center py-8 text-quantum-500 dark:text-quantum-400">
-            <UsersRound className="h-12 w-12 mx-auto mb-2 opacity-40" />
-            <p>No peer recommendations yet.</p>
-            <p className="text-sm mt-1">Click "Find peers" to discover learning partners.</p>
+          <div className="space-y-4">
+            {recommendations.map((peer) => (
+              <Card key={peer.id} className="overflow-hidden">
+                <div className="flex items-center p-4">
+                  <Avatar className="h-12 w-12 mr-4">
+                    <AvatarImage src={peer.avatar_url || ''} alt={peer.username || 'User'} />
+                    <AvatarFallback>
+                      {peer.username ? peer.username.charAt(0).toUpperCase() : 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-medium truncate">{peer.username || 'Quantum User'}</h4>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      <Badge variant="outline" className="text-xs">
+                        {peer.match_type === 'similar-level' ? 'Similar Level' : 'Complementary Skills'}
+                      </Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        Match: {Math.round(peer.match_score! * 100)}%
+                      </Badge>
+                    </div>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="ml-2"
+                    onClick={() => onConnect(peer.id)}
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Connect
+                  </Button>
+                </div>
+              </Card>
+            ))}
           </div>
         )}
       </CardContent>
+      <CardFooter className="border-t pt-4">
+        <div className="text-xs text-muted-foreground">
+          Recommendations are based on your learning path and progress.
+        </div>
+      </CardFooter>
     </Card>
   );
 };
