@@ -20,7 +20,10 @@ const simulatorMap: Record<string, SimulatorConfig> = {
   "1.1.1.3": {
     component: BuildAtomActivity,
     title: "Build Your Own Atom",
-    description: "Create stable atoms by balancing protons and electrons"
+    description: "Create stable atoms by balancing protons and electrons",
+    props: {
+      gameMode: false
+    }
   },
 
   // Module 2: Light and Energy
@@ -111,7 +114,8 @@ const simulatorMap: Record<string, SimulatorConfig> = {
     props: {
       simulationType: "probability",
       gameMode: true,
-      treasureMode: true
+      treasureMode: true,
+      waveColor: "amber"
     }
   },
 
@@ -122,7 +126,7 @@ const simulatorMap: Record<string, SimulatorConfig> = {
     props: {
       simulationType: "art",
       drawingMode: true,
-      colorOptions: ["red", "blue", "green", "purple"]
+      colorOptions: ["red", "blue", "green", "purple", "yellow", "pink"]
     }
   },
 
@@ -142,7 +146,8 @@ const simulatorMap: Record<string, SimulatorConfig> = {
     title: "Quantum Time Adventure",
     props: {
       simulationType: "time",
-      timeReversalMode: true
+      timeReversalMode: true,
+      waveColor: "cyan"
     }
   },
 
@@ -156,10 +161,152 @@ const simulatorMap: Record<string, SimulatorConfig> = {
     }
   },
 
+  // Level 2 courses
+  "2.1.1.3": {
+    component: QuantumCircuitSimulator,
+    title: "Build Your First Quantum Circuit",
+    props: {
+      maxQubits: 2,
+      initialState: "standard"
+    }
+  },
+  
+  "2.1.2.3": {
+    component: AtomSimulation,
+    title: "Grover's Search Algorithm Simulation",
+    props: {
+      simulationType: "search",
+      searchMode: true
+    }
+  },
+  
+  "2.1.8.1": {
+    component: QuantumWaveVisualizer,
+    title: "Quantum Gate Puzzles",
+    props: {
+      simulationType: "probability",
+      gameMode: true,
+      waveColor: "indigo"
+    }
+  },
+  
+  "2.1.8.2": {
+    component: BuildAtomActivity,
+    title: "Quantum Circuit Race",
+    props: {
+      gameMode: true,
+      superpositionMode: false
+    }
+  },
+  
+  "2.1.8.3": {
+    component: AtomSimulation,
+    title: "Quantum Error Defenders",
+    props: {
+      simulationType: "error",
+      gameMode: true
+    }
+  },
+  
+  // Level 3 courses
+  "3.2.1.2": {
+    component: QuantumCircuitSimulator,
+    title: "Quantum Game: AI Challenge",
+    props: {
+      initialState: "superposition",
+      maxQubits: 2,
+      inventionMode: false
+    }
+  },
+  
+  "3.2.1.3": {
+    component: BuildAtomActivity,
+    title: "Design Your Quantum AI App",
+    props: {
+      creativeMode: true,
+      animalTheme: false
+    }
+  },
+  
+  "3.2.2.2": {
+    component: QuantumWaveVisualizer,
+    title: "Quantum Pattern Detector",
+    props: {
+      simulationType: "probability",
+      waveColor: "blue",
+      showParticles: true
+    }
+  },
+  
+  "3.2.2.3": {
+    component: AtomSimulation,
+    title: "Quantum vs. Classical Challenge",
+    props: {
+      simulationType: "comparison",
+      showComparison: true
+    }
+  },
+  
+  "3.2.3.2": {
+    component: QuantumCircuitSimulator,
+    title: "Train Your Quantum Neural Network",
+    props: {
+      maxQubits: 2,
+      initialState: "entangled"
+    }
+  },
+  
+  "3.2.3.3": {
+    component: AtomSimulation,
+    title: "Quantum Image Detective",
+    props: {
+      simulationType: "image",
+      imageAnalysisMode: true
+    }
+  },
+  
+  "3.2.5.2": {
+    component: QuantumWaveVisualizer,
+    title: "Quantum Music Composer",
+    props: {
+      simulationType: "art",
+      drawingMode: false,
+      waveColor: "purple",
+      musicMode: true
+    }
+  },
+  
+  "3.2.5.3": {
+    component: AtomSimulation,
+    title: "Quantum Fashion Designer",
+    props: {
+      simulationType: "creative",
+      fashionMode: true
+    }
+  },
+  
+  "3.2.8.1": {
+    component: AtomSimulation,
+    title: "The Quantum Hospital Adventure",
+    props: {
+      simulationType: "healthcare",
+      hospitalMode: true
+    }
+  },
+  
+  "3.2.8.3": {
+    component: BuildAtomActivity,
+    title: "Design a Quantum Medicine",
+    props: {
+      creativeMode: true,
+      medicineMode: true
+    }
+  },
+
   // Default fallback
   "default": {
     component: AtomSimulation,
-    title: "Atom Simulation"
+    title: "Quantum Simulation"
   }
 };
 
@@ -169,10 +316,10 @@ export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.
   // Combine any props from the lesson with the configured props
   const combinedProps = {
     ...(config.props || {}),
-    ...(lesson?.interactiveOptions || {})
+    ...(lesson?.interactiveOptions || {}),
+    title: config.title || (lesson?.interactiveComponent ? `${lesson.interactiveComponent} Simulator` : "Quantum Simulator")
   };
   
   // Create the component with the combined props
-  return <config.component {...combinedProps} title={config.title} />;
+  return <config.component {...combinedProps} />;
 };
-

@@ -12,7 +12,7 @@ interface InteractiveLessonProps {
 }
 
 const InteractiveLesson = ({ lesson, onComplete }: InteractiveLessonProps) => {
-  // Get the appropriate simulator component based on lesson ID
+  // Get the appropriate simulator component based on lesson ID with full lesson context
   const InteractiveComponent = useMemo(() => {
     return getSimulatorForLesson(lesson.id, lesson);
   }, [lesson.id, lesson]);
@@ -22,7 +22,7 @@ const InteractiveLesson = ({ lesson, onComplete }: InteractiveLessonProps) => {
       <MarkdownContent content={lesson.content} />
       
       <div className="mt-8">
-        <div className="interactive-component-wrapper">
+        <div className="interactive-component-wrapper bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
           {InteractiveComponent}
           <div className="mt-6 flex justify-center">
             <Button onClick={onComplete} className="gap-2">
