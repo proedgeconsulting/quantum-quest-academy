@@ -20,7 +20,7 @@ export const module10: Module = {
       id: "1.1.10.2",
       title: "Quantum Frog Jumps",
       description: "Discover how frogs might use quantum tunneling to enhance their jumping.",
-      content: "Frogs are incredible jumpers, and scientists think they might use quantum physics to help them jump!\n\nInside frog muscles are special proteins that contract very quickly. These proteins may use quantum tunneling to move electrons faster than classical physics would allow. This quantum boost could help explain why frogs can jump so far and so quickly!\n\nIn this video, we'll see super slow-motion footage of frogs jumping and explain how quantum effects might be giving them their amazing leaping abilities.",
+      content: "",
       type: "video",
       duration: 10,
       points: 10,
