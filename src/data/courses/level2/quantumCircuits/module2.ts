@@ -23,7 +23,8 @@ export const module2: Module = {
       content: "The Deutsch-Jozsa algorithm was one of the first quantum algorithms to show a speedup over classical algorithms for a specific problem. While not particularly useful for real-world applications, it clearly demonstrates the power of quantum computing.\n\nIn this lesson, we'll walk through the algorithm step by step, from problem definition to implementation as a quantum circuit. You'll learn how it uses quantum parallelism to determine a property of a function in just one query that would take multiple queries classically.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
+      videoUrl: "https://www.youtube.com/watch?v=7MdEHsRZxvo"
     },
     {
       id: "2.1.2.3",
