@@ -8,6 +8,7 @@ import CompletionStatus from "./CompletionStatus";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useLearningAnalytics } from "@/hooks/useLearningAnalytics";
+import AIAssistant from "../quantum-assistant/AIAssistant";
 
 interface LessonContentWrapperProps {
   lesson?: Lesson;
@@ -76,6 +77,12 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContent
         showComplete={showComplete}
         type={lesson.type}
         onComplete={handleComplete}
+      />
+      
+      {/* AI Assistant */}
+      <AIAssistant 
+        lessonId={lesson.id}
+        conceptContext={`This question is related to the lesson: "${lesson.title}". The lesson content is about: "${lesson.description}"`}
       />
     </div>
   );
