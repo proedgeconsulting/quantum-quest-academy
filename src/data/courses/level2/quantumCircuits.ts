@@ -6,9 +6,9 @@ export const quantumCircuitsCourse: Course = {
   title: "Quantum Circuits",
   description: "Learn to build and understand quantum circuits and gates.",
   level: 2,
-  duration: "6 weeks",
+  duration: "12 weeks",
   icon: "circuit",
-  weeks: 6,
+  weeks: 12,
   modules: [
     {
       id: "2.1.1",
@@ -39,7 +39,7 @@ export const quantumCircuitsCourse: Course = {
           description: "Interactive activity to build a simple quantum circuit using basic gates.",
           content: "Now it's time to put your knowledge into practice! In this interactive activity, you'll build your first quantum circuit by arranging quantum gates in the correct order.\n\nYou'll create a simple circuit that generates a Bell state, which is one of the simplest examples of quantum entanglement. Follow the step-by-step instructions to place the Hadamard and CNOT gates correctly.",
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component for now
+          interactiveComponent: "BuildAtomActivity",
           duration: 25,
           points: 20
         },
@@ -83,7 +83,7 @@ export const quantumCircuitsCourse: Course = {
           description: "Interactive simulation of Grover's quantum search algorithm.",
           content: "Grover's algorithm is a quantum algorithm for searching an unsorted database with quadratic speedup compared to classical algorithms. It's one of the most important quantum algorithms with many potential applications.\n\nIn this interactive activity, you'll explore a simplified simulation of Grover's algorithm. You'll be able to visualize how the algorithm amplifies the probability of finding the correct answer through a process known as amplitude amplification.",
           type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component for now
+          interactiveComponent: "AtomSimulation",
           duration: 30,
           points: 25
         },
@@ -127,7 +127,7 @@ export const quantumCircuitsCourse: Course = {
           description: "Build your own quantum circuits using various quantum gates.",
           content: "It's time to put your knowledge of quantum gates into practice! In this interactive session, you'll use our Quantum Circuit Designer to create and test your own quantum circuits.\n\nYou'll be able to:\n\n- Drag and drop different gates onto qubits\n\n- Connect gates to form circuits\n\n- Run simulations to see how your circuit transforms input states\n\n- Visualize the quantum states at each step\n\nStart with simple circuits like creating Bell states and quantum teleportation, then progress to more complex designs. You'll gain hands-on experience with how different gates interact and how to compose them into meaningful quantum algorithms.",
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
+          interactiveComponent: "BuildAtomActivity",
           duration: 30,
           points: 25
         },
@@ -171,7 +171,7 @@ export const quantumCircuitsCourse: Course = {
           description: "Use simulation tools to explore the behavior of quantum circuits.",
           content: "In this interactive session, you'll use quantum simulation tools to explore how quantum circuits behave under different conditions. You'll be able to modify circuit parameters, observe the resulting quantum states, and gain intuition about quantum behavior.\n\nYou'll experiment with:\n\n- Simulating the Deutsch-Jozsa algorithm with different oracle functions\n\n- Observing how noise affects quantum teleportation\n\n- Exploring how the number of iterations in Grover's algorithm affects the probability of finding the correct answer\n\n- Testing quantum error correction codes\n\nBy running these simulations and seeing the results firsthand, you'll develop a deeper understanding of quantum algorithms and the challenges of quantum computation.",
           type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component as placeholder
+          interactiveComponent: "AtomSimulation",
           duration: 30,
           points: 25
         },
@@ -215,7 +215,7 @@ export const quantumCircuitsCourse: Course = {
           description: "Apply error mitigation techniques to improve quantum circuit performance.",
           content: "In this interactive session, you'll apply various error mitigation techniques to quantum circuits and observe how they improve results.\n\nYou'll work with a simulated noisy quantum environment to:\n\n- Implement zero-noise extrapolation on a simple algorithm\n\n- Design pulse sequences for dynamical decoupling\n\n- Apply readout error mitigation to improve measurement accuracy\n\n- Compare the performance of different mitigation strategies\n\n- Optimize circuit designs to minimize error sensitivity\n\nBy the end of this activity, you'll have practical experience implementing error mitigation techniques that are used in real quantum computing research and applications.",
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity", // Reusing existing component as placeholder
+          interactiveComponent: "BuildAtomActivity",
           duration: 30,
           points: 25
         },
@@ -259,7 +259,7 @@ export const quantumCircuitsCourse: Course = {
           description: "Use optimization tools to improve the efficiency of quantum circuits.",
           content: "In this interactive session, you'll work with quantum circuit optimization tools to transform inefficient circuits into more streamlined versions.\n\nYou'll have the opportunity to:\n\n- Analyze circuits to identify optimization opportunities\n\n- Apply various transformation rules to reduce gate count and depth\n\n- Optimize circuits for specific hardware architectures\n\n- Compare the performance of original and optimized circuits\n\n- Create a multi-stage optimization pipeline\n\nThrough this hands-on experience, you'll develop practical skills in quantum circuit optimization that are directly applicable to real-world quantum programming.",
           type: "interactive",
-          interactiveComponent: "AtomSimulation", // Reusing existing component as placeholder
+          interactiveComponent: "AtomSimulation",
           duration: 30,
           points: 25
         },
@@ -268,6 +268,277 @@ export const quantumCircuitsCourse: Course = {
           title: "Circuit Optimization Quiz",
           description: "Test your understanding of quantum circuit optimization techniques.",
           content: "Let's check your knowledge of quantum circuit optimization with this comprehensive quiz. You'll be tested on:\n\n- Identifying optimization opportunities in quantum circuits\n\n- Applying appropriate transformation rules for specific situations\n\n- Calculating changes in circuit metrics after optimization\n\n- Understanding the trade-offs involved in different optimization strategies\n\n- Optimizing circuits for specific hardware constraints",
+          type: "quiz",
+          duration: 15,
+          points: 25
+        }
+      ]
+    },
+    {
+      id: "2.1.7",
+      title: "Quantum Circuit Builder",
+      description: "Create your own quantum circuits in a fun, interactive environment.",
+      lessons: [
+        {
+          id: "2.1.7.1",
+          title: "Circuit Building Blocks",
+          description: "Learn about the essential components of a quantum circuit.",
+          content: "Welcome to the Quantum Circuit Builder! In this module, you'll learn how to build your own quantum circuits using simple building blocks. Think of quantum circuits like LEGO sets - you connect different pieces to create something amazing!\n\nWe'll start by exploring the basic components:\n\n- Qubits: The quantum version of classical bits\n\n- Quantum gates: Special operations that change qubit states\n\n- Measurement: How we read the final results\n\nBy the end of this lesson, you'll understand how these components work together to make a complete quantum circuit.",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.1.7.2",
+          title: "Drag and Drop Circuit Creator",
+          description: "Build quantum circuits by dragging and dropping components.",
+          content: "Time to get creative! In this interactive activity, you'll use our drag-and-drop interface to build your own quantum circuits. It's as easy as playing a video game!\n\nYou'll start with a blank canvas and a toolbox of quantum components. Drag qubits onto your circuit, add gates to manipulate them, and place measurement tools to see the results. As you build, you'll see your circuit come to life with animations showing how the quantum states change.\n\nTry completing the circuit challenges to unlock new components and achievements!",
+          type: "interactive",
+          interactiveComponent: "BuildAtomActivity",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.1.7.3",
+          title: "Circuit Challenge: Bell State",
+          description: "Create your first useful quantum circuit - a Bell state generator.",
+          content: "Ready for your first real quantum circuit challenge? In this activity, you'll build a circuit that creates a Bell state - one of the simplest and most important examples of quantum entanglement.\n\nYour mission is to entangle two qubits so they become connected in a special way. When you measure one qubit, you'll instantly know the state of the other, no matter how far apart they might be!\n\nFollow the step-by-step instructions to place a Hadamard gate on the first qubit, then use a CNOT gate to connect the two qubits. When you're done, run your circuit and see the magic of quantum entanglement in action!",
+          type: "video",
+          duration: 15,
+          points: 15,
+          videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
+        },
+        {
+          id: "2.1.7.4",
+          title: "Circuit Builder Quiz",
+          description: "Test your understanding of quantum circuit building.",
+          content: "Let's check what you've learned about building quantum circuits!",
+          type: "quiz",
+          duration: 10,
+          points: 20
+        }
+      ]
+    },
+    {
+      id: "2.1.8",
+      title: "Quantum Games Arena",
+      description: "Play fun games that teach quantum circuit concepts.",
+      lessons: [
+        {
+          id: "2.1.8.1",
+          title: "Quantum Gate Puzzles",
+          description: "Solve puzzles by applying the right quantum gates in the right order.",
+          content: "Welcome to the Quantum Gate Puzzles! In this game, you'll be given quantum puzzles to solve using different gates. Each puzzle has a starting quantum state and a target state - your job is to figure out which gates to apply (and in what order) to transform the starting state into the target state.\n\nIt's like figuring out the right combination of moves to solve a Rubik's Cube, but with quantum states! As you progress, the puzzles will get more challenging, requiring you to use more complex combinations of gates.",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 20,
+          points: 15
+        },
+        {
+          id: "2.1.8.2",
+          title: "Quantum Circuit Race",
+          description: "Race against time to build the most efficient quantum circuits.",
+          content: "3... 2... 1... GO! In the Quantum Circuit Race, you'll compete against the clock to build quantum circuits that solve specific problems. But there's a twist - you need to use as few gates as possible!\n\nIn quantum computing, simpler circuits are usually better because they have less chance of errors. Your score will depend on both how quickly you solve the problem and how efficient your solution is. Can you find the optimal circuit design for each challenge?",
+          type: "interactive",
+          interactiveComponent: "BuildAtomActivity",
+          duration: 20,
+          points: 20
+        },
+        {
+          id: "2.1.8.3",
+          title: "Quantum Error Defenders",
+          description: "Defend your quantum circuit from error monsters that want to ruin your computation.",
+          content: "Oh no! Error monsters are attacking your quantum circuit! In this exciting game, you'll defend your quantum computation from different types of error monsters that try to flip your qubits or change their phases.\n\nYou'll learn about different types of quantum errors and how to protect against them using special error correction codes. Deploy your quantum error correction shields at the right time and place to keep your computation safe. Can you complete the calculation before the errors take over?",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.1.8.4",
+          title: "Quantum Games Quiz",
+          description: "Test your understanding of the quantum concepts behind the games.",
+          content: "Let's check what you've learned while playing quantum games!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.1.9",
+      title: "Quantum Teleportation Adventure",
+      description: "Learn how quantum teleportation works through a space-themed adventure.",
+      lessons: [
+        {
+          id: "2.1.9.1",
+          title: "The Quantum Teleportation Mission",
+          description: "Join a space mission that requires quantum teleportation to succeed.",
+          content: "Attention space cadets! You've been selected for a special mission to save a stranded spacecraft on the other side of an asteroid field. The only way to send the rescue codes is through quantum teleportation!\n\nIn this adventure, you'll learn about quantum teleportation - a real quantum protocol that uses entanglement to transfer quantum information from one place to another. It's not like the teleportation you see in science fiction movies, but it's just as amazing in its own way!",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.1.9.2",
+          title: "Building the Teleportation Circuit",
+          description: "Learn how to build a quantum circuit that performs teleportation.",
+          content: "Now that you understand the mission, it's time to build the quantum teleportation circuit! This special circuit will allow you to transfer the quantum state of one qubit to another qubit far away, using the power of entanglement and some clever quantum operations.\n\nIn this video, we'll walk through the steps to build a quantum teleportation circuit:\n\n1. Creating an entangled pair of qubits\n\n2. Performing a Bell measurement\n\n3. Applying the right quantum operations based on the measurement results\n\nPay close attention to each step - you'll need this knowledge to complete your space mission!",
+          type: "video",
+          duration: 20,
+          points: 15,
+          videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
+        },
+        {
+          id: "2.1.9.3",
+          title: "Quantum Teleportation Simulator",
+          description: "Use a simulator to perform quantum teleportation and save the spacecraft.",
+          content: "The stranded spacecraft is waiting for your help! In this interactive activity, you'll use our quantum teleportation simulator to send the rescue codes through space.\n\nYou'll prepare the quantum state that contains the rescue code, create entangled qubits to establish the quantum channel, perform the necessary measurements, and apply the correct operations to complete the teleportation process. Watch in amazement as your quantum state disappears from one qubit and appears on another!\n\nWill you successfully teleport the rescue codes and save the day?",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 25,
+          points: 25
+        },
+        {
+          id: "2.1.9.4",
+          title: "Teleportation Adventure Quiz",
+          description: "Test your understanding of quantum teleportation.",
+          content: "Let's check what you've learned about quantum teleportation!",
+          type: "quiz",
+          duration: 10,
+          points: 20
+        }
+      ]
+    },
+    {
+      id: "2.1.10",
+      title: "Quantum Detective Agency",
+      description: "Solve mysteries using quantum circuits as a quantum detective.",
+      lessons: [
+        {
+          id: "2.1.10.1",
+          title: "The Quantum Detective",
+          description: "Learn how quantum algorithms can help solve mysteries.",
+          content: "Welcome to the Quantum Detective Agency! As a quantum detective, you'll use special quantum circuits to solve mysteries that would be difficult or impossible to solve using classical methods.\n\nIn this lesson, you'll learn about quantum search algorithms that can find clues hidden in large databases much faster than classical search methods. You'll discover how quantum superposition and interference can help you narrow down suspects and find the solution to complex mysteries.",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.1.10.2",
+          title: "The Case of the Hidden Message",
+          description: "Use a quantum oracle to find a hidden message.",
+          content: "Your first case as a quantum detective has arrived! Someone has hidden an important message in a quantum database, and you need to find it using a special quantum circuit called Grover's algorithm.\n\nIn this video, we'll explain how Grover's algorithm works like a quantum flashlight that gradually brightens the location of the hidden message. You'll learn about quantum oracles (special circuits that recognize the right answer) and how quantum amplitude amplification can make the correct answer stand out from all the wrong answers.",
+          type: "video",
+          duration: 15,
+          points: 15,
+          videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
+        },
+        {
+          id: "2.1.10.3",
+          title: "Solving the Quantum Mystery",
+          description: "Build and run a circuit to solve a quantum detective case.",
+          content: "Time to put your quantum detective skills to the test! In this interactive activity, you'll build a quantum circuit using Grover's algorithm to solve a mystery.\n\nThe mystery involves finding which of 16 suspects committed the crime. A classical detective would need to check up to all 16 suspects one by one, but as a quantum detective, you can find the culprit much faster using your quantum circuit. \n\nFollow the step-by-step instructions to build your quantum search circuit, run it, and measure the results to identify the culprit. How quickly can you solve the case?",
+          type: "interactive",
+          interactiveComponent: "BuildAtomActivity",
+          duration: 25,
+          points: 25
+        },
+        {
+          id: "2.1.10.4",
+          title: "Quantum Detective Quiz",
+          description: "Test your understanding of quantum search algorithms.",
+          content: "Let's check what you've learned about being a quantum detective!",
+          type: "quiz",
+          duration: 10,
+          points: 20
+        }
+      ]
+    },
+    {
+      id: "2.1.11",
+      title: "Quantum Music Maker",
+      description: "Create music using quantum circuits and interference.",
+      lessons: [
+        {
+          id: "2.1.11.1",
+          title: "Quantum Harmonies",
+          description: "Discover the connection between quantum interference and music.",
+          content: "Did you know that quantum physics and music have something amazing in common? Both use waves and interference to create beautiful patterns!\n\nIn this lesson, you'll learn how quantum interference works - when quantum waves meet, they can enhance each other (constructive interference) or cancel each other out (destructive interference), creating patterns just like sound waves do in music.\n\nWe'll explore how these quantum interference patterns can be used to create unique musical compositions that would be difficult to imagine without quantum physics.",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.1.11.2",
+          title: "Quantum Music Circuits",
+          description: "Learn how to design quantum circuits that produce musical patterns.",
+          content: "Now it's time to see how quantum circuits can create music! In this video, we'll show you how different quantum gates create different interference patterns, which we can map to musical notes and rhythms.\n\nYou'll learn about:\n\n- How the Hadamard gate creates a musical superposition\n\n- How phase gates adjust the 'tone' of quantum notes\n\n- How entangling gates create harmonies between quantum notes\n\n- How measurement turns quantum possibilities into actual musical sequences\n\nBy the end of this video, you'll understand how quantum circuits can be transformed into unique musical experiences.",
+          type: "video",
+          duration: 15,
+          points: 15,
+          videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
+        },
+        {
+          id: "2.1.11.3",
+          title: "Create Your Quantum Symphony",
+          description: "Use a quantum music generator to compose your own quantum-inspired music.",
+          content: "It's time to become a quantum composer! In this interactive activity, you'll use our Quantum Music Maker to create your own musical compositions based on quantum circuits.\n\nStart by designing a quantum circuit with different gates and qubit configurations. As you build your circuit, you'll hear how each element affects the music. The quantum interference patterns will create melodies, harmonies, and rhythms that change based on your circuit design.\n\nExperiment with different quantum gates to find the sound you like best, then save your quantum symphony to share with friends and family!",
+          type: "interactive",
+          interactiveComponent: "AtomSimulation",
+          duration: 25,
+          points: 20
+        },
+        {
+          id: "2.1.11.4",
+          title: "Quantum Music Quiz",
+          description: "Test your understanding of quantum interference and music.",
+          content: "Let's check what you've learned about quantum music making!",
+          type: "quiz",
+          duration: 10,
+          points: 15
+        }
+      ]
+    },
+    {
+      id: "2.1.12",
+      title: "Quantum Circuit Challenge",
+      description: "Put all your quantum circuit knowledge to the test in a final challenge.",
+      lessons: [
+        {
+          id: "2.1.12.1",
+          title: "Preparing for the Challenge",
+          description: "Review key quantum circuit concepts before the final challenge.",
+          content: "The ultimate Quantum Circuit Challenge awaits! Before you begin, let's review the key concepts you've learned throughout this course:\n\n- Quantum gates: Hadamard, Pauli-X/Y/Z, CNOT, and others\n\n- Quantum algorithms: Deutsch-Jozsa, Grover's search, quantum teleportation\n\n- Circuit design principles: minimizing depth and width, error mitigation\n\n- Quantum phenomena: superposition, entanglement, interference\n\nMake sure you understand these concepts well - you'll need them all to complete the final challenge!",
+          type: "reading",
+          duration: 15,
+          points: 10
+        },
+        {
+          id: "2.1.12.2",
+          title: "The Quantum Challenge Explained",
+          description: "Learn about the multi-part quantum circuit challenge.",
+          content: "The Quantum Circuit Challenge consists of three increasingly difficult tasks that will test your understanding of quantum circuits. In this video, we'll explain each part of the challenge:\n\n1. The Identity Quest: Create a circuit that starts with a certain quantum state and ends with the same state, despite all the transformations in between.\n\n2. The Entanglement Puzzle: Design a circuit that entangles multiple qubits in a specific pattern.\n\n3. The Algorithm Adventure: Implement a simple quantum algorithm that solves a practical problem.\n\nListen carefully to the requirements for each part - understanding the challenge is the first step to solving it!",
+          type: "video",
+          duration: 15,
+          points: 15,
+          videoUrl: "https://www.youtube.com/embed/FjHJ7FjgL34"
+        },
+        {
+          id: "2.1.12.3",
+          title: "Quantum Circuit Challenge",
+          description: "Complete the multi-part quantum circuit challenge.",
+          content: "The time has come to prove your quantum circuit mastery! In this interactive challenge, you'll work through the three tasks we discussed in the previous lesson.\n\nYou'll have access to all the quantum gates and tools you've learned about throughout the course. For each task, you'll build a quantum circuit that meets the specified requirements, test it to make sure it works correctly, and then submit your solution.\n\nThere may be multiple ways to solve each challenge - try to find the most elegant solution! Can you complete all three parts of the challenge and earn your Quantum Circuit Master badge?",
+          type: "interactive",
+          interactiveComponent: "BuildAtomActivity",
+          duration: 30,
+          points: 30
+        },
+        {
+          id: "2.1.12.4",
+          title: "Final Quantum Circuits Quiz",
+          description: "Test your comprehensive understanding of quantum circuits.",
+          content: "Congratulations on completing the Quantum Circuit Challenge! Now, let's check your overall understanding of quantum circuits with this final comprehensive quiz. It will cover all the topics you've learned throughout the course, from basic gates to complex algorithms.",
           type: "quiz",
           duration: 15,
           points: 25
