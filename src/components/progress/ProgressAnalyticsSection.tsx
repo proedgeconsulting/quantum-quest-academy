@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMemo } from "react";
 import PersonalizedQuiz from "../quiz/PersonalizedQuiz";
 import CertificatesList from "../certificates/CertificatesList";
+import AIAssistanceSection from "../quantum-learning/AIAssistanceSection";
 import {
   Bar,
   BarChart,
@@ -68,8 +69,9 @@ const ProgressAnalyticsSection = ({ userId, userProgress, isLoading }: ProgressA
   
   return (
     <Tabs defaultValue="analytics" className="w-full">
-      <TabsList className="grid grid-cols-3 mb-4">
+      <TabsList className="grid grid-cols-4 mb-4">
         <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsTrigger value="ai-assistant">AI Assistant</TabsTrigger>
         <TabsTrigger value="personalized">Personalized Quiz</TabsTrigger>
         <TabsTrigger value="certificates">Certificates</TabsTrigger>
       </TabsList>
@@ -105,6 +107,10 @@ const ProgressAnalyticsSection = ({ userId, userProgress, isLoading }: ProgressA
             </div>
           </CardContent>
         </Card>
+      </TabsContent>
+      
+      <TabsContent value="ai-assistant">
+        <AIAssistanceSection userId={userId} />
       </TabsContent>
       
       <TabsContent value="personalized">

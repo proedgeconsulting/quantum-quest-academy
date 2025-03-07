@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
+import { useLearningAnalytics } from "@/hooks/useLearningAnalytics";
 
 interface Certificate {
   id: string;
@@ -23,6 +24,7 @@ const CertificatesList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { generateCertificate } = useLearningAnalytics(user?.id);
 
   useEffect(() => {
     const fetchCertificates = async () => {
@@ -58,17 +60,7 @@ const CertificatesList = () => {
     if (!user) return;
     
     try {
-      const { error } = await supabase.functions.invoke('generate-certificate', {
-        body: {
-          userId: user.id,
-          courseId: certificate.course_id,
-          courseName: certificate.course_name,
-          username: user.email?.split('@')[0] || 'Student', // Simple username extraction
-          email: user.email
-        }
-      });
-      
-      if (error) throw error;
+      await generateCertificate(certificate.course_id, certificate.course_name);
       
       toast({
         title: "Certificate Sent",

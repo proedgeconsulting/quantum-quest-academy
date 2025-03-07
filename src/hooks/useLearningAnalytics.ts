@@ -94,6 +94,99 @@ export const useLearningAnalytics = (userId: string | undefined) => {
     }
   };
 
+  // Get AI assistance for a specific concept
+  const getAIAssistance = async (concept: string, question: string) => {
+    if (!userId) return null;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-learning-assistant', {
+        body: { 
+          user_id: userId, 
+          concept: concept,
+          question: question 
+        }
+      });
+      
+      if (error) throw error;
+      
+      // Track this interaction for analytics
+      await supabase.from('user_learning_interactions').insert({
+        user_id: userId,
+        concept: concept,
+        interaction_type: 'ai_assistance'
+      });
+      
+      return data;
+    } catch (error) {
+      console.error("Error getting AI assistance:", error);
+      toast({
+        title: "AI Assistant Error",
+        description: "Couldn't get an answer right now. Please try again later.",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
+
+  // Generate a personalized quiz
+  const generatePersonalizedQuiz = async (courseId: string) => {
+    if (!userId) return null;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-personalized-quiz', {
+        body: { 
+          user_id: userId, 
+          course_id: courseId 
+        }
+      });
+      
+      if (error) throw error;
+      
+      return data;
+    } catch (error) {
+      console.error("Error generating personalized quiz:", error);
+      toast({
+        title: "Quiz Generation Error",
+        description: "Couldn't generate a quiz right now. Please try again later.",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
+
+  // Generate a certificate
+  const generateCertificate = async (courseId: string, courseName: string) => {
+    if (!userId) return false;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-certificate', {
+        body: { 
+          userId: userId,
+          courseId: courseId,
+          courseName: courseName
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Certificate Generated",
+        description: "Your certificate has been generated and sent to your email!",
+        variant: "default",
+      });
+      
+      return true;
+    } catch (error) {
+      console.error("Error generating certificate:", error);
+      toast({
+        title: "Certificate Generation Error",
+        description: "Couldn't generate your certificate right now. Please try again later.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   // Fetch notifications - temporarily disabled until the table is created
   const fetchNotifications = async () => {
     if (!userId) return;
@@ -150,6 +243,9 @@ export const useLearningAnalytics = (userId: string | undefined) => {
     streakInfo,
     notifications,
     trackActivity,
+    getAIAssistance,
+    generatePersonalizedQuiz,
+    generateCertificate,
     refreshAnalytics: fetchAnalytics,
     refreshNotifications: fetchNotifications,
     markNotificationAsRead
