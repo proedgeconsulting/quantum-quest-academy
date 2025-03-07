@@ -36,7 +36,7 @@ export const module2: Module = {
       duration: 20,
       points: 15,
       interactiveOptions: {
-        simulationType: "photon",
+        simulatorType: "photon",
         waveColor: "yellow",
         showParticles: true
       }

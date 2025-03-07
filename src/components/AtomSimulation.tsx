@@ -6,6 +6,7 @@ import { Info } from "lucide-react";
 interface AtomSimulationProps {
   title?: string;
   simulationType?: string;
+  simulatorType?: string; // Added this property to match the type definition
   waveColor?: string;
   showParticles?: boolean;
 }
@@ -13,9 +14,13 @@ interface AtomSimulationProps {
 const AtomSimulation = ({
   title = "Atom Simulation",
   simulationType = "standard",
+  simulatorType, // Accept the new property
   waveColor = "purple",
   showParticles = true
 }: AtomSimulationProps) => {
+  // Use simulatorType as fallback if simulationType is not provided
+  const actualSimulationType = simulationType || simulatorType || "standard";
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [showInstructions, setShowInstructions] = useState(true);
   const [particleSpeed, setParticleSpeed] = useState(1);
@@ -60,7 +65,7 @@ const AtomSimulation = ({
     let photons: any[] = [];
     
     // For photon simulation, add some light particles
-    if (simulationType === "photon") {
+    if (actualSimulationType === "photon") {
       // Add 5 photons at random positions moving in random directions
       for (let i = 0; i < 5; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -170,7 +175,7 @@ const AtomSimulation = ({
     return () => {
       cancelAnimationFrame(animationId);
     };
-  }, [simulationType, waveColor, showParticles, particleSpeed, particleSize]);
+  }, [actualSimulationType, waveColor, showParticles, particleSpeed, particleSize]);
   
   return (
     <motion.div 
@@ -191,7 +196,7 @@ const AtomSimulation = ({
       
       {showInstructions && (
         <div className="bg-quantum-100 dark:bg-quantum-800 p-4 rounded-lg text-sm mb-2">
-          {simulationType === "photon" ? (
+          {actualSimulationType === "photon" ? (
             <div className="space-y-2">
               <p className="font-medium">Welcome to the Photon Explorer!</p>
               <p>This simulation demonstrates how light behaves as both a wave and a particle:</p>
