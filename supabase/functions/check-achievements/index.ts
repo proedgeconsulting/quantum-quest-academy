@@ -2,7 +2,9 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 import { parseAchievementCriteria, checkAchievementCriteria } from "./achievementCriteria.ts";
-import type { AchievementCriteria, UserProgress } from "./types.ts";
+import { fetchUserProgress, processProgressData } from "./progressUtils.ts";
+import { fetchAchievements, fetchUserAchievements, awardAchievement } from "./achievementUtils.ts";
+import type { AchievementCriteria } from "./types.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,81 +18,8 @@ function initSupabaseClient() {
   return createClient(supabaseUrl, supabaseServiceKey);
 }
 
-// Fetch all achievements from database
-async function fetchAchievements(supabase) {
-  const { data, error } = await supabase.from('achievements').select('*');
-  if (error) throw error;
-  return data;
-}
-
-// Fetch user's earned achievements
-async function fetchUserAchievements(supabase, userId) {
-  const { data, error } = await supabase
-    .from('user_achievements')
-    .select('achievement_id')
-    .eq('user_id', userId);
-  if (error) throw error;
-  return data;
-}
-
-// Fetch user's progress data
-async function fetchUserProgress(supabase, userId) {
-  const { data, error } = await supabase
-    .from('user_progress')
-    .select('*')
-    .eq('user_id', userId);
-  if (error) throw error;
-  return data;
-}
-
-// Process progress data for easier access
-function processProgressData(progressData: UserProgress[]) {
-  const courseCompletionMap = new Map();
-  let totalCompletedLessons = 0;
-  
-  progressData.forEach(progress => {
-    if (progress.completed) {
-      totalCompletedLessons++;
-      
-      // Count completed lessons per course
-      if (!courseCompletionMap.has(progress.course_id)) {
-        courseCompletionMap.set(progress.course_id, 0);
-      }
-      courseCompletionMap.set(
-        progress.course_id, 
-        courseCompletionMap.get(progress.course_id) + 1
-      );
-    }
-  });
-  
-  return { courseCompletionMap, totalCompletedLessons };
-}
-
-// Award an achievement to a user
-async function awardAchievement(supabase, userId, achievement) {
-  const { data, error } = await supabase
-    .from('user_achievements')
-    .insert({
-      user_id: userId,
-      achievement_id: achievement.id,
-      earned_at: new Date().toISOString(),
-    })
-    .select();
-    
-  if (error) {
-    console.error(`Error awarding achievement ${achievement.id}:`, error);
-    return null;
-  }
-  
-  console.log(`Awarded achievement ${achievement.name} to user ${userId}`);
-  return {
-    ...achievement,
-    earned_at: new Date().toISOString(),
-  };
-}
-
 // Main function to check and award achievements
-async function checkAndAwardAchievements(supabase, userId) {
+async function checkAndAwardAchievements(supabase: any, userId: string) {
   try {
     // 1. Get the list of all achievements
     const achievements = await fetchAchievements(supabase);
