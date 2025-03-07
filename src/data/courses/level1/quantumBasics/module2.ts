@@ -30,11 +30,16 @@ export const module2: Module = {
       id: "1.1.2.3",
       title: "Photon Explorer",
       description: "Interactive simulation to explore the properties of photons.",
-      content: "In this interactive activity, you'll explore the behavior of photons - the particles of light. See how they travel through space, interact with objects, and demonstrate both wave-like and particle-like properties.\n\nYou'll also learn about the photoelectric effect, a phenomenon that helped establish the quantum nature of light.",
+      content: "In this interactive activity, you'll explore the behavior of photons - the particles of light. Photons are tiny packets of energy that make up light waves.\n\n**How to use the Photon Explorer:**\n\n1. Observe the yellow photons moving around the simulation\n2. Notice how they behave both as waves (following wavy patterns) and as particles (discrete points)\n3. Use the slider controls to adjust the simulation speed and particle size\n4. Watch what happens when photons interact with the central nucleus\n5. Toggle the instructions panel using the info button for more details\n\nTry experimenting with different settings to see how energy levels affect photon behavior, and observe the wave-particle duality in action!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      interactiveComponent: "QuantumWaveVisualizer",
       duration: 20,
-      points: 15
+      points: 15,
+      interactiveOptions: {
+        simulationType: "photon",
+        waveColor: "yellow",
+        showParticles: true
+      }
     },
     {
       id: "1.1.2.4",
