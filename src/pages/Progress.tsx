@@ -28,6 +28,7 @@ const Progress = () => {
     recommendations,
     totalPoints, 
     loading,
+    newAchievements,
     refreshRecommendations
   } = useProgressData(user?.id);
   const { toast } = useToast();
@@ -163,6 +164,7 @@ const Progress = () => {
                 courseNames={courseNames}
                 onRefresh={handleRefreshRecommendations}
                 isRefreshing={isRefreshing}
+                newAchievements={newAchievements}
               />
             </motion.div>
 

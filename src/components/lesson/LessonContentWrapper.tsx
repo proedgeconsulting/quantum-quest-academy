@@ -5,6 +5,8 @@ import ReadingLesson from "./ReadingLesson";
 import VideoLesson from "./VideoLesson";
 import InteractiveLesson from "./InteractiveLesson";
 import CompletionStatus from "./CompletionStatus";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 interface LessonContentWrapperProps {
   lesson?: Lesson;
@@ -14,6 +16,7 @@ interface LessonContentWrapperProps {
 
 const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContentWrapperProps) => {
   const [showComplete, setShowComplete] = useState(false);
+  const { user } = useAuth();
   
   // Auto-show complete button after 80% of the estimated reading time
   useEffect(() => {
@@ -30,6 +33,23 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContent
     return () => clearTimeout(timer);
   }, [lesson, isCompleted, lesson?.duration, lesson?.type]);
   
+  const handleComplete = async () => {
+    // First trigger the regular completion logic
+    onComplete();
+    
+    // Then check for achievements
+    if (user) {
+      try {
+        // Call the achievement check function silently
+        await supabase.functions.invoke('check-achievements', {
+          body: { user_id: user.id }
+        });
+      } catch (error) {
+        console.error("Error checking achievements after lesson completion:", error);
+      }
+    }
+  };
+  
   if (!lesson) return null;
   
   return (
@@ -42,7 +62,7 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContent
       
       {/* Interactive Content */}
       {lesson.type === "interactive" && (
-        <InteractiveLesson lesson={lesson} onComplete={onComplete} />
+        <InteractiveLesson lesson={lesson} onComplete={handleComplete} />
       )}
       
       {/* Complete Button or Completed Status */}
@@ -50,7 +70,7 @@ const LessonContentWrapper = ({ lesson, onComplete, isCompleted }: LessonContent
         isCompleted={isCompleted}
         showComplete={showComplete}
         type={lesson.type}
-        onComplete={onComplete}
+        onComplete={handleComplete}
       />
     </div>
   );

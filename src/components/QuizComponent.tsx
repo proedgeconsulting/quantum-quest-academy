@@ -6,6 +6,8 @@ import QuizActions from "@/components/quiz/QuizActions";
 import QuizResult from "@/components/quiz/QuizResult";
 import { getQuizQuestions, QuizQuestion as QuizQuestionType } from "@/utils/quizHelpers";
 import { AnimatePresence, motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 interface QuizComponentProps {
   lessonId: string;
@@ -19,6 +21,7 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
   const [showFeedback, setShowFeedback] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const { user } = useAuth();
   
   const quizQuestions = getQuizQuestions(lessonId);
   const currentQuestion = quizQuestions[currentQuestionIndex];
@@ -50,8 +53,21 @@ const QuizComponent = ({ lessonId, quizContent, onComplete }: QuizComponentProps
     }
   };
   
-  const handleQuizComplete = () => {
+  const handleQuizComplete = async () => {
+    // First trigger the regular completion logic
     onComplete(finalScore);
+    
+    // Then check for achievements
+    if (user) {
+      try {
+        // Call the achievement check function silently
+        await supabase.functions.invoke('check-achievements', {
+          body: { user_id: user.id }
+        });
+      } catch (error) {
+        console.error("Error checking achievements after quiz completion:", error);
+      }
+    }
   };
   
   const handleRestartQuiz = () => {
