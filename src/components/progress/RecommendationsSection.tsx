@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,8 @@ import { Sparkles, RefreshCw, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { AnimatePresence, motion } from "framer-motion";
+import { Recommendation } from "@/hooks/useRecommendations";
+import { Achievement } from "@/components/progress/AchievementsSection";
 
 export interface Recommendation {
   id: string;
@@ -46,19 +47,14 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   const [achievementQueue, setAchievementQueue] = useState<Achievement[]>([]);
 
   useEffect(() => {
-    // Add new achievements to the queue
     if (newAchievements && newAchievements.length > 0) {
       setAchievementQueue(prev => [...prev, ...newAchievements]);
     }
   }, [newAchievements]);
 
   useEffect(() => {
-    // Process achievement queue
     if (achievementQueue.length > 0 && !showAchievement) {
-      // Show the first achievement in the queue
       setShowAchievement(achievementQueue[0]);
-      
-      // Remove it from the queue
       setAchievementQueue(prev => prev.slice(1));
     }
   }, [achievementQueue, showAchievement]);
@@ -133,7 +129,6 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
         </CardContent>
       </Card>
 
-      {/* Achievement Popup */}
       <AnimatePresence>
         {showAchievement && (
           <motion.div

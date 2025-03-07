@@ -5,121 +5,38 @@ import { useToast } from "@/hooks/use-toast";
 import { CourseProgressItem } from "@/components/progress/CourseProgressSection";
 import { Achievement } from "@/components/progress/AchievementsSection";
 import { level1Courses, level2Courses, level3Courses } from "@/data/courseData";
-
-export interface Recommendation {
-  id: string;
-  course_id: string;
-  relevance_score: number;
-  reason: string;
-  created_at: string;
-}
+import { useAchievements } from "./useAchievements";
+import { useRecommendations } from "./useRecommendations";
 
 export interface ProgressData {
   achievements: Achievement[];
   courseProgress: CourseProgressItem[];
-  recommendations: Recommendation[];
+  recommendations: any[];
   totalPoints: number;
   loading: boolean;
   newAchievements: Achievement[];
 }
 
 export const useProgressData = (userId: string | undefined) => {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [courseProgress, setCourseProgress] = useState<CourseProgressItem[]>([]);
-  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
-  const [totalPoints, setTotalPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  // Use the separated hooks
+  const { 
+    achievements, 
+    totalPoints, 
+    newAchievements, 
+    checkAchievements 
+  } = useAchievements(userId);
+  
+  const { 
+    recommendations, 
+    generateRecommendations 
+  } = useRecommendations(userId, checkAchievements);
+
   // Combine all courses for processing
   const allCourses = [...level1Courses, ...level2Courses, ...level3Courses];
-
-  // Check for achievements
-  const checkAchievements = async () => {
-    if (!userId) return;
-    
-    try {
-      // Call the edge function to check achievements
-      const { data, error } = await supabase.functions.invoke('check-achievements', {
-        body: { user_id: userId }
-      });
-      
-      if (error) {
-        console.error("Error checking achievements:", error);
-        throw error;
-      }
-      
-      console.log("Achievement check results:", data);
-      
-      // If there are new achievements, update state
-      if (data.newAchievements && data.newAchievements.length > 0) {
-        setNewAchievements(data.newAchievements);
-        
-        // Show a toast notification
-        toast({
-          title: "Achievement Unlocked!",
-          description: `You've earned ${data.newAchievements.length} new achievement${data.newAchievements.length > 1 ? 's' : ''}!`,
-          variant: "default",
-        });
-        
-        // Update total points
-        setTotalPoints(data.totalPoints);
-        
-        // Refresh achievements list
-        await fetchData();
-      }
-    } catch (error: any) {
-      console.error("Error in achievement check process:", error);
-      toast({
-        title: "Error checking achievements",
-        description: error.message || "Failed to check for new achievements",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Generate recommendations
-  const generateRecommendations = async () => {
-    if (!userId) return;
-    
-    try {
-      // Call the edge function to generate recommendations
-      const { error } = await supabase.functions.invoke('generate-recommendations');
-      
-      if (error) {
-        console.error("Error generating recommendations:", error);
-        throw error;
-      }
-      
-      console.log("Recommendations generated successfully");
-      
-      // Fetch the newly generated recommendations
-      const { data: recommendationsData, error: fetchError } = await supabase
-        .from("recommendations")
-        .select("*")
-        .eq("user_id", userId)
-        .order("relevance_score", { ascending: false });
-        
-      if (fetchError) {
-        console.error("Error fetching recommendations:", fetchError);
-        throw fetchError;
-      }
-      
-      setRecommendations(recommendationsData || []);
-      console.log("Fetched recommendations:", recommendationsData?.length || 0);
-      
-      // Check for achievements after generating recommendations
-      await checkAchievements();
-    } catch (error: any) {
-      console.error("Error in recommendation process:", error);
-      toast({
-        title: "Error generating recommendations",
-        description: error.message || "Failed to generate course recommendations",
-        variant: "destructive",
-      });
-    }
-  };
 
   const fetchData = async () => {
     if (!userId) {
@@ -131,50 +48,6 @@ export const useProgressData = (userId: string | undefined) => {
     console.log("Fetching progress data for user:", userId);
     
     try {
-      // Fetch achievements
-      const { data: achievementsData, error: achievementsError } = await supabase
-        .from("achievements")
-        .select("*");
-
-      if (achievementsError) {
-        console.error("Error fetching achievements:", achievementsError);
-        throw achievementsError;
-      }
-
-      console.log("Fetched achievements:", achievementsData?.length || 0);
-
-      // Fetch user's earned achievements
-      const { data: userAchievementsData, error: userAchievementsError } = await supabase
-        .from("user_achievements")
-        .select("achievement_id, earned_at")
-        .eq("user_id", userId);
-
-      if (userAchievementsError) {
-        console.error("Error fetching user achievements:", userAchievementsError);
-        throw userAchievementsError;
-      }
-
-      console.log("Fetched user achievements:", userAchievementsData?.length || 0);
-
-      // Combine the data
-      const userAchievementsMap = new Map(
-        userAchievementsData?.map((ua) => [ua.achievement_id, ua.earned_at]) || []
-      );
-
-      const enhancedAchievements = achievementsData?.map((achievement) => ({
-        ...achievement,
-        earned_at: userAchievementsMap.get(achievement.id),
-      })) || [];
-
-      setAchievements(enhancedAchievements);
-
-      // Calculate total points
-      const earned = enhancedAchievements
-        .filter((a) => a.earned_at)
-        .reduce((sum, a) => sum + a.points, 0);
-      
-      setTotalPoints(earned);
-
       // Fetch actual course progress from the database
       const { data: progressData, error: progressError } = await supabase
         .from("user_progress")
@@ -235,29 +108,6 @@ export const useProgressData = (userId: string | undefined) => {
 
       setCourseProgress(courseProgressData);
       console.log("Course progress data prepared:", courseProgressData.length);
-      
-      // Fetch recommendations
-      const { data: recommendationsData, error: recommendationsError } = await supabase
-        .from("recommendations")
-        .select("*")
-        .eq("user_id", userId)
-        .order("relevance_score", { ascending: false });
-        
-      if (recommendationsError) {
-        console.error("Error fetching recommendations:", recommendationsError);
-        throw recommendationsError;
-      }
-      
-      setRecommendations(recommendationsData || []);
-      console.log("Fetched recommendations:", recommendationsData?.length || 0);
-      
-      // If no recommendations exist, generate them
-      if (!recommendationsData || recommendationsData.length === 0) {
-        await generateRecommendations();
-      } else {
-        // Check for achievements
-        await checkAchievements();
-      }
     } catch (error: any) {
       console.error("Error loading progress data:", error);
       toast({
@@ -267,11 +117,7 @@ export const useProgressData = (userId: string | undefined) => {
       });
       
       // Set default empty data on error
-      setAchievements([]);
       setCourseProgress([]);
-      setRecommendations([]);
-      setTotalPoints(0);
-      setNewAchievements([]);
     } finally {
       setLoading(false);
     }
@@ -283,7 +129,7 @@ export const useProgressData = (userId: string | undefined) => {
     } else {
       setLoading(false);
     }
-  }, [userId, toast, allCourses]);
+  }, [userId]);
 
   return {
     achievements,
