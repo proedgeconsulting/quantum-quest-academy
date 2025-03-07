@@ -31,11 +31,10 @@ const CertificatesList = () => {
       setIsLoading(true);
       
       try {
-        const { data, error } = await supabase
-          .from('user_certificates')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('issued_at', { ascending: false });
+        // Use edge function instead of direct table query
+        const { data, error } = await supabase.functions.invoke('get-certificates', {
+          body: { userId: user.id }
+        });
           
         if (error) throw error;
         

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -195,8 +194,9 @@ const Progress = () => {
               className="mt-8"
             >
               <ProgressAnalyticsSection 
-                analytics={analytics} 
-                loading={analyticsLoading} 
+                userId={user?.id || ""}
+                userProgress={analytics?.learning_activity || []} 
+                isLoading={analyticsLoading} 
               />
             </motion.div>
 

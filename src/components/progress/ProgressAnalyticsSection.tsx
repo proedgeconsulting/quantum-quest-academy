@@ -2,9 +2,18 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMemo } from "react";
-import { Chart } from "@/components/ui/chart";
 import PersonalizedQuiz from "../quiz/PersonalizedQuiz";
 import CertificatesList from "../certificates/CertificatesList";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 
 interface ProgressAnalyticsProps {
   userId: string;
@@ -73,40 +82,26 @@ const ProgressAnalyticsSection = ({ userId, userProgress, isLoading }: ProgressA
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <Chart
-                type="bar"
-                data={activityData}
-                options={{
-                  scales: {
-                    x: {
-                      type: 'category',
-                      title: {
-                        display: true,
-                        text: 'Date'
-                      }
-                    },
-                    y: {
-                      type: 'linear',
-                      min: 0,
-                      title: {
-                        display: true,
-                        text: 'Activities'
-                      }
-                    }
-                  }
-                }}
-                className="w-full h-full"
-                xField="date"
-                series={[
-                  {
-                    label: 'Learning Activities',
-                    data: activityData.map(d => d.activities),
-                    backgroundColor: 'rgba(99, 102, 241, 0.5)',
-                    borderColor: 'rgb(99, 102, 241)',
-                    borderWidth: 1
-                  }
-                ]}
-              />
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={activityData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="date" 
+                    label={{ value: 'Date', position: 'insideBottom', offset: -10 }}
+                  />
+                  <YAxis 
+                    label={{ value: 'Activities', angle: -90, position: 'insideLeft' }}
+                  />
+                  <Tooltip />
+                  <Legend />
+                  <Bar 
+                    dataKey="activities" 
+                    name="Learning Activities" 
+                    fill="rgba(99, 102, 241, 0.5)" 
+                    stroke="rgb(99, 102, 241)" 
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
