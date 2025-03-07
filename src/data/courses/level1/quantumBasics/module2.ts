@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 2: Light and Energy
@@ -23,7 +24,7 @@ export const module2: Module = {
       type: "video",
       duration: 10,
       points: 10,
-      videoUrl: "https://www.youtube.com/watch?v=FjHJ7FjgL34"
+      videoUrl: "https://www.youtube.com/watch?v=ajWogac3eM0"
     },
     {
       id: "1.1.2.3",
