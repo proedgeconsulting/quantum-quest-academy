@@ -1,30 +1,13 @@
 
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
+import { parseAchievementCriteria, checkAchievementCriteria } from "./achievementCriteria.ts";
+import type { AchievementCriteria, UserProgress } from "./types.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-interface AchievementCriteria {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  points: number;
-  criteria: {
-    type: 'course_completion' | 'lesson_count' | 'points_threshold';
-    value: number;
-    courseId?: string;
-  };
-}
-
-interface UserProgress {
-  course_id: string;
-  lesson_id: string;
-  completed: boolean;
-}
 
 // Initialize Supabase client
 function initSupabaseClient() {
@@ -60,41 +43,8 @@ async function fetchUserProgress(supabase, userId) {
   return data;
 }
 
-// Parse achievement criteria from achievement data
-function parseAchievementCriteria(achievements) {
-  return achievements.map(achievement => {
-    let criteria = {
-      type: 'lesson_count' as const,
-      value: 1,
-    };
-    
-    if (achievement.name.includes('Complete Course')) {
-      criteria = {
-        type: 'course_completion' as const,
-        value: 1,
-        courseId: achievement.name.split(' ').pop(),
-      };
-    } else if (achievement.name.includes('lessons')) {
-      criteria = {
-        type: 'lesson_count' as const,
-        value: parseInt(achievement.name.match(/\d+/)?.[0] || '5', 10),
-      };
-    } else if (achievement.name.includes('points')) {
-      criteria = {
-        type: 'points_threshold' as const,
-        value: parseInt(achievement.name.match(/\d+/)?.[0] || '50', 10),
-      };
-    }
-    
-    return {
-      ...achievement,
-      criteria,
-    };
-  });
-}
-
 // Process progress data for easier access
-function processProgressData(progressData) {
+function processProgressData(progressData: UserProgress[]) {
   const courseCompletionMap = new Map();
   let totalCompletedLessons = 0;
   
@@ -114,30 +64,6 @@ function processProgressData(progressData) {
   });
   
   return { courseCompletionMap, totalCompletedLessons };
-}
-
-// Check if achievement criteria is met
-function checkAchievementCriteria(
-  achievement, 
-  totalCompletedLessons, 
-  courseCompletionMap, 
-  totalPoints
-) {
-  switch (achievement.criteria.type) {
-    case 'course_completion':
-      return achievement.criteria.courseId && 
-        courseCompletionMap.has(achievement.criteria.courseId) && 
-        courseCompletionMap.get(achievement.criteria.courseId) >= achievement.criteria.value;
-    
-    case 'lesson_count':
-      return totalCompletedLessons >= achievement.criteria.value;
-    
-    case 'points_threshold':
-      return totalPoints >= achievement.criteria.value;
-    
-    default:
-      return false;
-  }
 }
 
 // Award an achievement to a user
