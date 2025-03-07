@@ -48,11 +48,11 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     const videoId = getYoutubeVideoId(lesson.videoUrl);
     console.log("Video URL:", lesson.videoUrl, "Extracted ID:", videoId);
     
-    // If we have a YouTube video ID, use the proper embed format
+    // If we have a YouTube video ID, use the proper embed format with additional parameters
     if (videoId) {
       return (
         <iframe
-          src={`https://www.youtube.com/embed/${videoId}`}
+          src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
           className="w-full aspect-video"
           title={lesson.title}
           frameBorder="0"
