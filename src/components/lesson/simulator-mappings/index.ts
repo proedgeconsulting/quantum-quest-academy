@@ -26,5 +26,5 @@ export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.
   };
   
   // Create the component with the combined props
-  return <config.component {...combinedProps} />;
+  return React.createElement(config.component, combinedProps);
 };
