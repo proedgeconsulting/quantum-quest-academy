@@ -16,7 +16,7 @@ const QuantumWaveVisualizer = () => {
       <div className="p-4">
         <SimulatorHeader 
           title="Quantum Wave Visualizer" 
-          mode="visualizer" 
+          mode="state" 
         />
       </div>
       
