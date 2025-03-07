@@ -9,23 +9,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Recommendation } from "@/hooks/useRecommendations";
 import { Achievement } from "@/components/progress/AchievementsSection";
 
-export interface Recommendation {
-  id: string;
-  course_id: string;
-  relevance_score: number;
-  reason: string;
-  created_at: string;
-}
-
-export interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  points: number;
-  earned_at: string;
-}
-
 interface RecommendationsSectionProps {
   recommendations: Recommendation[];
   courseNames: Record<string, string>;

@@ -10,7 +10,7 @@ export interface Achievement {
   description: string;
   icon: string;
   points: number;
-  earned_at?: string;
+  earned_at?: string; // Make sure this is optional with a question mark
 }
 
 interface AchievementsSectionProps {
