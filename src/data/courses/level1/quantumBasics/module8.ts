@@ -17,7 +17,7 @@ export const module8: Module = {
       points: 20,
       externalSimulator: {
         type: "iframe",
-        url: "/Qubit Measurement Probability.html",
+        url: "/QubitMeasurementProbability.html",
         height: 600,
         width: "100%"
       }
@@ -32,7 +32,7 @@ export const module8: Module = {
       points: 15,
       externalSimulator: {
         type: "iframe",
-        url: "/Quantum Heroes Card Game.html",
+        url: "/QuantumHeroesCardGame.html",
         height: 600,
         width: "100%"
       }
@@ -47,7 +47,7 @@ export const module8: Module = {
       points: 25,
       externalSimulator: {
         type: "iframe",
-        url: "/Quantum Chess.html",
+        url: "/QuantumChess.html",
         height: 700,
         width: "100%"
       }
@@ -62,7 +62,7 @@ export const module8: Module = {
       points: 15,
       externalSimulator: {
         type: "iframe",
-        url: "/Quantum Heroes Match-Up.html",
+        url: "/QuantumHeroesMatch-Up.html",
         height: 600,
         width: "100%"
       }

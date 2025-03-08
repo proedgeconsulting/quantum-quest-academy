@@ -6,7 +6,8 @@ import {
   IframeSimulator, 
   ComponentSimulator, 
   ApiSimulator, 
-  UnsupportedSimulator 
+  UnsupportedSimulator,
+  QuantumGamesSimulator
 } from "./simulators";
 
 // External simulators - component mapping
@@ -14,6 +15,12 @@ const externalComponentMap: Record<string, React.ComponentType<any>> = {
   // Register your external React components here
   // Example: "QuantumEntanglementDemo": QuantumEntanglementDemo,
 };
+
+// List of quantum games lesson IDs
+const quantumGamesLessonIds = [
+  "1.1.8.1", "1.1.8.2", "1.1.8.3", "1.1.8.4", 
+  "1.1.8.5", "1.1.8.6", "1.1.8.7"
+];
 
 interface ExternalSimulatorProps {
   lesson: Lesson;
@@ -32,6 +39,11 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
         </CardContent>
       </Card>
     );
+  }
+
+  // Special case for quantum games
+  if (quantumGamesLessonIds.includes(lesson.id)) {
+    return <QuantumGamesSimulator lesson={lesson} />;
   }
 
   // Case 1: Render iframe for external HTML content
