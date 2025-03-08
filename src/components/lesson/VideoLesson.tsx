@@ -25,11 +25,12 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
   const getYoutubeVideoId = (url: string): string | null => {
     if (!url) return null;
     
-    // Handle various YouTube URL formats
+    // Handle various YouTube URL formats including shorts
     const patterns = [
       /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/i,
       /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]+)/i,
-      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/i
+      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]+)/i,
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/i  // Added pattern for YouTube shorts
     ];
     
     for (const pattern of patterns) {
@@ -92,6 +93,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     
     // If we have a YouTube video ID, use the proper embed format
     if (videoId) {
+      // Use the standard embed URL that works for both regular videos and shorts
       const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&origin=${window.location.origin}`;
       console.log("Using YouTube embed URL:", embedUrl);
       
