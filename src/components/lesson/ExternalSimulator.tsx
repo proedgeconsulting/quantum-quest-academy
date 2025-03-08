@@ -16,7 +16,7 @@ const externalComponentMap: Record<string, React.ComponentType<any>> = {
   // Example: "QuantumEntanglementDemo": QuantumEntanglementDemo,
 };
 
-// List of quantum games lesson IDs
+// List of quantum games lesson IDs - make sure these match exactly with your module definitions
 const quantumGamesLessonIds = [
   "1.1.8.1", "1.1.8.2", "1.1.8.3", "1.1.8.4", 
   "1.1.8.5", "1.1.8.6", "1.1.8.7"
@@ -41,7 +41,8 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
     );
   }
 
-  // Special case for quantum games
+  // Special case for quantum games - use the dedicated QuantumGamesSimulator 
+  // which has enhanced path resolution for these specific lessons
   if (quantumGamesLessonIds.includes(lesson.id)) {
     return <QuantumGamesSimulator lesson={lesson} />;
   }

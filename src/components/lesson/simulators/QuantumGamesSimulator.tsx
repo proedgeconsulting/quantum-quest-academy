@@ -13,7 +13,8 @@ const QuantumGamesSimulator: React.FC<QuantumGamesSimulatorProps> = ({ lesson })
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPath, setCurrentPath] = useState<string | null>(null);
+  const [currentPathIndex, setCurrentPathIndex] = useState(0);
+  const [pathVariations, setPathVariations] = useState<string[]>([]);
   
   useEffect(() => {
     if (!lesson.externalSimulator?.url) {
@@ -28,58 +29,63 @@ const QuantumGamesSimulator: React.FC<QuantumGamesSimulatorProps> = ({ lesson })
     
     // Get original URL from lesson config
     const originalUrl = lesson.externalSimulator.url;
+    console.log(`Attempting to load simulator for ${lesson.id}: ${originalUrl}`);
     
     // Create multiple path variations to try
-    const pathVariations = [
-      originalUrl,                                  // Original path as-is
-      originalUrl.startsWith('/') ? originalUrl.substring(1) : `/${originalUrl}`, // With/without leading slash
-      originalUrl.replace(/\s+/g, ''),              // Without spaces
-      originalUrl.startsWith('/') ? originalUrl.substring(1).replace(/\s+/g, '') : `/${originalUrl.replace(/\s+/g, '')}`, // Without spaces, with/without leading slash
-      `/simulators/${originalUrl.replace(/\s+/g, '').replace(/\.html$/, '')}.html`, // In /simulators/ folder without spaces
-      `/public/${originalUrl.replace(/\s+/g, '').replace(/\.html$/, '')}.html`,     // In /public/ folder without spaces
-    ];
+    const variations = generatePathVariations(originalUrl);
+    setPathVariations(variations);
+    setCurrentPathIndex(0);
     
-    // Set the first path to try
-    setCurrentPath(pathVariations[0]);
-    
-    // We'll attempt each path in sequence in the onError handler of the iframe
-    console.log("Initial path to try:", pathVariations[0]);
+    console.log("Generated path variations:", variations);
   }, [lesson.id, lesson.externalSimulator?.url]);
   
-  const handleIframeError = () => {
-    if (!lesson.externalSimulator?.url) return;
+  const generatePathVariations = (originalUrl: string): string[] => {
+    // Remove file extension if present
+    const baseUrl = originalUrl.replace(/\.html$/, '');
+    const withExtension = originalUrl.endsWith('.html') ? originalUrl : `${originalUrl}.html`;
     
-    // Original URL from lesson config
-    const originalUrl = lesson.externalSimulator.url;
+    // Create normalized versions
+    const noSpaces = baseUrl.replace(/\s+/g, '');
+    const noSpacesWithExtension = `${noSpaces}.html`;
     
-    // Path variations to try in sequence
-    const pathVariations = [
-      originalUrl,                                  // Original path as-is
+    // Generate variations with and without leading slash
+    return [
+      withExtension,                            // Original with extension
+      originalUrl,                              // Original as-is
       originalUrl.startsWith('/') ? originalUrl.substring(1) : `/${originalUrl}`, // With/without leading slash
-      originalUrl.replace(/\s+/g, ''),              // Without spaces
-      originalUrl.startsWith('/') ? originalUrl.substring(1).replace(/\s+/g, '') : `/${originalUrl.replace(/\s+/g, '')}`, // Without spaces, with/without leading slash
-      `/simulators/${originalUrl.replace(/\s+/g, '').replace(/\.html$/, '')}.html`, // In /simulators/ folder without spaces
-      `/public/${originalUrl.replace(/\s+/g, '').replace(/\.html$/, '')}.html`,     // In /public/ folder without spaces
+      noSpacesWithExtension,                    // No spaces with extension
+      noSpacesWithExtension.startsWith('/') ? noSpacesWithExtension.substring(1) : `/${noSpacesWithExtension}`, // No spaces with/without leading slash
+      `/simulators/${noSpaces}.html`,           // In /simulators/ folder
+      `/public/${noSpaces}.html`,               // In /public/ folder
+      
+      // Additional variations based on common filename patterns
+      withExtension.replace(/ /g, '-'),         // Replace spaces with hyphens
+      withExtension.replace(/ /g, '_'),         // Replace spaces with underscores
+      
+      // Try without extension variants
+      baseUrl,
+      baseUrl.startsWith('/') ? baseUrl.substring(1) : `/${baseUrl}`,
+      noSpaces,
+      noSpaces.startsWith('/') ? noSpaces.substring(1) : `/${noSpaces}`,
     ];
+  };
+  
+  const handleIframeError = () => {
+    console.log(`Path ${pathVariations[currentPathIndex]} failed.`);
     
-    // Find the current path in the variations
-    const currentIndex = pathVariations.indexOf(currentPath || '');
-    
-    // If we've tried all paths, show error
-    if (currentIndex === pathVariations.length - 1 || currentIndex === -1) {
-      setError(`Could not load the simulator at any of the attempted paths. Please check if the file exists and is accessible.`);
+    // Try the next path variation
+    if (currentPathIndex < pathVariations.length - 1) {
+      setCurrentPathIndex(prevIndex => prevIndex + 1);
+    } else {
+      // If we've tried all paths, show error
+      setError(`Could not load the simulator. Tried ${pathVariations.length} different paths.`);
       setLoading(false);
-      return;
     }
-    
-    // Try the next path
-    const nextPath = pathVariations[currentIndex + 1];
-    console.log(`Path ${currentPath} failed. Trying next path: ${nextPath}`);
-    setCurrentPath(nextPath);
   };
   
   const handleIframeLoad = () => {
-    console.log(`Successfully loaded simulator at: ${currentPath}`);
+    const successPath = pathVariations[currentPathIndex];
+    console.log(`Successfully loaded simulator at: ${successPath}`);
     setLoading(false);
     setError(null);
   };
@@ -96,7 +102,13 @@ const QuantumGamesSimulator: React.FC<QuantumGamesSimulatorProps> = ({ lesson })
           
           <div className="mt-4 text-center text-gray-500">
             <p>Attempted to load: {lesson.externalSimulator?.url}</p>
-            <p className="mt-2">Current path attempted: {currentPath}</p>
+            <p className="mt-2">Tried multiple path variations including:</p>
+            <ul className="list-disc list-inside mt-2 text-left max-h-40 overflow-y-auto">
+              {pathVariations.slice(0, 5).map((path, i) => (
+                <li key={i} className="text-sm">{path}</li>
+              ))}
+              {pathVariations.length > 5 && <li className="text-sm">...and {pathVariations.length - 5} more</li>}
+            </ul>
             <p className="mt-4 text-sm">
               Please check that the file exists in your public folder and that the path is correct.
             </p>
@@ -105,6 +117,8 @@ const QuantumGamesSimulator: React.FC<QuantumGamesSimulatorProps> = ({ lesson })
       </Card>
     );
   }
+  
+  const currentPath = pathVariations[currentPathIndex];
   
   return (
     <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
