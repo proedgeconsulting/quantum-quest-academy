@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Trophy } from "lucide-react";
 import { Lesson } from "@/data/types/courseTypes";
@@ -30,14 +29,21 @@ const InteractiveLesson = ({ lesson, onComplete, isLastLesson = false }: Interac
     }
   };
 
+  const renderInteractiveComponent = () => {
+    if (lesson.externalSimulator) {
+      return getSimulatorForLesson(lesson.id, lesson);
+    }
+    
+    return lesson.interactiveComponent ? getSimulatorForLesson(lesson.id, lesson) : null;
+  };
+
   return (
     <div className="interactive-lesson">
       <MarkdownContent content={lesson.content} />
       
       <div className="mt-8">
         <div className="interactive-component-wrapper bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
-          {/* Render the appropriate simulator component based on the lesson ID and pass full lesson context */}
-          {lesson.interactiveComponent && getSimulatorForLesson(lesson.id, lesson)}
+          {renderInteractiveComponent()}
           
           {completed && isLastLesson ? (
             <div className="mt-6 flex flex-col items-center justify-center space-y-4">

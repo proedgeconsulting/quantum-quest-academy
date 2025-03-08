@@ -11,6 +11,14 @@ export interface Lesson {
   points: number;
   interactiveComponent?: string;
   videoUrl?: string; // Adding videoUrl as an optional property
+  externalSimulator?: {
+    type: "iframe" | "component" | "api";
+    url?: string;          // URL for iframe or API
+    height?: number;       // Height for iframe
+    width?: string;        // Width for iframe
+    componentName?: string; // Name of the React component
+    apiConfig?: Record<string, any>; // Configuration for API-based simulators
+  };
   interactiveOptions?: {
     simulatorType?: string;
     datasetOptions?: string[];

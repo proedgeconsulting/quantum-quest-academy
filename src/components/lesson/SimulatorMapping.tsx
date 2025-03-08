@@ -3,9 +3,15 @@ import simulatorMappings from "./simulator-mappings";
 import React from "react";
 import { Lesson } from "@/data/types/courseTypes";
 import { SimulatorConfig } from "./simulator-mappings/types";
+import ExternalSimulator from "./ExternalSimulator";
 
 export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.ReactNode => {
-  // First check if there's a specific mapping for this exact lesson ID
+  // First check if this lesson has an external simulator configured
+  if (lesson?.externalSimulator) {
+    return <ExternalSimulator lesson={lesson} />;
+  }
+  
+  // If not, use the internal simulator mapping system
   const config = simulatorMappings[lessonId] || simulatorMappings["default"];
   
   // Get the title from either the config, the lesson component name, or a default
