@@ -88,9 +88,14 @@ export const module8: Module = {
       description: "Sort quantum particles in multiple states simultaneously.",
       content: "Welcome to Superposition Sorter! This game will help you understand one of the weirdest parts of quantum physics - superposition.\n\nIn this game, quantum particles come in two colors: blue and red. But some particles are in a 'superposition' - they're both blue AND red at the same time!\n\nYour job is to sort them into the right containers. But be careful - once you measure a particle in superposition, it collapses into just one color! Can you figure out the pattern and complete all the levels?",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
       duration: 15,
-      points: 15
+      points: 15,
+      externalSimulator: {
+        type: "iframe",
+        url: "/Superposition Sorter.html",
+        height: 600,
+        width: "100%"
+      }
     },
     {
       id: "1.1.8.7",
@@ -98,9 +103,14 @@ export const module8: Module = {
       description: "Use quantum clues to find hidden treasures.",
       content: "It's time for a Quantum Treasure Hunt! In this game, you'll search for hidden quantum treasures by using probability clouds.\n\nIn quantum physics, we can't know exactly where a particle is - we only know the probability of finding it in different places. In this game, you'll see 'probability clouds' that show where treasures might be hidden.\n\nThe brighter the cloud, the more likely you'll find a treasure there. But remember - just because there's a high probability doesn't guarantee the treasure is there! Can you collect enough quantum treasures to win?",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
       duration: 20,
-      points: 20
+      points: 20,
+      externalSimulator: {
+        type: "iframe",
+        url: "/Quantum Treasure Hunt.html",
+        height: 600,
+        width: "100%"
+      }
     },
     {
       id: "1.1.8.8",
