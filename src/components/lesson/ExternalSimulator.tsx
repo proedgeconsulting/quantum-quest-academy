@@ -81,12 +81,55 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
       );
     }
     
-    // Ensure URL has a leading slash for absolute path from public folder
+    // Try different path strategies
     let simulatorUrl = lesson.externalSimulator.url;
+    
+    // Strategy 1: If URL doesn't start with slash or http, try with slash
     if (!simulatorUrl.startsWith('/') && !simulatorUrl.startsWith('http')) {
       simulatorUrl = `/${simulatorUrl}`;
     }
     
+    // Strategy 2: If URL starts with slash but not http, try without the slash
+    // This creates a relative path which might work better in some environments
+    if (simulatorUrl.startsWith('/') && !simulatorUrl.startsWith('http')) {
+      // Remove the leading slash to make it relative
+      const relativeUrl = simulatorUrl.substring(1);
+      
+      return (
+        <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
+          <CardContent className="p-2 relative">
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 bg-opacity-75 z-10">
+                <Loader2 className="h-8 w-8 animate-spin text-quantum-500" />
+              </div>
+            )}
+            
+            {error && (
+              <div className="p-4 text-red-500 text-center">
+                <p>{error}</p>
+                <p className="text-sm mt-2">Attempted to load: {simulatorUrl}</p>
+                <p className="text-sm">Trying relative path instead: {relativeUrl}</p>
+              </div>
+            )}
+            
+            <iframe 
+              ref={iframeRef}
+              src={relativeUrl}
+              width={lesson.externalSimulator.width || "100%"}
+              height={lesson.externalSimulator.height || 500}
+              style={{ border: "none" }}
+              title={`External simulator for ${lesson.title}`}
+              sandbox="allow-scripts allow-same-origin allow-forms"
+              onLoad={handleIframeLoad}
+              onError={handleIframeError}
+              className="w-full"
+            />
+          </CardContent>
+        </Card>
+      );
+    }
+    
+    // Default case: use the processed URL
     return (
       <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <CardContent className="p-2 relative">
