@@ -12,12 +12,16 @@ export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.
   const simulatorTitle = config.title || 
                         (lesson?.interactiveComponent ? `${lesson.interactiveComponent} Simulator` : "Quantum Simulator");
   
+  // Get the mode from the simulator config or from the lesson's interactiveOptions
+  const simulatorMode = config.props?.mode || lesson?.interactiveOptions?.simulatorType || "basic";
+  
   // Apply any custom options from the lesson, but don't override simulator-specific props
   // Combine the configured props with any interactive options from the lesson
   const simulatorProps = {
     ...(config.props || {}),
     ...(lesson?.interactiveOptions || {}),
     title: simulatorTitle,
+    mode: simulatorMode, // Ensure mode is set properly for the simulator
     lessonId: lessonId, // Pass the lesson ID to allow for more context-aware behavior
     lessonTitle: lesson?.title || "Quantum Interactive Lesson"
   };

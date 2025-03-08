@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tab } from "@headlessui/react";
 import QubitStateSimulator from "@/components/quantum-simulator/QubitStateSimulator";
 import QuantumCoinSimulator from "@/components/quantum-simulator/QuantumCoinSimulator";
@@ -10,17 +10,60 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const QuantumSimulator = () => {
+interface QuantumSimulatorProps {
+  title?: string;
+  mode?: string;
+  simulatorType?: string; // For backward compatibility
+  showControls?: boolean;
+  lessonId?: string;
+  lessonTitle?: string;
+}
+
+const QuantumSimulator = ({ 
+  title = "Quantum Simulator", 
+  mode = "basic",
+  simulatorType, // For backward compatibility
+  showControls = true,
+  lessonId,
+  lessonTitle
+}: QuantumSimulatorProps) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [measurements, setMeasurements] = useState<Array<0 | 1>>([]);
   const [coinFlips, setCoinFlips] = useState<Array<"H" | "T">>([]);
   
-  // Title and mode based on selected tab
+  // Use simulatorType as fallback if provided (for backward compatibility)
+  const actualMode = mode || simulatorType || "basic";
+  
+  // Set the initial tab based on the mode
+  useEffect(() => {
+    if (actualMode === "technologies") {
+      // Technologies mode should start with the Random Numbers tab
+      setSelectedTab(2);
+    } else if (actualMode === "coin") {
+      // Coin mode should start with the Quantum Coin tab
+      setSelectedTab(1);
+    } else if (actualMode === "circuit" || actualMode === "random") {
+      // Circuit/random mode should start with the Random Numbers tab
+      setSelectedTab(2);
+    } else {
+      // Default to the first tab (Qubit State)
+      setSelectedTab(0);
+    }
+  }, [actualMode]);
+  
+  // Title and mode based on selected tab and provided props
   const getSimulatorTitle = () => {
+    if (title !== "Quantum Simulator") {
+      return title;
+    }
+    
     switch(selectedTab) {
       case 0: return "Qubit State Simulator";
       case 1: return "Quantum Coin Simulator";
-      case 2: return "Quantum Random Number Generator";
+      case 2: 
+        return actualMode === "technologies" 
+          ? "Quantum Technology Explorer" 
+          : "Quantum Random Number Generator";
       default: return "Quantum Simulator";
     }
   };
@@ -29,7 +72,7 @@ const QuantumSimulator = () => {
     switch(selectedTab) {
       case 0: return "state";
       case 1: return "coin";
-      case 2: return "circuit";
+      case 2: return actualMode === "technologies" ? "technologies" : "circuit";
       default: return "state";
     }
   };
@@ -40,10 +83,12 @@ const QuantumSimulator = () => {
         <SimulatorHeader 
           title={getSimulatorTitle()} 
           mode={getSimulatorMode()} 
+          lessonId={lessonId}
+          lessonTitle={lessonTitle}
         />
       </div>
       
-      <Tab.Group onChange={setSelectedTab}>
+      <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
         <Tab.List className="flex space-x-1 p-1 bg-quantum-100 dark:bg-quantum-900">
           <Tab
             className={({ selected }) =>
@@ -82,7 +127,7 @@ const QuantumSimulator = () => {
               )
             }
           >
-            Random Numbers
+            {actualMode === "technologies" ? "Quantum Technologies" : "Random Numbers"}
           </Tab>
         </Tab.List>
         <Tab.Panels className="p-4">
@@ -101,7 +146,8 @@ const QuantumSimulator = () => {
           <Tab.Panel>
             <RandomNumberSimulator 
               measurements={measurements} 
-              setMeasurements={setMeasurements} 
+              setMeasurements={setMeasurements}
+              mode={actualMode} 
             />
           </Tab.Panel>
         </Tab.Panels>

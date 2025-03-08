@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 6: Quantum Applications
@@ -35,7 +36,7 @@ export const module6: Module = {
       duration: 20,
       points: 15,
       interactiveOptions: {
-        mode: "technologies",
+        simulatorType: "technologies",
         showControls: true
       }
     },
