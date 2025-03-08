@@ -15,7 +15,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "Quantum Leaper.html",
+        url: "/simulators/quantum_leaper.html",
         height: 600,
         width: "100%"
       },
@@ -30,7 +30,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "Superposition Sorter.html",
+        url: "/simulators/superposition_sorter.html",
         height: 600,
         width: "100%"
       },
@@ -45,7 +45,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "Quantum Treasure Hunt.html",
+        url: "/simulators/quantum_treasure_hunt.html",
         height: 600,
         width: "100%"
       },

@@ -47,7 +47,6 @@ const generatePossiblePaths = (baseUrl: string) => {
   }
   
   // Try looking for files with variations in capitalization
-  // This can be helpful when filenames have inconsistent capitalization
   const lowerCaseName = fileName.toLowerCase();
   if (lowerCaseName !== fileName) {
     paths.push('/' + lowerCaseName);
@@ -58,6 +57,20 @@ const generatePossiblePaths = (baseUrl: string) => {
       paths.push('/' + lowerCaseName + '.html');
       paths.push(lowerCaseName + '.html');
       paths.push(`/simulators/${lowerCaseName}.html`);
+    }
+  }
+  
+  // Try with word 'Quantum' abbreviated to Q if it starts with Quantum
+  if (fileName.startsWith('Quantum ')) {
+    const abbreviatedName = fileName.replace('Quantum ', 'Q');
+    paths.push('/' + abbreviatedName);
+    paths.push(abbreviatedName);
+    paths.push(`/simulators/${abbreviatedName}`);
+    
+    if (!baseUrl.endsWith('.html')) {
+      paths.push('/' + abbreviatedName + '.html');
+      paths.push(abbreviatedName + '.html');
+      paths.push(`/simulators/${abbreviatedName}.html`);
     }
   }
   
