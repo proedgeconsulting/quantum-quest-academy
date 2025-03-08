@@ -36,7 +36,7 @@ export const module6: Module = {
       points: 20,
       externalSimulator: {
         type: "iframe",
-        url: "file:///local/path/to/your/simulator.html", // Replace with your actual local file path
+        url: "/simulators/quantum-technologies.html", // Relative path for deployment
         height: 600,
         width: "100%"
       }

@@ -51,10 +51,10 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
 
   // Case 1: Render iframe for external HTML content
   if (lesson.externalSimulator.type === "iframe" && lesson.externalSimulator.url) {
-    // Check if trying to load a local file
-    const isLocalFile = lesson.externalSimulator.url.startsWith('file:///');
+    // Check if trying to load a local file that's not relative
+    const isLocalFileProtocol = lesson.externalSimulator.url.startsWith('file:///');
     
-    if (isLocalFile) {
+    if (isLocalFileProtocol) {
       return (
         <Card className="bg-gray-50 dark:bg-gray-900">
           <CardContent className="p-6">
@@ -62,12 +62,16 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Local file access restricted</AlertTitle>
               <AlertDescription>
-                Browser security prevents direct access to local files through iframes. Please serve your HTML files through a local web server.
+                Browser security prevents direct access to local files through iframes. 
+                For deployment, please move your simulator files to the public folder and use relative paths.
               </AlertDescription>
             </Alert>
             
             <div className="text-center text-gray-500 mt-4 mb-4">
               <p>Attempted to load: {lesson.externalSimulator.url}</p>
+              <p className="mt-2 text-sm">
+                For production deployments, move your simulator files to the <code>public/simulators/</code> folder and use a relative path like <code>/simulators/your-simulator.html</code>
+              </p>
             </div>
             
             <LocalFileHelper />
