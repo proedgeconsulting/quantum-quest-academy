@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Chess, Piece, Square } from "lucide-react";
+import { ChessboardIcon, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -99,7 +99,7 @@ const QuantumChessSimulator = () => {
       <div className="p-4">
         <SimulatorHeader 
           title="Quantum Chess Simulator" 
-          mode="chess"
+          mode="circuit"
         />
       </div>
       

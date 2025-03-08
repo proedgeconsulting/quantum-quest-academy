@@ -1,30 +1,16 @@
 
-import { atomSimulatorMappings } from "./atom-simulators";
-import { waveSimulatorMappings } from "./wave-simulators";
-import { circuitSimulatorMappings } from "./circuit-simulators";
-import { miscSimulators } from "./misc-simulators";
 import { SimulatorConfig } from "./types";
-import React from "react";
-import { Lesson } from "@/data/types/courseTypes";
+import { circuitSimulators } from "./circuit-simulators";
+import { waveSimulators } from "./wave-simulators";
+import { atomSimulators } from "./atom-simulators";
+import { miscSimulators } from "./misc-simulators";
 
-// Combine all simulator mappings
-const simulatorMap: Record<string, SimulatorConfig> = {
-  ...atomSimulatorMappings,
-  ...waveSimulatorMappings,
-  ...circuitSimulatorMappings,
+// Combine all simulator mappings into a single record
+const simulatorMappings: Record<string, SimulatorConfig> = {
+  ...circuitSimulators,
+  ...waveSimulators,
+  ...atomSimulators,
   ...miscSimulators
 };
 
-export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.ReactNode => {
-  const config = simulatorMap[lessonId] || simulatorMap["default"];
-  
-  // Combine any props from the lesson with the configured props
-  const combinedProps = {
-    ...(config.props || {}),
-    ...(lesson?.interactiveOptions || {}),
-    title: config.title || (lesson?.interactiveComponent ? `${lesson.interactiveComponent} Simulator` : "Quantum Simulator")
-  };
-  
-  // Create the component with the combined props
-  return React.createElement(config.component, combinedProps);
-};
+export default simulatorMappings;
