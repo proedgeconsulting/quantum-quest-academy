@@ -58,7 +58,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
       return (
         <Card className="bg-gray-50 dark:bg-gray-900">
           <CardContent className="p-6">
-            <Alert variant="warning" className="mb-4">
+            <Alert variant="destructive" className="mb-4">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Local file access restricted</AlertTitle>
               <AlertDescription>
