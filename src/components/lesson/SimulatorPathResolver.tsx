@@ -46,6 +46,21 @@ const generatePossiblePaths = (baseUrl: string) => {
     paths.push(`/simulators/${underscoreHtml}`);
   }
   
+  // Try looking for files with variations in capitalization
+  // This can be helpful when filenames have inconsistent capitalization
+  const lowerCaseName = fileName.toLowerCase();
+  if (lowerCaseName !== fileName) {
+    paths.push('/' + lowerCaseName);
+    paths.push(lowerCaseName);
+    paths.push(`/simulators/${lowerCaseName}`);
+    
+    if (!baseUrl.endsWith('.html')) {
+      paths.push('/' + lowerCaseName + '.html');
+      paths.push(lowerCaseName + '.html');
+      paths.push(`/simulators/${lowerCaseName}.html`);
+    }
+  }
+  
   return [...new Set(paths)]; // Remove duplicates
 };
 

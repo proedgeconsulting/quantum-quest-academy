@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { Lesson } from "@/data/types/courseTypes";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import LocalFileHelper from "./LocalFileHelper";
@@ -22,6 +22,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
+  const [simulatorLoaded, setSimulatorLoaded] = useState(false);
 
   useEffect(() => {
     // Log for debugging
@@ -31,6 +32,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
     setError(null);
     setLoading(true);
     setResolvedUrl(null);
+    setSimulatorLoaded(false);
   }, [lesson.id]);
 
   if (!lesson.externalSimulator) {
@@ -45,6 +47,8 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
 
   const handleIframeLoad = () => {
     setLoading(false);
+    setSimulatorLoaded(true);
+    console.log(`Simulator loaded successfully: ${resolvedUrl}`);
   };
 
   const handleIframeError = () => {
@@ -59,6 +63,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
   const handlePathResolved = (path: string) => {
     setResolvedUrl(path);
     setError(null);
+    console.log(`Path resolved to: ${path}`);
   };
 
   const handlePathError = () => {
@@ -126,6 +131,12 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
                   <li><code>public/simulators/{lesson.externalSimulator.url.replace(/^\//, '')}</code></li>
                 </ul>
               </p>
+            </div>
+          )}
+          
+          {simulatorLoaded && (
+            <div className="absolute top-2 right-2 bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full p-1 z-20">
+              <CheckCircle size={16} />
             </div>
           )}
           
