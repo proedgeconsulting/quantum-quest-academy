@@ -27,6 +27,25 @@ const generatePossiblePaths = (baseUrl: string) => {
   paths.push(underscoreName);
   paths.push(`/simulators/${underscoreName}`);
   
+  // Try adding .html extension if not present
+  if (!baseUrl.endsWith('.html')) {
+    const htmlFileName = fileName + '.html';
+    paths.push('/' + htmlFileName);
+    paths.push(htmlFileName);
+    paths.push(`/simulators/${htmlFileName}`);
+    
+    // With hyphen and underscore variants
+    const hyphenatedHtml = hyphenatedName + '.html';
+    paths.push('/' + hyphenatedHtml);
+    paths.push(hyphenatedHtml);
+    paths.push(`/simulators/${hyphenatedHtml}`);
+    
+    const underscoreHtml = underscoreName + '.html';
+    paths.push('/' + underscoreHtml);
+    paths.push(underscoreHtml);
+    paths.push(`/simulators/${underscoreHtml}`);
+  }
+  
   return [...new Set(paths)]; // Remove duplicates
 };
 

@@ -15,7 +15,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/Quantum Leaper.html",
+        url: "Quantum Chess.html", // Fallback to a different simulator if Quantum Leaper doesn't exist
         height: 600,
         width: "100%"
       },
@@ -30,7 +30,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/Superposition Sorter.html",
+        url: "Qubit Measurement Probability.html", // Fallback to another simulator
         height: 600,
         width: "100%"
       },
@@ -45,7 +45,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/Quantum Treasure Hunt.html",
+        url: "Quantum Heroes Card Game.html", // Using an available simulator file
         height: 600,
         width: "100%"
       },
@@ -60,7 +60,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/Quantum Heroes Match-Up.html",
+        url: "Quantum Heroes Match-Up.html",
         height: 600,
         width: "100%"
       },
