@@ -32,7 +32,7 @@ export const module2: Module = {
       description: "Interactive simulation of Grover's quantum search algorithm.",
       content: "Grover's algorithm is a quantum algorithm for searching an unsorted database with quadratic speedup compared to classical algorithms. It's one of the most important quantum algorithms with many potential applications.\n\nIn this interactive activity, you'll explore a simplified simulation of Grover's algorithm. You'll be able to visualize how the algorithm amplifies the probability of finding the correct answer through a process known as amplitude amplification.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      interactiveComponent: "QuantumCircuitSimulator",
       duration: 30,
       points: 25
     },
