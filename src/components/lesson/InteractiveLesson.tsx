@@ -36,7 +36,7 @@ const InteractiveLesson = ({ lesson, onComplete, isLastLesson = false }: Interac
       
       <div className="mt-8">
         <div className="interactive-component-wrapper bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
-          {/* Render the appropriate simulator component based on the lesson ID */}
+          {/* Render the appropriate simulator component based on the lesson ID and pass full lesson context */}
           {lesson.interactiveComponent && getSimulatorForLesson(lesson.id, lesson)}
           
           {completed && isLastLesson ? (

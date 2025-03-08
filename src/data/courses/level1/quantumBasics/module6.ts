@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 6: Quantum Applications
@@ -32,9 +31,13 @@ export const module6: Module = {
       description: "Interactive exploration of quantum technologies.",
       content: "In this interactive activity, you'll explore different technologies that rely on quantum physics. You'll see how lasers work using stimulated emission, how solar panels generate electricity through the photoelectric effect, and how quantum tunneling enables scanning tunneling microscopes to image individual atoms.\n\nThis hands-on exploration will help you appreciate how quantum mechanics, despite its abstract nature, has led to practical technologies that benefit humanity.",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      interactiveComponent: "QuantumSimulator",
       duration: 20,
-      points: 15
+      points: 15,
+      interactiveOptions: {
+        mode: "technologies",
+        showControls: true
+      }
     },
     {
       id: "1.1.6.4",
