@@ -38,6 +38,7 @@ export interface Lesson {
     initialState?: string;
     treasureMode?: boolean;
     superpositionMode?: boolean;
+    showControls?: boolean;
   };
 }
 

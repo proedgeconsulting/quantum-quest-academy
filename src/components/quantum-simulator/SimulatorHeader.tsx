@@ -5,11 +5,13 @@ import { motion } from "framer-motion";
 
 interface SimulatorHeaderProps {
   title: string;
-  mode: "state" | "coin" | "circuit" | "creative";
+  mode: "state" | "coin" | "circuit" | "creative" | "technologies";
   isCollapsed?: boolean;
+  lessonId?: string;
+  lessonTitle?: string;
 }
 
-const SimulatorHeader = ({ title, mode, isCollapsed }: SimulatorHeaderProps) => {
+const SimulatorHeader = ({ title, mode, isCollapsed, lessonId, lessonTitle }: SimulatorHeaderProps) => {
   return (
     <div className="flex justify-between items-center mb-4">
       <h3 className="text-lg font-medium">{title}</h3>
@@ -19,6 +21,7 @@ const SimulatorHeader = ({ title, mode, isCollapsed }: SimulatorHeaderProps) => 
           {mode === "coin" && "Quantum Coin"}
           {mode === "circuit" && "Quantum Circuit"}
           {mode === "creative" && "Quantum Creative"}
+          {mode === "technologies" && "Quantum Tech"}
         </Badge>
         <motion.div
           whileHover={{ scale: 1.05 }}

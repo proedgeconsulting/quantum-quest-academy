@@ -7,12 +7,14 @@ interface RandomNumberSimulatorProps {
   measurements: Array<0 | 1>;
   setMeasurements: React.Dispatch<React.SetStateAction<Array<0 | 1>>>;
   probabilityBias?: number;
+  mode?: string;
 }
 
 const RandomNumberSimulator = ({ 
   measurements,
   setMeasurements,
-  probabilityBias = 0.5 
+  probabilityBias = 0.5,
+  mode
 }: RandomNumberSimulatorProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   
@@ -57,6 +59,14 @@ const RandomNumberSimulator = ({
       { name: '1', value: ones }
     ];
   };
+
+  // Custom title based on mode
+  const getTitle = () => {
+    if (mode === "technologies") {
+      return "Quantum Technology Applications";
+    }
+    return "Measurement Results";
+  };
   
   return (
     <div className="p-4">
@@ -73,7 +83,7 @@ const RandomNumberSimulator = ({
       </div>
       
       <div className="p-4 border rounded-md bg-white dark:bg-quantum-900">
-        <h3 className="text-sm font-medium mb-2">Measurement Results</h3>
+        <h3 className="text-sm font-medium mb-2">{getTitle()}</h3>
         <div className="flex flex-wrap gap-1 mb-4 min-h-10">
           {measurements.map((m, i) => (
             <span 

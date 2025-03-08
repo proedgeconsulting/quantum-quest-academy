@@ -72,7 +72,8 @@ const QuantumSimulator = ({
     switch(selectedTab) {
       case 0: return "state";
       case 1: return "coin";
-      case 2: return actualMode === "technologies" ? "technologies" : "circuit";
+      case 2: 
+        return actualMode === "technologies" ? "technologies" : "circuit";
       default: return "state";
     }
   };
