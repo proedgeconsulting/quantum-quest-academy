@@ -1,8 +1,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { Lesson } from "@/data/types/courseTypes";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import LocalFileHelper from "./LocalFileHelper";
 
 // External simulators - component mapping
 const externalComponentMap: Record<string, React.ComponentType<any>> = {
@@ -22,6 +24,10 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
   useEffect(() => {
     // Log for debugging
     console.log("Rendering external simulator for lesson:", lesson.id);
+    
+    // Reset error state when lesson changes
+    setError(null);
+    setLoading(true);
   }, [lesson.id]);
 
   if (!lesson.externalSimulator) {
@@ -40,11 +46,36 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
 
   const handleIframeError = () => {
     setLoading(false);
-    setError("Failed to load external simulator. Please check your connection or try again later.");
+    setError("Failed to load external simulator. Please check if the file path is correct and accessible.");
   };
 
   // Case 1: Render iframe for external HTML content
   if (lesson.externalSimulator.type === "iframe" && lesson.externalSimulator.url) {
+    // Check if trying to load a local file
+    const isLocalFile = lesson.externalSimulator.url.startsWith('file:///');
+    
+    if (isLocalFile) {
+      return (
+        <Card className="bg-gray-50 dark:bg-gray-900">
+          <CardContent className="p-6">
+            <Alert variant="warning" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Local file access restricted</AlertTitle>
+              <AlertDescription>
+                Browser security prevents direct access to local files through iframes. Please serve your HTML files through a local web server.
+              </AlertDescription>
+            </Alert>
+            
+            <div className="text-center text-gray-500 mt-4 mb-4">
+              <p>Attempted to load: {lesson.externalSimulator.url}</p>
+            </div>
+            
+            <LocalFileHelper />
+          </CardContent>
+        </Card>
+      );
+    }
+    
     return (
       <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <CardContent className="p-2 relative">
