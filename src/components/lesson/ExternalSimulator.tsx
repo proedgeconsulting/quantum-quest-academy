@@ -81,6 +81,12 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
       );
     }
     
+    // Ensure URL has a leading slash for absolute path from public folder
+    let simulatorUrl = lesson.externalSimulator.url;
+    if (!simulatorUrl.startsWith('/') && !simulatorUrl.startsWith('http')) {
+      simulatorUrl = `/${simulatorUrl}`;
+    }
+    
     return (
       <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <CardContent className="p-2 relative">
@@ -96,7 +102,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
           
           <iframe 
             ref={iframeRef}
-            src={lesson.externalSimulator.url}
+            src={simulatorUrl}
             width={lesson.externalSimulator.width || "100%"}
             height={lesson.externalSimulator.height || 500}
             style={{ border: "none" }}
