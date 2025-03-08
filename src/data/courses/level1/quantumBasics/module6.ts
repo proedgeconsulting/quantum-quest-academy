@@ -36,7 +36,7 @@ export const module6: Module = {
       points: 20,
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum-technologies.html", // Relative path for deployment
+        url: "/Qubit Measurement Probability.html",
         height: 600,
         width: "100%"
       }
