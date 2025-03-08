@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { ChessboardIcon, GraduationCap } from "lucide-react";
+import { Trophy, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,30 +13,24 @@ const QuantumChessSimulator = () => {
   const [quantumMoves, setQuantumMoves] = useState<QuantumMove[]>([]);
   const [moveHistory, setMoveHistory] = useState<string[]>([]);
   
-  // Handle piece selection and movement
   const handleSquareClick = (index: number) => {
     if (selectedPiece === null) {
-      // Select a piece
       if (boardState[index].piece) {
         setSelectedPiece(index);
       }
     } else {
-      // Move the selected piece
       if (selectedPiece !== index) {
         const newBoard = [...boardState];
         const selectedPieceType = newBoard[selectedPiece].piece;
         
         if (activeMode === "classical") {
-          // Classical move - just move the piece
           newBoard[index].piece = selectedPieceType;
           newBoard[selectedPiece].piece = null;
           
-          // Record the move
           const fromSquare = getSquareNotation(selectedPiece);
           const toSquare = getSquareNotation(index);
           setMoveHistory(prev => [...prev, `${selectedPieceType} ${fromSquare}-${toSquare}`]);
         } else {
-          // Quantum move - create superposition
           const newQuantumMove: QuantumMove = {
             pieceType: selectedPieceType!,
             originalPosition: selectedPiece,
@@ -47,7 +40,6 @@ const QuantumChessSimulator = () => {
           
           setQuantumMoves(prev => [...prev, newQuantumMove]);
           
-          // Record the quantum move
           const fromSquare = getSquareNotation(selectedPiece);
           const toSquare = getSquareNotation(index);
           setMoveHistory(prev => [...prev, `Q:${selectedPieceType} ${fromSquare}⟨+⟩${toSquare}`]);
@@ -58,21 +50,17 @@ const QuantumChessSimulator = () => {
     }
   };
   
-  // Force measurement of quantum pieces
   const handleMeasure = () => {
     if (quantumMoves.length === 0) return;
     
     const newBoard = [...boardState];
     const newQuantumMoves = [...quantumMoves];
     
-    // Measure each quantum move
     newQuantumMoves.forEach(move => {
       if (!move.measured) {
-        // 50% chance to be in either position
         const measurementResult = Math.random() > 0.5;
         
         if (measurementResult) {
-          // Piece is in the superposition position
           newBoard[move.originalPosition].piece = null;
           newBoard[move.superpositionPosition].piece = move.pieceType;
         }
@@ -86,7 +74,6 @@ const QuantumChessSimulator = () => {
     setMoveHistory(prev => [...prev, "Measurement performed!"]);
   };
   
-  // Reset the board
   const handleReset = () => {
     setBoardState(initialBoard);
     setQuantumMoves([]);
@@ -229,14 +216,12 @@ const QuantumChessSimulator = () => {
   );
 };
 
-// Helper function to convert index to chess notation
 const getSquareNotation = (index: number): string => {
-  const file = String.fromCharCode(97 + (index % 8)); // a-h
-  const rank = 8 - Math.floor(index / 8); // 1-8
+  const file = String.fromCharCode(97 + (index % 8));
+  const rank = 8 - Math.floor(index / 8);
   return `${file}${rank}`;
 };
 
-// Helper function to get piece symbol
 const getPieceSymbol = (piece: string): string => {
   switch (piece) {
     case 'K': return '♔';
@@ -255,7 +240,6 @@ const getPieceSymbol = (piece: string): string => {
   }
 };
 
-// Types
 interface ChessSquare {
   color: "white" | "black";
   piece: string | null;
@@ -268,7 +252,6 @@ interface QuantumMove {
   measured: boolean;
 }
 
-// Initial board setup
 const initialBoard: ChessSquare[] = Array(64).fill(null).map((_, index) => {
   const row = Math.floor(index / 8);
   const col = index % 8;
@@ -276,11 +259,9 @@ const initialBoard: ChessSquare[] = Array(64).fill(null).map((_, index) => {
   
   let piece: string | null = null;
   
-  // Set up pawns
   if (row === 1) piece = 'p';
   if (row === 6) piece = 'P';
   
-  // Set up back rows
   if (row === 0) {
     const pieces = ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'];
     piece = pieces[col];

@@ -5,6 +5,7 @@ import { Lesson } from "@/data/types/courseTypes";
 import { MarkdownContent } from "./VideoLesson";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { getSimulatorForLesson } from "./SimulatorMapping";
 
 interface InteractiveLessonProps {
   lesson: Lesson;
@@ -35,6 +36,9 @@ const InteractiveLesson = ({ lesson, onComplete, isLastLesson = false }: Interac
       
       <div className="mt-8">
         <div className="interactive-component-wrapper bg-gray-50 dark:bg-gray-900 p-4 rounded-xl">
+          {/* Render the appropriate simulator component based on the lesson ID */}
+          {lesson.interactiveComponent && getSimulatorForLesson(lesson.id, lesson)}
+          
           {completed && isLastLesson ? (
             <div className="mt-6 flex flex-col items-center justify-center space-y-4">
               <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
