@@ -1,38 +1,20 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { Lesson } from "@/data/types/courseTypes";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import LocalFileHelper from "./LocalFileHelper";
-import SimulatorPathResolver from "./SimulatorPathResolver";
-
-// External simulators - component mapping
-const externalComponentMap: Record<string, React.ComponentType<any>> = {
-  // Register your external React components here
-  // Example: "QuantumEntanglementDemo": QuantumEntanglementDemo,
-};
+import IframeSimulator from "./simulators/IframeSimulator";
+import LocalFileSimulator from "./simulators/LocalFileSimulator";
+import ComponentSimulator from "./simulators/ComponentSimulator";
+import ApiSimulator from "./simulators/ApiSimulator";
 
 interface ExternalSimulatorProps {
   lesson: Lesson;
 }
 
 const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
-  const [simulatorLoaded, setSimulatorLoaded] = useState(false);
-
   useEffect(() => {
     // Log for debugging
     console.log("Rendering external simulator for lesson:", lesson.id);
-    
-    // Reset error state when lesson changes
-    setError(null);
-    setLoading(true);
-    setResolvedUrl(null);
-    setSimulatorLoaded(false);
   }, [lesson.id]);
 
   if (!lesson.externalSimulator) {
@@ -45,154 +27,53 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
     );
   }
 
-  const handleIframeLoad = () => {
-    setLoading(false);
-    setSimulatorLoaded(true);
-    console.log(`Simulator loaded successfully: ${resolvedUrl}`);
-  };
-
-  const handleIframeError = () => {
-    setLoading(false);
-    if (!resolvedUrl) {
-      setError("Failed to load simulator. The file might not exist or there might be an issue with the simulator.");
-    } else {
-      setError(`Failed to load simulator at ${resolvedUrl}. There might be an issue with the simulator content.`);
-    }
-  };
-
-  const handlePathResolved = (path: string) => {
-    setResolvedUrl(path);
-    setError(null);
-    console.log(`Path resolved to: ${path}`);
-  };
-
-  const handlePathError = () => {
-    setLoading(false);
-    setError(`Could not find simulator file for "${lesson.title}". Please check that the file exists in the public folder.`);
-  };
-
-  // Case 1: Render iframe for external HTML content
+  // Case 1: Handle local file protocol (file:///)
+  if (lesson.externalSimulator.type === "iframe" && 
+      lesson.externalSimulator.url && 
+      lesson.externalSimulator.url.startsWith('file:///')) {
+    return (
+      <Card className="bg-gray-50 dark:bg-gray-900">
+        <CardContent className="p-6">
+          <LocalFileSimulator url={lesson.externalSimulator.url} />
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  // Case 2: Handle iframe-based simulators
   if (lesson.externalSimulator.type === "iframe" && lesson.externalSimulator.url) {
-    // Check if trying to load a local file that's not relative
-    const isLocalFileProtocol = lesson.externalSimulator.url.startsWith('file:///');
-    
-    if (isLocalFileProtocol) {
-      return (
-        <Card className="bg-gray-50 dark:bg-gray-900">
-          <CardContent className="p-6">
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Local file access restricted</AlertTitle>
-              <AlertDescription>
-                Browser security prevents direct access to local files through iframes. 
-                For deployment, please move your simulator files to the public folder and use relative paths.
-              </AlertDescription>
-            </Alert>
-            
-            <div className="text-center text-gray-500 mt-4 mb-4">
-              <p>Attempted to load: {lesson.externalSimulator.url}</p>
-              <p className="mt-2 text-sm">
-                For production deployments, move your simulator files to the <code>public/</code> folder and use a relative path like <code>/your-simulator.html</code>
-              </p>
-            </div>
-            
-            <LocalFileHelper />
-          </CardContent>
-        </Card>
-      );
-    }
-    
     return (
       <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <CardContent className="p-2 relative">
-          {/* Path resolution for the simulator file */}
-          {!resolvedUrl && !error && (
-            <SimulatorPathResolver 
-              url={lesson.externalSimulator.url}
-              onResolve={handlePathResolved}
-              onError={handlePathError}
-            />
-          )}
-          
-          {loading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 bg-opacity-75 z-10">
-              <Loader2 className="h-8 w-8 animate-spin text-quantum-500" />
-            </div>
-          )}
-          
-          {error && (
-            <div className="p-4 text-red-500 text-center">
-              <AlertCircle className="h-6 w-6 mx-auto mb-2" />
-              <p>{error}</p>
-              <p className="text-sm mt-2">
-                Make sure the file exists at one of the following locations:
-                <ul className="list-disc mt-1 text-left pl-6 text-gray-500">
-                  <li><code>public{lesson.externalSimulator.url}</code></li>
-                  <li><code>public/simulators/{lesson.externalSimulator.url.replace(/^\//, '')}</code></li>
-                </ul>
-              </p>
-            </div>
-          )}
-          
-          {simulatorLoaded && (
-            <div className="absolute top-2 right-2 bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400 rounded-full p-1 z-20">
-              <CheckCircle size={16} />
-            </div>
-          )}
-          
-          {resolvedUrl && (
-            <iframe 
-              ref={iframeRef}
-              src={resolvedUrl}
-              width={lesson.externalSimulator.width || "100%"}
-              height={lesson.externalSimulator.height || 500}
-              style={{ border: "none" }}
-              title={`External simulator for ${lesson.title}`}
-              sandbox="allow-scripts allow-same-origin allow-forms"
-              onLoad={handleIframeLoad}
-              onError={handleIframeError}
-            />
-          )}
+          <IframeSimulator lesson={lesson} />
         </CardContent>
       </Card>
     );
   }
 
-  // Case 2: Render React component
+  // Case 3: Handle component-based simulators
   if (lesson.externalSimulator.type === "component" && lesson.externalSimulator.componentName) {
-    const ComponentToRender = externalComponentMap[lesson.externalSimulator.componentName];
-    
-    if (!ComponentToRender) {
-      return (
-        <Card className="bg-gray-50 dark:bg-gray-900">
-          <CardContent className="p-6 text-center text-red-500">
-            Component "{lesson.externalSimulator.componentName}" is not registered.
-          </CardContent>
-        </Card>
-      );
-    }
-    
     return (
       <Card className="bg-gray-50 dark:bg-gray-900">
         <CardContent className="p-2">
-          <ComponentToRender lesson={lesson} />
+          <ComponentSimulator lesson={lesson} />
         </CardContent>
       </Card>
     );
   }
 
-  // Case 3: API-based simulators would go here
+  // Case 4: Handle API-based simulators
   if (lesson.externalSimulator.type === "api") {
-    // Implementation for API-based simulators
     return (
       <Card className="bg-gray-50 dark:bg-gray-900">
-        <CardContent className="p-6 text-center text-gray-500">
-          API-based simulator integration is configured but not yet implemented.
+        <CardContent className="p-6">
+          <ApiSimulator />
         </CardContent>
       </Card>
     );
   }
 
+  // Default case: Unsupported simulator type
   return (
     <Card className="bg-gray-50 dark:bg-gray-900">
       <CardContent className="p-6 text-center text-gray-500">
