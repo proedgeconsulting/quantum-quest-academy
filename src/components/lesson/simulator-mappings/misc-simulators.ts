@@ -1,7 +1,8 @@
-import { SimulatorMapping } from "@/components/types";
+
+import { SimulatorConfig } from "./types";
 import { lazy } from "react";
 
-export const miscSimulators: SimulatorMapping[] = [
+export const miscSimulators: SimulatorConfig[] = [
   {
     name: "QuantumChessSimulator",
     component: lazy(() => import("../../quantum-simulator/QuantumChessSimulator")),

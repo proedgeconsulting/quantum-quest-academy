@@ -2,7 +2,7 @@
 import { atomSimulatorMappings } from "./atom-simulators";
 import { waveSimulatorMappings } from "./wave-simulators";
 import { circuitSimulatorMappings } from "./circuit-simulators";
-import { miscSimulatorMappings } from "./misc-simulators";
+import { miscSimulators } from "./misc-simulators";
 import { SimulatorConfig } from "./types";
 import React from "react";
 import { Lesson } from "@/data/types/courseTypes";
@@ -12,7 +12,7 @@ const simulatorMap: Record<string, SimulatorConfig> = {
   ...atomSimulatorMappings,
   ...waveSimulatorMappings,
   ...circuitSimulatorMappings,
-  ...miscSimulatorMappings
+  ...miscSimulators
 };
 
 export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.ReactNode => {
