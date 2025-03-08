@@ -44,6 +44,39 @@ export const module10: Module = {
       type: "quiz",
       duration: 10,
       points: 20
+    },
+    {
+      id: "2.1.10.5",
+      title: "Quantum Chess",
+      description: "Play chess with quantum moves and superposition.",
+      content: `# Quantum Chess
+
+## Chess with a Quantum Twist
+
+Quantum Chess adds quantum mechanical principles to the traditional game of chess, creating entirely new strategic possibilities.
+
+## Quantum Rules
+
+In Quantum Chess:
+- Pieces can exist in superposition across multiple squares
+- Quantum moves allow pieces to be in two places at once
+- Measurement occurs when pieces interact
+- Entanglement can link the fate of different pieces
+
+## How to Play
+
+1. Make classical moves as in regular chess (click a piece, then click where to move it)
+2. Use quantum moves to place pieces in superposition (click the "Quantum Mode" button first)
+3. Force measurement by clicking the "Measure" button
+4. Try to create strategic advantages using quantum mechanics!
+
+## Interactive Quantum Chess Simulator
+
+Try the interactive Quantum Chess simulator below:`,
+      type: "interactive",
+      interactiveComponent: "QuantumChessSimulator",
+      duration: 30,
+      points: 35
     }
   ]
 };
