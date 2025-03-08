@@ -24,6 +24,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
   useEffect(() => {
     // Log for debugging
     console.log("Rendering external simulator for lesson:", lesson.id);
+    console.log("Simulator URL:", lesson.externalSimulator?.url);
     
     // Reset error state when lesson changes
     setError(null);
@@ -103,6 +104,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
             sandbox="allow-scripts allow-same-origin allow-forms"
             onLoad={handleIframeLoad}
             onError={handleIframeError}
+            className="w-full"
           />
         </CardContent>
       </Card>
