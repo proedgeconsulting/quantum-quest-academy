@@ -27,7 +27,22 @@ export const module6: Module = {
       videoUrl: "https://www.youtube.com/watch?v=7MdEHsRZxvo"
     },
     {
-      id: "1.1.6.7",
+      id: "1.1.6.3",
+      title: "Quantum Technologies Simulator",
+      description: "Interact with simulations of various quantum technologies.",
+      content: "In this interactive lesson, you'll explore simulations of different quantum technologies. You can experiment with quantum computing circuits, quantum key distribution for secure communication, and quantum sensors that can detect tiny changes in gravity, magnetic fields, and more.\n\nThese simulations will help you understand how quantum principles are applied in real-world technologies and why they offer advantages over classical approaches. Try different configurations and see how the quantum systems respond!",
+      type: "interactive",
+      duration: 25,
+      points: 20,
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-technologies.html", // Relative path for deployment
+        height: 600,
+        width: "100%"
+      }
+    },
+    {
+      id: "1.1.6.4",
       title: "Quantum Technologies Quiz",
       description: "Test your understanding of quantum technologies and their applications.",
       content: "Let's test your knowledge of quantum technologies!",
