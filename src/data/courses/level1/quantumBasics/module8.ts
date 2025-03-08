@@ -73,9 +73,14 @@ export const module8: Module = {
       description: "Learn about quantum jumping through a fun platformer game.",
       content: "Get ready to play Quantum Leaper! In this game, you'll control a quantum particle that can 'tunnel' through barriers.\n\nRemember how we learned that quantum particles can sometimes pass through walls? In this game, you'll use that superpower to solve puzzles and reach the finish line.\n\nThe thicker the barrier, the less likely your particle can tunnel through it. Can you make it through all the levels using your quantum tunneling skills?",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
       duration: 15,
-      points: 15
+      points: 15,
+      externalSimulator: {
+        type: "iframe",
+        url: "/Quantum Leaper.html",
+        height: 600,
+        width: "100%"
+      }
     },
     {
       id: "1.1.8.6",
