@@ -20,6 +20,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [useFallbackPath, setUseFallbackPath] = useState(false);
 
   useEffect(() => {
     // Log for debugging
@@ -29,6 +30,7 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
     // Reset error state when lesson changes
     setError(null);
     setLoading(true);
+    setUseFallbackPath(false);
   }, [lesson.id]);
 
   if (!lesson.externalSimulator) {
@@ -46,8 +48,13 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
   };
 
   const handleIframeError = () => {
-    setLoading(false);
-    setError("Failed to load external simulator. Please check if the file path is correct and accessible.");
+    // If primary path fails, try fallback path
+    if (!useFallbackPath) {
+      setUseFallbackPath(true);
+    } else {
+      setLoading(false);
+      setError("Failed to load external simulator. Please check if the file path is correct and accessible.");
+    }
   };
 
   // Case 1: Render iframe for external HTML content
@@ -81,55 +88,26 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
       );
     }
     
-    // Try different path strategies
-    let simulatorUrl = lesson.externalSimulator.url;
+    // Multiple path strategies for iframe source
+    let primaryPath: string;
+    let fallbackPath: string;
     
-    // Strategy 1: If URL doesn't start with slash or http, try with slash
-    if (!simulatorUrl.startsWith('/') && !simulatorUrl.startsWith('http')) {
-      simulatorUrl = `/${simulatorUrl}`;
+    const originalUrl = lesson.externalSimulator.url;
+    
+    // For deployment environments where files might be in root public folder
+    if (originalUrl.startsWith('/')) {
+      // If it already has a leading slash
+      primaryPath = originalUrl;
+      fallbackPath = originalUrl.substring(1); // Try without the slash
+    } else {
+      // If it doesn't have a leading slash
+      primaryPath = originalUrl; // Try as-is (relative path)
+      fallbackPath = `/${originalUrl}`; // Try with a slash (absolute from root)
     }
+
+    // Use the fallback path if primary path failed
+    const currentPath = useFallbackPath ? fallbackPath : primaryPath;
     
-    // Strategy 2: If URL starts with slash but not http, try without the slash
-    // This creates a relative path which might work better in some environments
-    if (simulatorUrl.startsWith('/') && !simulatorUrl.startsWith('http')) {
-      // Remove the leading slash to make it relative
-      const relativeUrl = simulatorUrl.substring(1);
-      
-      return (
-        <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
-          <CardContent className="p-2 relative">
-            {loading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 bg-opacity-75 z-10">
-                <Loader2 className="h-8 w-8 animate-spin text-quantum-500" />
-              </div>
-            )}
-            
-            {error && (
-              <div className="p-4 text-red-500 text-center">
-                <p>{error}</p>
-                <p className="text-sm mt-2">Attempted to load: {simulatorUrl}</p>
-                <p className="text-sm">Trying relative path instead: {relativeUrl}</p>
-              </div>
-            )}
-            
-            <iframe 
-              ref={iframeRef}
-              src={relativeUrl}
-              width={lesson.externalSimulator.width || "100%"}
-              height={lesson.externalSimulator.height || 500}
-              style={{ border: "none" }}
-              title={`External simulator for ${lesson.title}`}
-              sandbox="allow-scripts allow-same-origin allow-forms"
-              onLoad={handleIframeLoad}
-              onError={handleIframeError}
-              className="w-full"
-            />
-          </CardContent>
-        </Card>
-      );
-    }
-    
-    // Default case: use the processed URL
     return (
       <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <CardContent className="p-2 relative">
@@ -140,12 +118,17 @@ const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
           )}
           
           {error && (
-            <div className="p-4 text-red-500 text-center">{error}</div>
+            <div className="p-4 text-red-500 text-center">
+              <p>{error}</p>
+              <p className="text-sm mt-2">Attempted paths:</p>
+              <p className="text-sm">Primary: {primaryPath}</p>
+              <p className="text-sm">Fallback: {fallbackPath}</p>
+            </div>
           )}
           
           <iframe 
             ref={iframeRef}
-            src={simulatorUrl}
+            src={currentPath}
             width={lesson.externalSimulator.width || "100%"}
             height={lesson.externalSimulator.height || 500}
             style={{ border: "none" }}
