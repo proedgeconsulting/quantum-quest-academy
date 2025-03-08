@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Heroes Card Game</title>
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .card {
+            width: 100px;
+            height: 150px;
+            position: relative;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .back, .front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            border: 1px solid #333;
+            box-sizing: border-box;
+            transition: transform 0.6s;
+        }
+        .back {
+            background: #f0f0f0;
+            transform: rotateY(0deg);
+        }
+        .front {
+            background: #fff;
+            transform: rotateY(180deg);
+        }
+        .card.flipped .back {
+            transform: rotateY(180deg);
+        }
+        .card.flipped .front {
+            transform: rotateY(0deg);
+        }
+        .card.matched .front {
+            border-color: green;
+        }
+        .fact-display {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+        }
+        .fact-display p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Heroes Card Game</h1>
+    <p>Let's play a fun game to learn about the heroes of quantum physics! In this interactive card matching game, you'll match quantum scientists with their discoveries.</p>
+    <p>Learn about Niels Bohr, Marie Curie, Werner Heisenberg, and Erwin Schrödinger. Match all the cards to unlock special facts about each quantum hero!</p>
+    <div class="game-board"></div>
+    <div class="fact-display">
+        <h2>Unlocked Facts:</h2>
+    </div>
+    <script>
+        const gameBoard = document.querySelector('.game-board');
+        const factDisplay = document.querySelector('.fact-display');
+
+        // Define special facts for each scientist
+        const facts = {
+            "bohr": "Fun fact: Niels Bohr won the Nobel Prize in Physics in 1922 for his work on atomic structure.",
+            "curie": "Fun fact: Marie Curie was the first woman to win a Nobel Prize and the only person to win in two different sciences.",
+            "heisenberg": "Fun fact: Werner Heisenberg's uncertainty principle states that we cannot know both the position and speed of a particle with perfect accuracy.",
+            "schrodinger": "Fun fact: Erwin Schrödinger's thought experiment illustrates the concept of superposition in quantum mechanics."
+        };
+
+        // Define card data: scientists and their discoveries
+        const cardData = [
+            { content: "Niels Bohr", pair: "bohr" },
+            { content: "Figured out how electrons orbit around atoms.", pair: "bohr" },
+            { content: "Marie Curie", pair: "curie" },
+            { content: "Discovered radioactive elements.", pair: "curie" },
+            { content: "Werner Heisenberg", pair: "heisenberg" },
+            { content: "Came up with the uncertainty principle.", pair: "heisenberg" },
+            { content: "Erwin Schrödinger", pair: "schrodinger" },
+            { content: "Created the famous cat thought experiment.", pair: "schrodinger" }
+        ];
+
+        // Fisher-Yates shuffle function to randomize cards
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Create and append shuffled cards to the game board
+        const shuffledCards = shuffle(cardData);
+        shuffledCards.forEach(data => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.pair = data.pair;
+            const back = document.createElement('div');
+            back.classList.add('back');
+            back.textContent = '⚛️'; // Atom symbol for card back
+            const front = document.createElement('div');
+            front.classList.add('front');
+            front.textContent = data.content;
+            card.appendChild(back);
+            card.appendChild(front);
+            gameBoard.appendChild(card);
+        });
+
+        let flippedCards = [];
+        let isChecking = false;
+
+        // Event listener for card clicks using event delegation
+        gameBoard.addEventListener('click', (e) => {
+            const card = e.target.closest('.card');
+            if (!card || isChecking || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                return;
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                isChecking = true;
+                const [card1, card2] = flippedCards;
+
+                if (card1.dataset.pair === card2.dataset.pair) {
+                    // Match found
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    displayFact(card1.dataset.pair);
+                    flippedCards = [];
+                    isChecking = false;
+
+                    // Check if all pairs are matched
+                    const matchedPairs = document.querySelectorAll('.matched').length / 2;
+                    if (matchedPairs === 4) {
+                        setTimeout(() => {
+                            alert("Congratulations! You've matched all pairs and unlocked all the facts!");
+                        }, 500);
+                    }
+                } else {
+                    // No match, flip back after delay
+                    setTimeout(() => {
+                        card1.classList.remove('flipped');
+                        card2.classList.remove('flipped');
+                        flippedCards = [];
+                        isChecking = false;
+                    }, 1000);
+                }
+            }
+        });
+
+        // Function to display facts when a match is made
+        function displayFact(pair) {
+            const factElement = document.createElement('p');
+            factElement.textContent = facts[pair];
+            factDisplay.appendChild(factElement);
+        }
+    </script>
+</body>
+</html>
