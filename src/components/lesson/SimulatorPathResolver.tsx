@@ -20,6 +20,14 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
     const resolveSimulatorPath = async () => {
       console.log(`SimulatorPathResolver: Trying to resolve paths for ${url}`);
       
+      // First check if the URL is already absolute (starts with http or https)
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        console.log(`SimulatorPathResolver: URL is already absolute: ${url}`);
+        onResolve(url);
+        setIsResolved(true);
+        return;
+      }
+      
       // Generate all possible paths based on our strategies
       const possiblePaths = generateAllPossiblePaths(url);
       

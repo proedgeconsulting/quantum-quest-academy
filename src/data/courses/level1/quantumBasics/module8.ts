@@ -60,7 +60,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "Quantum Heroes Match-Up.html",
+        url: "/simulators/Quantum Heroes Match-Up.html",
         height: 600,
         width: "100%"
       },

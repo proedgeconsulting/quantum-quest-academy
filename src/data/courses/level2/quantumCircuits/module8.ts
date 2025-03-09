@@ -54,12 +54,18 @@ export const module8: Module = {
     },
     {
       id: "2.1.8.4",
-      title: "Quantum Games Quiz",
-      description: "Test your understanding of the quantum concepts behind the games.",
-      content: "Let's check what you've learned while playing quantum games!",
-      type: "quiz",
-      duration: 10,
-      points: 15
+      title: "Quantum Chess",
+      description: "Play a variant of chess with quantum-mechanical twists.",
+      content: "Quantum Chess combines the classic strategy game with quantum mechanics principles. In this game, pieces can exist in superposition, allowing them to potentially be in multiple places at once!\n\nUnlike regular chess, in Quantum Chess a piece can be placed in a quantum superposition of two different squares. When you try to capture it, the superposition collapses and the piece will be in only one of those locations. This adds a whole new layer of strategy and probability to the traditional game.\n\nCan you master this quantum twist on one of the world's oldest strategy games?",
+      type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum Chess.html",
+        height: 600,
+        width: "100%"
+      },
+      duration: 25,
+      points: 20
     }
   ]
 };
