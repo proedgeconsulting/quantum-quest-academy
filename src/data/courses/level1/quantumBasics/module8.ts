@@ -15,7 +15,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/public/simulators/Quantum Leaper.html"
+        url: "/public/simulators/Quantum Leaper.html",
         height: 600,
         width: "100%"
       },

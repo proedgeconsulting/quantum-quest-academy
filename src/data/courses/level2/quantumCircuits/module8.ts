@@ -15,7 +15,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum_gate_puzzles.html",
+        url: "/public/simulators/quantum gate puzzles.html",
         height: 600,
         width: "100%"
       },
@@ -30,7 +30,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum_circuit_race.html",
+        url: "/public/simulators/quantum circuit race.html",
         height: 600,
         width: "100%"
       },
@@ -45,7 +45,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum_error_defenders.html",
+        url: "/public/simulators/quantum error defenders.html",
         height: 600,
         width: "100%"
       },
@@ -60,7 +60,7 @@ export const module8: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/Quantum Chess.html",
+        url: "/public/simulators/Quantum Chess.html",
         height: 600,
         width: "100%"
       },
