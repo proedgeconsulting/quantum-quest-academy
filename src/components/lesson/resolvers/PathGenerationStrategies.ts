@@ -22,10 +22,8 @@ export const generateSubfolderVariations = (baseUrl: string): string[] => {
   const fileName = baseUrl.startsWith('/') ? baseUrl.substring(1) : baseUrl;
   
   // Try with simulators subfolder
-  if (!baseUrl.includes('simulators/') && !baseUrl.includes('simulators\\')) {
-    paths.push(`/simulators/${fileName}`);
-    paths.push(`simulators/${fileName}`);
-  }
+  paths.push(`/simulators/${fileName}`);
+  paths.push(`simulators/${fileName}`);
   
   return paths;
 };
