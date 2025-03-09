@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Measurement Probability Simulator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Qubit Measurement Probability</h2>
+    α (Real): <input type="range" id="alpha" min="-100" max="100" value="70"><br>
+    β (Imaginary): <input type="range" id="beta" min="-100" max="100" value="70"><br>
+    <canvas id="probChart" width="400" height="200"></canvas>
+
+    <script>
+        const ctx = document.getElementById('probChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['|0⟩', '|1⟩'],
+                datasets: [{
+                    label: 'Probability',
+                    data: [0.5, 0.5],
+                    backgroundColor: ['#ff6384', '#36a2eb']
+                }]
+            }
+        });
+
+        function updateProbabilities() {
+            const alpha = document.getElementById('alpha').value / 100;
+            const beta = document.getElementById('beta').value / 100;
+            
+            // Normalize
+            const norm = Math.sqrt(alpha**2 + beta**2);
+            const prob0 = (alpha**2) / (norm**2);
+            const prob1 = (beta**2) / (norm**2);
+
+            chart.data.datasets[0].data = [prob0, prob1];
+            chart.update();
+        }
+
+        document.getElementById('alpha').addEventListener('input', updateProbabilities);
+        document.getElementById('beta').addEventListener('input', updateProbabilities);
+        updateProbabilities();
+    </script>
+</body>
+</html>

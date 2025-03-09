@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Treasure Hunt</title>
+    <style>
+        #gameCanvas {
+            border: 2px solid white;
+            background-color: #1a1a1a;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #2a2a2a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .status {
+            margin: 20px;
+            font-size: 1.2em;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Treasure Hunt</h1>
+    <div class="status">
+        Treasures Found: <span id="found">0</span> | 
+        Attempts Left: <span id="attempts">20</span>
+    </div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <button onclick="newGame()">New Game</button>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const GRID_SIZE = 20;
+const CELL_SIZE = canvas.width/GRID_SIZE;
+let probabilityMap = [];
+let treasuresFound = 0;
+let attemptsLeft = 20;
+
+class QuantumTreasure {
+    constructor() {
+        this.grid = Array(GRID_SIZE).fill().map(() => 
+            Array(GRID_SIZE).fill(0));
+        this.generateProbabilityClouds();
+    }
+
+    generateProbabilityClouds() {
+        // Create Gaussian probability distributions
+        this.addGaussianCloud(4, 4);
+        this.addGaussianCloud(15, 15);
+        this.addGaussianCloud(10, 15);
+    }
+
+    addGaussianCloud(centerX, centerY) {
+        const spread = 2;
+        for(let x = 0; x < GRID_SIZE; x++) {
+            for(let y = 0; y < GRID_SIZE; y++) {
+                const dx = x - centerX;
+                const dy = y - centerY;
+                const prob = Math.exp(-(dx*dx + dy*dy)/(2*spread*spread));
+                this.grid[x][y] = Math.min(this.grid[x][y] + prob, 1);
+            }
+        }
+    }
+
+    search(x, y) {
+        const probability = this.grid[x][y];
+        this.grid[x][y] *= 0.3; // Collapse probability
+        return Math.random() < probability;
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw probability cloud
+    for(let x = 0; x < GRID_SIZE; x++) {
+        for(let y = 0; y < GRID_SIZE; y++) {
+            const alpha = probabilityMap.grid[x][y];
+            ctx.fillStyle = `rgba(0, 255, 150, ${alpha*0.5})`;
+            ctx.fillRect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        }
+    }
+}
+
+function handleClick(event) {
+    if(attemptsLeft <= 0) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left)/CELL_SIZE);
+    const y = Math.floor((event.clientY - rect.top)/CELL_SIZE);
+    
+    if(x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+        attemptsLeft--;
+        const found = probabilityMap.search(x, y);
+        if(found) treasuresFound++;
+        
+        // Draw search result
+        ctx.fillStyle = found ? 'gold' : 'red';
+        ctx.beginPath();
+        ctx.arc((x+0.5)*CELL_SIZE, (y+0.5)*CELL_SIZE, 5, 0, Math.PI*2);
+        ctx.fill();
+        
+        updateDisplay();
+        checkGameOver();
+    }
+}
+
+function updateDisplay() {
+    document.getElementById('found').textContent = treasuresFound;
+    document.getElementById('attempts').textContent = attemptsLeft;
+}
+
+function checkGameOver() {
+    if(attemptsLeft === 0) {
+        setTimeout(() => alert(`Game Over! Found ${treasuresFound} treasures`), 10);
+    }
+}
+
+function newGame() {
+    probabilityMap = new QuantumTreasure();
+    treasuresFound = 0;
+    attemptsLeft = 20;
+    updateDisplay();
+    draw();
+}
+
+// Initialize game
+canvas.addEventListener('click', handleClick);
+newGame();
+
+// Animation loop
+setInterval(() => {
+    draw();
+}, 100);
+</script>
+</body>
+</html>

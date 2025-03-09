@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Superposition Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .controls {
+            flex: 1;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .visualization {
+            flex: 2;
+            height: 500px;
+            position: relative;
+        }
+        .slider-container {
+            margin: 15px 0;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <h1>Quantum Superposition Simulator</h1>
+    
+    <div class="container">
+        <div class="controls">
+            <h2>Qubit Controls</h2>
+            <div class="slider-container">
+                <label>θ (Theta): <span id="thetaValue">0</span>°</label>
+                <input type="range" id="theta" min="0" max="180" value="90" step="1">
+            </div>
+            <div class="slider-container">
+                <label>φ (Phi): <span id="phiValue">0</span>°</label>
+                <input type="range" id="phi" min="0" max="360" value="0" step="1">
+            </div>
+            <button onclick="measure()">Measure Qubit</button>
+            <div id="result" style="margin-top: 20px;"></div>
+        </div>
+        
+        <div class="visualization">
+            <div id="blochSphere" style="height: 100%;"></div>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 40px;">PhET Quantum Bound States Simulator</h2>
+    <iframe src="https://phet.colorado.edu/sims/html/quantum-bound-states/latest/quantum-bound-states_en.html" 
+            width="100%" 
+            height="600" 
+            frameborder="0" 
+            allowfullscreen></iframe>
+
+<script>
+// Three.js Bloch Sphere Visualization
+let scene, camera, renderer, arrow;
+
+function initBlochSphere() {
+    const container = document.getElementById('blochSphere');
+    
+    // Scene setup
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, container.offsetWidth/container.offsetHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    container.appendChild(renderer.domElement);
+
+    // Bloch Sphere
+    const geometry = new THREE.SphereGeometry(2, 32, 32);
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0x444444,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.3
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    // State vector arrow
+    const direction = new THREE.Vector3(0, 0, 1);
+    const origin = new THREE.Vector3(0, 0, 0);
+    const length = 2.5;
+    const hex = 0xff0000;
+    arrow = new THREE.ArrowHelper(direction, origin, length, hex);
+    scene.add(arrow);
+
+    // Lighting and camera
+    camera.position.z = 5;
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+}
+
+function updateState() {
+    const theta = document.getElementById('theta').value * Math.PI / 180;
+    const phi = document.getElementById('phi').value * Math.PI / 180;
+    
+    const x = Math.sin(theta) * Math.cos(phi);
+    const y = Math.sin(theta) * Math.sin(phi);
+    const z = Math.cos(theta);
+    
+    arrow.setDirection(new THREE.Vector3(x, y, z).normalize();
+    renderer.render(scene, camera);
+}
+
+// Measurement function
+function measure() {
+    const theta = document.getElementById('theta').value * Math.PI / 180;
+    const probability0 = Math.pow(Math.cos(theta/2), 2);
+    const result = Math.random() < probability0 ? "|0⟩" : "|1⟩";
+    
+    document.getElementById('result').innerHTML = `
+        <h3>Measurement Result: ${result}</h3>
+        <p>Probability of |0⟩: ${(probability0 * 100).toFixed(1)}%</p>
+        <p>Probability of |1⟩: ${((1 - probability0) * 100).toFixed(1)}%</p>
+    `;
+}
+
+// Event listeners
+document.getElementById('theta').addEventListener('input', function() {
+    document.getElementById('thetaValue').textContent = this.value;
+    updateState();
+});
+
+document.getElementById('phi').addEventListener('input', function() {
+    document.getElementById('phiValue').textContent = this.value;
+    updateState();
+});
+
+// Initialize
+initBlochSphere();
+updateState();
+</script>
+</body>
+</html>

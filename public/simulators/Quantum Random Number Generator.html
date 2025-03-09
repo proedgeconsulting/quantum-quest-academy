@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Random Number Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .qubits-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .qubit {
+            width: 150px;
+            text-align: center;
+        }
+        .probability-bar {
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .bit-display {
+            font-size: 24px;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+        #result {
+            font-size: 32px;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .history-item {
+            padding: 5px;
+            margin: 2px;
+            background-color: #444;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Random Number Generator</h1>
+        <div class="qubits-container">
+            <div class="qubit">
+                <h3>Qubit 1</h3>
+                <div class="probability-bar">
+                    <div class="fill" id="q1-0" style="width: 100%; background-color: #2196F3"></div>
+                </div>
+                <div class="probability-bar">
+                    <div class="fill" id="q1-1" style="width: 0%; background-color: #E91E63"></div>
+                </div>
+                <div class="bit-display" id="q1-bit">-</div>
+            </div>
+            <div class="qubit">
+                <h3>Qubit 2</h3>
+                <div class="probability-bar">
+                    <div class="fill" id="q2-0" style="width: 100%; background-color: #2196F3"></div>
+                </div>
+                <div class="probability-bar">
+                    <div class="fill" id="q2-1" style="width: 0%; background-color: #E91E63"></div>
+                </div>
+                <div class="bit-display" id="q2-bit">-</div>
+            </div>
+        </div>
+        <div id="result">0</div>
+        <div>
+            <button onclick="initializeQubits()">Initialize Qubits</button>
+            <button onclick="applyHadamards()">Apply H Gates</button>
+            <button onclick="measureQubits()">Measure</button>
+            <button onclick="fullRandomize()">Generate Random Number</button>
+            <button onclick="resetAll()">Reset</button>
+        </div>
+        <h3>History:</h3>
+        <div id="history"></div>
+    </div>
+
+    <script>
+        let qubits = [
+            { alpha: 1, beta: 0, measured: null },  // Qubit 1
+            { alpha: 1, beta: 0, measured: null }   // Qubit 2
+        ];
+        let history = [];
+
+        function updateDisplays() {
+            // Update probability bars
+            qubits.forEach((q, index) => {
+                const prob0 = Math.pow(Math.abs(q.alpha), 2) * 100;
+                const prob1 = Math.pow(Math.abs(q.beta), 2) * 100;
+                document.getElementById(`q${index+1}-0`).style.width = prob0 + '%';
+                document.getElementById(`q${index+1}-1`).style.width = prob1 + '%';
+                
+                // Update bit display
+                const bitDisplay = document.getElementById(`q${index+1}-bit`);
+                bitDisplay.textContent = q.measured !== null ? q.measured : '-';
+                bitDisplay.style.color = q.measured !== null ? (q.measured ? '#E91E63' : '#2196F3') : '#fff';
+            });
+
+            // Update final result
+            if (qubits[0].measured !== null && qubits[1].measured !== null) {
+                const result = (qubits[0].measured << 1) | qubits[1].measured;
+                document.getElementById('result').textContent = result;
+            }
+        }
+
+        function initializeQubits() {
+            qubits = qubits.map(() => ({ alpha: 1, beta: 0, measured: null }));
+            updateDisplays();
+        }
+
+        function applyHadamards() {
+            qubits = qubits.map(q => {
+                const newAlpha = (q.alpha + q.beta) / Math.sqrt(2);
+                const newBeta = (q.alpha - q.beta) / Math.sqrt(2);
+                return { ...q, alpha: newAlpha, beta: newBeta };
+            });
+            updateDisplays();
+        }
+
+        function measureQubits() {
+            qubits = qubits.map(q => {
+                if (q.measured === null) {
+                    const prob0 = Math.pow(Math.abs(q.alpha), 2);
+                    const result = Math.random() < prob0 ? 0 : 1;
+                    return {
+                        alpha: result === 0 ? 1 : 0,
+                        beta: result === 0 ? 0 : 1,
+                        measured: result
+                    };
+                }
+                return q;
+            });
+            
+            if (qubits.every(q => q.measured !== null)) {
+                const result = (qubits[0].measured << 1) | qubits[1].measured;
+                history.unshift(`Result: ${result} (${qubits[0].measured}${qubits[1].measured})`);
+                document.getElementById('history').innerHTML = 
+                    history.map(item => `<div class="history-item">${item}</div>`).join('');
+            }
+            
+            updateDisplays();
+        }
+
+        function fullRandomize() {
+            initializeQubits();
+            applyHadamards();
+            measureQubits();
+        }
+
+        function resetAll() {
+            initializeQubits();
+            history = [];
+            document.getElementById('history').innerHTML = '';
+            document.getElementById('result').textContent = '0';
+            updateDisplays();
+        }
+
+        // Initialize on load
+        initializeQubits();
+    </script>
+</body>
+</html>

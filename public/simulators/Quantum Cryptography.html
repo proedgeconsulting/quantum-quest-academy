@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Cryptography Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .simulation {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        canvas {
+            border: 2px solid #444;
+            background: #000;
+        }
+        .controls {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Cryptography Simulator (E91 Protocol)</h1>
+        
+        <div class="simulation">
+            <canvas id="mainCanvas" width="800" height="600"></canvas>
+            <div class="controls">
+                <h3>Controls</h3>
+                <label><input type="checkbox" id="eve"> Enable Eavesdropper (Eve)</label>
+                
+                <h4>Alice's Basis</h4>
+                <select id="aliceBasis">
+                    <option value="0">0°</option>
+                    <option value="120">120°</option>
+                    <option value="240">240°</option>
+                </select>
+
+                <h4>Bob's Basis</h4>
+                <select id="bobBasis">
+                    <option value="0">0°</option>
+                    <option value="120">120°</option>
+                    <option value="240">240°</option>
+                </select>
+
+                <button onclick="runProtocol()" style="margin-top: 20px;">Run Protocol</button>
+                
+                <div class="result" id="results">
+                    <h3>Results</h3>
+                    <p>Shared Key: <span id="sharedKey"></span></p>
+                    <p>Error Rate: <span id="errorRate"></span></p>
+                    <p>Bell Test Value: <span id="bellValue"></span></p>
+                    <p>Security Status: <span id="security"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+let entangledParticles = [];
+
+class EntangledPair {
+    constructor() {
+        this.state = Math.random() < 0.5 ? 0 : 1; // 0 = |Φ+⟩, 1 = |Ψ-⟩
+        this.aliceResult = null;
+        this.bobResult = null;
+        this.eveMeasured = false;
+    }
+
+    measure(angle, isEve = false) {
+        const effectiveAngle = angle * Math.PI / 180;
+        const probability = Math.pow(Math.cos(effectiveAngle/2), 2);
+        const result = Math.random() < probability ? 0 : 1;
+        
+        if(isEve) {
+            this.eveMeasured = true;
+            this.state = result; // Collapse the state
+        }
+        return result;
+    }
+}
+
+function drawEntanglement() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw Alice
+    ctx.fillStyle = '#ff4444';
+    ctx.fillRect(100, 250, 50, 100);
+    ctx.fillStyle = '#fff';
+    ctx.fillText('Alice', 110, 240);
+
+    // Draw Bob
+    ctx.fillStyle = '#4444ff';
+    ctx.fillRect(650, 250, 50, 100);
+    ctx.fillStyle = '#fff';
+    ctx.fillText('Bob', 660, 240);
+
+    // Draw entangled particles
+    entangledParticles.forEach((pair, i) => {
+        const yPos = 100 + i * 50;
+        ctx.beginPath();
+        ctx.moveTo(150, yPos);
+        ctx.lineTo(650, yPos);
+        ctx.strokeStyle = pair.eveMeasured ? '#ff0000' : '#00ff00';
+        ctx.setLineDash(pair.state === 0 ? [] : [5,5]);
+        ctx.stroke();
+        
+        ctx.fillStyle = '#fff';
+        ctx.fillText(`P${i+1}`, 130, yPos+5);
+        ctx.fillText(`P${i+1}`, 660, yPos+5);
+    });
+}
+
+function calculateBellValue(results) {
+    let S = 0;
+    const angles = [[0, 0], [0, 120], [120, 0], [120, 120]];
+    
+    angles.forEach(([a, b]) => {
+        const matches = results.filter(r => 
+            r.aliceAngle === a && r.bobAngle === b
+        );
+        const correlation = matches.filter(m => m.alice === m.bob).length / matches.length;
+        S += (a === 120 && b === 120) ? -correlation : correlation;
+    });
+    
+    return S.toFixed(3);
+}
+
+function runProtocol() {
+    const numPairs = 100;
+    const results = [];
+    entangledParticles = [];
+    const eveEnabled = document.getElementById('eve').checked;
+
+    // Generate entangled pairs
+    for(let i = 0; i < numPairs; i++) {
+        const pair = new EntangledPair();
+        if(eveEnabled) {
+            pair.measure(Math.random() * 360, true); // Eve's measurement
+        }
+        entangledParticles.push(pair);
+    }
+
+    // Perform measurements
+    entangledParticles.forEach(pair => {
+        const aliceAngle = parseInt(document.getElementById('aliceBasis').value);
+        const bobAngle = parseInt(document.getElementById('bobBasis').value);
+        
+        pair.aliceResult = pair.measure(aliceAngle);
+        pair.bobResult = pair.measure(bobAngle);
+        
+        results.push({
+            alice: pair.aliceResult,
+            bob: pair.bobResult,
+            aliceAngle,
+            bobAngle
+        });
+    });
+
+    // Calculate statistics
+    const matchingBasis = results.filter(r => r.aliceAngle === r.bobAngle);
+    const errorRate = matchingBasis.filter(r => r.alice !== r.bob).length / matchingBasis.length;
+    const bellValue = calculateBellValue(results);
+    
+    // Update display
+    document.getElementById('sharedKey').textContent = 
+        results.slice(0, 10).map(r => r.alice).join('');
+    document.getElementById('errorRate').textContent = 
+        `${(errorRate * 100).toFixed(1)}%`;
+    document.getElementById('bellValue').textContent = bellValue;
+    document.getElementById('security').textContent = 
+        bellValue > 2 ? 'Secure (Quantum)' : 'Insecure (Eavesdropping Detected)';
+    document.getElementById('security').style.color = 
+        bellValue > 2 ? '#00ff00' : '#ff0000';
+
+    drawEntanglement();
+}
+
+// Initial draw
+drawEntanglement();
+</script>
+</body>
+</html>

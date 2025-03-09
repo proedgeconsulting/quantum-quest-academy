@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            cursor: pointer;
+            position: relative;
+        }
+        .quantum-x {
+            color: #ff4444;
+            opacity: 0.6;
+        }
+        .quantum-o {
+            color: #44ff44;
+            opacity: 0.6;
+        }
+        .entanglement-line {
+            position: absolute;
+            pointer-events: none;
+        }
+        .classical-x { color: #ff4444; }
+        .classical-o { color: #44ff44; }
+        .info {
+            margin: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Tic-Tac-Toe</h1>
+    <div class="info">
+        Player: <span id="current-player">X</span> | 
+        Moves: <span id="move-count">0</span>
+    </div>
+    <div class="game-container" id="game-board"></div>
+    <div class="info" id="game-status"></div>
+
+    <h2>Advanced Quantum Tic-Tac-Toe</h2>
+    <iframe src="https://ducky.org/quantum-tictactoe" 
+            width="600" 
+            height="600" 
+            frameborder="0" 
+            allowfullscreen></iframe>
+
+<script>
+class QuantumGame {
+    constructor() {
+        this.board = Array(9).fill().map(() => ({
+            classical: null,
+            quantum: []
+        }));
+        this.players = ['X', 'O'];
+        this.currentPlayer = 0;
+        this.entanglements = new Map();
+        this.moveCount = 0;
+        this.gameOver = false;
+    }
+
+    makeMove(cellIndex) {
+        if(this.gameOver || this.board[cellIndex].classical) return;
+
+        const player = this.players[this.currentPlayer];
+        
+        if(this.board[cellIndex].quantum.length === 0) {
+            // First part of quantum move
+            this.board[cellIndex].quantum.push(player);
+            this.currentMove = cellIndex;
+        } else {
+            // Complete entanglement
+            this.board[cellIndex].quantum.push(player);
+            this.entanglements.set(this.currentMove, cellIndex);
+            this.entanglements.set(cellIndex, this.currentMove);
+            this.currentPlayer = (this.currentPlayer + 1) % 2;
+            this.moveCount++;
+            this.checkCollapse();
+        }
+    }
+
+    checkCollapse() {
+        if(this.moveCount % 4 === 0) {
+            this.collapseQuantumStates();
+        }
+    }
+
+    collapseQuantumStates() {
+        // Simple collapse logic - random resolution
+        for(const [a, b] of this.entanglements) {
+            if(Math.random() < 0.5) {
+                this.board[a].classical = this.board[a].quantum[0];
+                this.board[b].quantum = [];
+            } else {
+                this.board[b].classical = this.board[b].quantum[0];
+                this.board[a].quantum = [];
+            }
+        }
+        this.entanglements.clear();
+        this.checkWinner();
+    }
+
+    checkWinner() {
+        const lines = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6] // Diagonals
+        ];
+
+        for(const line of lines) {
+            const [a, b, c] = line;
+            if(this.board[a].classical && 
+               this.board[a].classical === this.board[b].classical && 
+               this.board[a].classical === this.board[c].classical) {
+                this.gameOver = true;
+                return this.board[a].classical;
+            }
+        }
+        return null;
+    }
+}
+
+const game = new QuantumGame();
+const board = document.getElementById('game-board');
+
+// Initialize board
+for(let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.dataset.index = i;
+    cell.addEventListener('click', () => handleMove(i));
+    board.appendChild(cell);
+}
+
+function handleMove(index) {
+    if(game.gameOver) return;
+    
+    game.makeMove(index);
+    updateBoard();
+    
+    const winner = game.checkWinner();
+    if(winner) {
+        document.getElementById('game-status').textContent = `Player ${winner} wins!`;
+    }
+}
+
+function updateBoard() {
+    document.getElementById('current-player').textContent = 
+        game.players[game.currentPlayer];
+    document.getElementById('move-count').textContent = game.moveCount;
+
+    document.querySelectorAll('.cell').forEach((cell, index) => {
+        cell.innerHTML = '';
+        const state = game.board[index];
+        
+        // Add classical state
+        if(state.classical) {
+            const elem = document.createElement('div');
+            elem.className = `classical-${state.classical.toLowerCase()}`;
+            elem.textContent = state.classical;
+            cell.appendChild(elem);
+        }
+        
+        // Add quantum states
+        state.quantum.forEach((player, i) => {
+            const elem = document.createElement('div');
+            elem.className = `quantum-${player.toLowerCase()}`;
+            elem.textContent = player;
+            elem.style.position = 'absolute';
+            elem.style.left = i === 0 ? '20%' : '60%';
+            elem.style.top = '30%';
+            cell.appendChild(elem);
+        });
+
+        // Draw entanglement lines
+        const partner = game.entanglements.get(index);
+        if(partner !== undefined) {
+            const startCell = cell.getBoundingClientRect();
+            const endCell = board.children[partner].getBoundingClientRect();
+            
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            line.className = 'entanglement-line';
+            line.style.width = `${Math.abs(startCell.left - endCell.left)}px`;
+            line.style.height = `${Math.abs(startCell.top - endCell.top)}px`;
+            line.style.left = `${Math.min(startCell.left, endCell.left) - board.getBoundingClientRect().left}px`;
+            line.style.top = `${Math.min(startCell.top, endCell.top) - board.getBoundingClientRect().top}px`;
+            
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M ${startCell.width/2} ${startCell.height/2} 
+                                  L ${endCell.left - startCell.left + endCell.width/2} 
+                                    ${endCell.top - startCell.top + endCell.height/2}`);
+            path.setAttribute('stroke', '#888');
+            path.setAttribute('stroke-width', '2');
+            line.appendChild(path);
+            cell.appendChild(line);
+        }
+    });
+}
+</script>
+</body>
+</html>

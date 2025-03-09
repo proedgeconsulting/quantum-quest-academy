@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Entanglement Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .simulation {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        canvas {
+            border: 2px solid #444;
+            background: #000;
+        }
+        .controls {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .qubit-control {
+            margin: 15px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 8px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Entanglement Simulator</h1>
+        
+        <div class="simulation">
+            <div id="blochSpheres" style="height: 600px;"></div>
+            <div class="controls">
+                <div class="qubit-control">
+                    <h3>Qubit 1 (Control)</h3>
+                    <label>θ: <input type="range" id="theta" min="0" max="180" value="90"></label>
+                    <label>φ: <input type="range" id="phi" min="0" max="360" value="0"></label>
+                </div>
+                
+                <button onclick="applyH()">Apply Hadamard (H)</button>
+                <button onclick="applyCNOT()">Apply CNOT Gate</button>
+                <button onclick="measure()">Measure Qubits</button>
+                
+                <div class="result" id="results">
+                    <h3>Quantum State</h3>
+                    <p>State Vector: <span id="stateVector">|00⟩</span></p>
+                    <p>Probabilities: <span id="probabilities"></span></p>
+                    <p>Last Measurement: <span id="measurement"></span></p>
+                    <p>Bell Test Value: <span id="bellValue"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+class QuantumState {
+    constructor() {
+        this.state = [1, 0, 0, 0]; // |00⟩
+        this.entangled = false;
+    }
+
+    applyH() {
+        // Hadamard on first qubit
+        const newState = [
+            (this.state[0] + this.state[1])/Math.sqrt(2),
+            (this.state[0] - this.state[1])/Math.sqrt(2),
+            (this.state[2] + this.state[3])/Math.sqrt(2),
+            (this.state[2] - this.state[3])/Math.sqrt(2)
+        ];
+        this.state = newState;
+    }
+
+    applyCNOT() {
+        // CNOT gate
+        this.state = [
+            this.state[0],
+            this.state[1],
+            this.state[3],
+            this.state[2]
+        ];
+        this.entangled = true;
+    }
+
+    measure() {
+        const probabilities = this.state.map(x => Math.pow(Math.abs(x), 2));
+        const rand = Math.random();
+        let outcome = 0;
+        let sum = 0;
+        
+        for(let i = 0; i < 4; i++) {
+            sum += probabilities[i];
+            if(rand < sum) {
+                outcome = i;
+                break;
+            }
+        }
+        
+        // Collapse state
+        this.state = this.state.map((_, i) => i === outcome ? 1 : 0);
+        return outcome;
+    }
+
+    getBellTestValue() {
+        if(!this.entangled) return 0;
+        const p00 = Math.pow(Math.abs(this.state[0]), 2);
+        const p11 = Math.pow(Math.abs(this.state[3]), 2);
+        return 2 * (p00 + p11) - 1;
+    }
+}
+
+// Three.js Visualization
+let scene, camera, renderer, controls;
+let qubit1Arrow, qubit2Arrow;
+const quantumState = new QuantumState();
+
+function initVisualization() {
+    const container = document.getElementById('blochSpheres');
+    
+    // Scene setup
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, container.offsetWidth/container.offsetHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    container.appendChild(renderer.domElement);
+
+    // Bloch Spheres
+    const sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0x444444,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.3
+    });
+
+    // Qubit 1
+    const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(sphere1);
+    qubit1Arrow = new THREE.ArrowHelper(
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(-3, 0, 0),
+        2.5,
+        0xff0000
+    );
+    scene.add(qubit1Arrow);
+
+    // Qubit 2
+    const sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere2.position.x = 3;
+    scene.add(sphere2);
+    qubit2Arrow = new THREE.ArrowHelper(
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(3, 0, 0),
+        2.5,
+        0x0000ff
+    );
+    scene.add(qubit2Arrow);
+
+    camera.position.z = 10;
+    animate();
+}
+
+function updateArrows() {
+    const theta = document.getElementById('theta').value * Math.PI/180;
+    const phi = document.getElementById('phi').value * Math.PI/180;
+    
+    const x = Math.sin(theta) * Math.cos(phi);
+    const y = Math.sin(theta) * Math.sin(phi);
+    const z = Math.cos(theta);
+    
+    qubit1Arrow.setDirection(new THREE.Vector3(x, y, z).normalize());
+    qubit2Arrow.setDirection(quantumState.entangled ? 
+        new THREE.Vector3(x, y, -z).normalize() : 
+        new THREE.Vector3(x, y, z).normalize());
+}
+
+function applyH() {
+    quantumState.applyH();
+    updateDisplay();
+}
+
+function applyCNOT() {
+    quantumState.applyCNOT();
+    updateDisplay();
+}
+
+function measure() {
+    const outcome = quantumState.measure();
+    const binary = outcome.toString(2).padStart(2, '0');
+    document.getElementById('measurement').textContent = `|${binary}⟩`;
+    updateDisplay();
+}
+
+function updateDisplay() {
+    // Update state vector display
+    const stateDisplay = quantumState.state
+        .map((x, i) => `${x.toFixed(2)}|${i.toString(2).padStart(2, '0')}⟩`)
+        .join(' + ');
+    document.getElementById('stateVector').textContent = stateDisplay;
+
+    // Update probabilities
+    const probabilities = quantumState.state
+        .map(x => Math.pow(Math.abs(x), 2).toFixed(2));
+    document.getElementById('probabilities').textContent = probabilities.join(', ');
+
+    // Update Bell test value
+    document.getElementById('bellValue').textContent = 
+        quantumState.getBellTestValue().toFixed(2);
+
+    updateArrows();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+// Initialize simulation
+initVisualization();
+document.getElementById('theta').addEventListener('input', updateDisplay);
+document.getElementById('phi').addEventListener('input', updateDisplay);
+</script>
+</body>
+</html>

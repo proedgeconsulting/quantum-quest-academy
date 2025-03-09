@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Build Your First Quantum Circuit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .circuit-board {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .qubit-line {
+            display: contents;
+        }
+        .wire {
+            height: 60px;
+            border-bottom: 2px solid #444;
+            position: relative;
+        }
+        .gate-palette {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .gate {
+            padding: 10px;
+            border: 2px solid #666;
+            border-radius: 5px;
+            cursor: move;
+            user-select: none;
+        }
+        .placed-gate {
+            position: absolute;
+            width: 50px;
+            text-align: center;
+            background-color: #333;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .h-gate { border-color: #4CAF50; }
+        .cnot-gate { border-color: #2196F3; }
+        .cnot-connection {
+            position: absolute;
+            height: 30px;
+            width: 2px;
+            background-color: #2196F3;
+            left: 50%;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Build Your First Quantum Circuit</h1>
+        <p>Create a Bell state by placing gates on the circuit:</p>
+        
+        <div class="gate-palette">
+            <div class="gate h-gate" draggable="true" ondragstart="drag(event)">H</div>
+            <div class="gate cnot-gate" draggable="true" ondragstart="drag(event)">CNOT</div>
+        </div>
+
+        <div class="circuit-board" id="circuit">
+            <div class="qubit-line">
+                <div>q₀</div>
+                <div class="wire" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+            <div class="qubit-line">
+                <div>q₁</div>
+                <div class="wire" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+        </div>
+
+        <button onclick="runCircuit()">Run Circuit</button>
+        <button onclick="resetCircuit()">Reset</button>
+        
+        <div id="result"></div>
+        <div id="help" style="display: none; margin-top: 20px;">
+            <h3>Bell State Circuit Guide</h3>
+            <p>Correct circuit should have:</p>
+            <ol>
+                <li>H gate on q₀ (first qubit)</li>
+                <li>CNOT gate with q₀ as control and q₁ as target</li>
+            </ol>
+        </div>
+        <button onclick="toggleHelp()">Toggle Help</button>
+    </div>
+
+    <script>
+        let gates = [];
+        let nextStep = 0;
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.textContent);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const gateType = ev.dataTransfer.getData("text");
+            const wireIndex = Array.from(ev.target.parentNode.parentNode.children)
+                              .indexOf(ev.target.parentNode) - 1;
+
+            if (gateType === 'CNOT' && wireIndex !== 0) {
+                showResult("CNOT must be placed on control qubit (q₀)", "error");
+                return;
+            }
+
+            const gate = document.createElement("div");
+            gate.className = `placed-gate ${gateType.toLowerCase()}-gate`;
+            gate.textContent = gateType;
+            gate.dataset.step = nextStep;
+            gate.dataset.qubit = wireIndex;
+            
+            const rect = ev.target.getBoundingClientRect();
+            gate.style.left = `${nextStep * 100 + 20}px`;
+            ev.target.appendChild(gate);
+            
+            if (gateType === 'CNOT') {
+                const connection = document.createElement("div");
+                connection.className = "cnot-connection";
+                connection.style.left = `${nextStep * 100 + 45}px`;
+                connection.style.top = "30px";
+                ev.target.parentNode.nextElementSibling.lastElementChild.appendChild(connection);
+            }
+            
+            gates.push({
+                type: gateType,
+                step: nextStep++,
+                qubit: wireIndex
+            });
+        }
+
+        function runCircuit() {
+            const hGate = gates.find(g => g.type === 'H' && g.qubit === 0);
+            const cnotGate = gates.find(g => g.type === 'CNOT');
+
+            if (!hGate || !cnotGate) {
+                showResult("Missing required gates!", "error");
+                return;
+            }
+
+            if (hGate.step > cnotGate.step) {
+                showResult("H gate must come before CNOT gate!", "error");
+                return;
+            }
+
+            // Simulate quantum state
+            const state = {
+                q0: 0,
+                q1: 0
+            };
+
+            // Apply H gate to q0
+            state.q0 = Math.random() < 0.5 ? 0 : 1;
+            
+            // Apply CNOT gate
+            state.q1 = state.q0;
+
+            showResult(`Success! Bell state created: |${state.q0}${state.q1}⟩`, "success");
+        }
+
+        function resetCircuit() {
+            document.querySelectorAll('.placed-gate, .cnot-connection').forEach(el => el.remove());
+            gates = [];
+            nextStep = 0;
+            showResult("");
+        }
+
+        function showResult(text, type) {
+            const result = document.getElementById("result");
+            result.innerHTML = text;
+            result.className = type || "";
+        }
+
+        function toggleHelp() {
+            const help = document.getElementById("help");
+            help.style.display = help.style.display === "none" ? "block" : "none";
+        }
+    </script>
+</body>
+</html>

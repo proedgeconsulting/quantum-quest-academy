@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photon Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        canvas {
+            border: 2px solid #444;
+            background-color: #000;
+        }
+        .controls {
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .control-group {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .info-panel {
+            position: fixed;
+            right: -300px;
+            top: 20px;
+            width: 280px;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            transition: right 0.3s;
+        }
+        .info-panel.active {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Photon Explorer</h1>
+        <button onclick="toggleInfo()" style="margin-bottom: 20px;">Toggle Info</button>
+        
+        <canvas id="simCanvas" width="800" height="600"></canvas>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Simulation Speed</label>
+                <input type="range" id="speed" min="1" max="100" value="50">
+            </div>
+            <div class="control-group">
+                <label>Particle Size</label>
+                <input type="range" id="size" min="2" max="20" value="8">
+            </div>
+            <div class="control-group">
+                <label>Energy Level</label>
+                <input type="range" id="energy" min="1" max="100" value="50">
+            </div>
+        </div>
+
+        <div class="info-panel" id="infoPanel">
+            <h3>Instructions</h3>
+            <p>Observe photons behaving as both waves and particles:</p>
+            <ul>
+                <li>Yellow circles show particle nature</li>
+                <li>Wave lines show wave nature</li>
+                <li>Adjust sliders to modify behavior</li>
+                <li>Watch interactions with nucleus (center)</li>
+            </ul>
+        </div>
+    </div>
+
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+const photons = [];
+const nucleus = { x: canvas.width/2, y: canvas.height/2, radius: 30 };
+
+class Photon {
+    constructor() {
+        this.reset();
+        this.baseSpeed = Math.random() * 2 + 1;
+        this.waveAmplitude = Math.random() * 20 + 10;
+        this.waveFrequency = Math.random() * 0.05 + 0.02;
+    }
+
+    reset() {
+        this.angle = Math.random() * Math.PI * 2;
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.history = [];
+    }
+
+    update(speedFactor, energy) {
+        // Wave-like motion
+        const speed = this.baseSpeed * speedFactor;
+        this.angle += speed * 0.02;
+        
+        // Particle movement with wave pattern
+        this.x += speed * Math.cos(this.angle);
+        this.y += speed * Math.sin(this.angle) + 
+                 Math.sin(this.x * this.waveFrequency) * this.waveAmplitude;
+
+        // Keep within bounds
+        if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+            this.reset();
+        }
+
+        // Store position history for wave trail
+        this.history.push({x: this.x, y: this.y});
+        if(this.history.length > 50) this.history.shift();
+
+        // Check nucleus collision
+        const dx = this.x - nucleus.x;
+        const dy = this.y - nucleus.y;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        if(distance < nucleus.radius + 10) {
+            this.angle += Math.PI; // Reverse direction
+        }
+    }
+
+    draw(size) {
+        // Draw wave trail
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255, 255, 0, 0.3)`;
+        ctx.lineWidth = 2;
+        this.history.forEach((pos, i) => {
+            if(i === 0) ctx.moveTo(pos.x, pos.y);
+            else ctx.lineTo(pos.x, pos.y);
+        });
+        ctx.stroke();
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = '#ff0';
+        ctx.fill();
+    }
+}
+
+// Initialize photons
+for(let i = 0; i < 50; i++) {
+    photons.push(new Photon());
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw nucleus
+    ctx.beginPath();
+    ctx.arc(nucleus.x, nucleus.y, nucleus.radius, 0, Math.PI * 2);
+    ctx.fillStyle = '#f00';
+    ctx.fill();
+
+    // Update and draw photons
+    const speedFactor = document.getElementById('speed').value / 50;
+    const size = document.getElementById('size').value;
+    const energy = document.getElementById('energy').value / 100;
+    
+    photons.forEach(photon => {
+        photon.update(speedFactor, energy);
+        photon.draw(size);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+function toggleInfo() {
+    document.getElementById('infoPanel').classList.toggle('active');
+}
+
+// Start animation
+animate();
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth * 0.8;
+    canvas.height = window.innerHeight * 0.7;
+    nucleus.x = canvas.width/2;
+    nucleus.y = canvas.height/2;
+});
+</script>
+</body>
+</html>

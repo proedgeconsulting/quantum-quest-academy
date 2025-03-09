@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Circuit Designer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .gate-palette {
+            width: 150px;
+            padding: 10px;
+            background-color: #2d2d2d;
+            border-radius: 5px;
+        }
+        .gate {
+            padding: 10px;
+            margin: 5px;
+            background-color: #333;
+            border: 2px solid #444;
+            border-radius: 5px;
+            cursor: move;
+            user-select: none;
+        }
+        .circuit-board {
+            flex-grow: 1;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .qubit-line {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .wire {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #444;
+            margin: 0 10px;
+            position: relative;
+        }
+        .gate-slot {
+            width: 60px;
+            height: 40px;
+            border: 2px dashed #666;
+            margin: 0 5px;
+            position: relative;
+        }
+        .placed-gate {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background-color: #333;
+            border: 2px solid;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .visualization {
+            width: 300px;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .bloch-sphere {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #444;
+            border-radius: 50%;
+            margin: 10px auto;
+            position: relative;
+        }
+        .state-vector {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gate-palette">
+            <div class="gate" draggable="true" data-gate="H">H</div>
+            <div class="gate" draggable="true" data-gate="X">X</div>
+            <div class="gate" draggable="true" data-gate="Y">Y</div>
+            <div class="gate" draggable="true" data-gate="Z">Z</div>
+            <div class="gate" draggable="true" data-gate="CNOT">CNOT</div>
+            <div class="gate" draggable="true" data-gate="SWAP">SWAP</div>
+        </div>
+
+        <div class="circuit-board" id="circuitBoard">
+            <div class="qubit-line">
+                <span>q₀</span>
+                <div class="wire" id="wire0"></div>
+            </div>
+            <div class="qubit-line">
+                <span>q₁</span>
+                <div class="wire" id="wire1"></div>
+            </div>
+        </div>
+
+        <div class="visualization">
+            <h3>Quantum State Visualization</h3>
+            <div class="bloch-sphere" id="bloch0"></div>
+            <div class="bloch-sphere" id="bloch1"></div>
+            <div class="state-vector" id="stateVector"></div>
+        </div>
+    </div>
+
+    <script>
+        let quantumState = [1, 0, 0, 0]; // |00⟩
+        let gates = [];
+        let selectedGate = null;
+
+        // Initialize circuit board
+        function initializeCircuit() {
+            [0, 1].forEach(qubit => {
+                const wire = document.getElementById(`wire${qubit}`);
+                for(let i = 0; i < 5; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'gate-slot';
+                    slot.dataset.qubit = qubit;
+                    slot.dataset.position = i;
+                    slot.ondragover = allowDrop;
+                    slot.ondrop = drop;
+                    wire.appendChild(slot);
+                }
+            });
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function dragStart(ev) {
+            selectedGate = ev.target.dataset.gate;
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const qubit = parseInt(ev.target.dataset.qubit);
+            const position = parseInt(ev.target.dataset.position);
+            
+            const gate = document.createElement('div');
+            gate.className = 'placed-gate';
+            gate.textContent = selectedGate;
+            gate.dataset.gate = selectedGate;
+            gate.dataset.qubit = qubit;
+            gate.dataset.position = position;
+            
+            if(selectedGate === 'CNOT') {
+                gate.style.borderColor = '#2196F3';
+                addControlLine(qubit, position);
+            } else {
+                gate.style.borderColor = '#4CAF50';
+            }
+            
+            ev.target.appendChild(gate);
+            gates.push({type: selectedGate, qubit, position});
+            updateQuantumState();
+        }
+
+        function addControlLine(controlQubit, position) {
+            const targetWire = document.getElementById(`wire${1 - controlQubit}`);
+            const controlWire = document.getElementById(`wire${controlQubit}`);
+            
+            const line = document.createElement('div');
+            line.style.position = 'absolute';
+            line.style.left = `${position * 70 + 30}px`;
+            line.style.width = '2px';
+            line.style.height = '50px';
+            line.style.backgroundColor = '#2196F3';
+            targetWire.appendChild(line);
+        }
+
+        function updateQuantumState() {
+            // Reset to |00⟩
+            let state = [1, 0, 0, 0];
+            
+            // Apply gates in order
+            gates.sort((a, b) => a.position - b.position).forEach(gate => {
+                switch(gate.type) {
+                    case 'H':
+                        state = applyH(state, gate.qubit);
+                        break;
+                    case 'CNOT':
+                        state = applyCNOT(state, gate.qubit);
+                        break;
+                    case 'X':
+                        state = applyX(state, gate.qubit);
+                        break;
+                }
+            });
+            
+            quantumState = state;
+            updateVisualization();
+        }
+
+        function applyH(state, qubit) {
+            // Hadamard gate implementation
+            const hMatrix = [[1/Math.sqrt(2), 1/Math.sqrt(2)],
+                             [1/Math.sqrt(2), -1/Math.sqrt(2)]];
+            return tensorOperation(state, hMatrix, qubit);
+        }
+
+        function applyCNOT(state, controlQubit) {
+            // CNOT gate implementation
+            const targetQubit = 1 - controlQubit;
+            const newState = [...state];
+            for(let i = 0; i < state.length; i++) {
+                const controlBit = (i >> (1 - controlQubit)) & 1;
+                if(controlBit) {
+                    const targetBit = (i >> (1 - targetQubit)) & 1;
+                    const newIndex = i ^ (1 << (1 - targetQubit));
+                    [newState[i], newState[newIndex]] = [state[newIndex], state[i]];
+                }
+            }
+            return newState;
+        }
+
+        function tensorOperation(state, matrix, qubit) {
+            // Helper function for tensor operations
+            const newState = [];
+            const qubitMask = 1 << (1 - qubit);
+            for(let i = 0; i < state.length; i++) {
+                let sum = 0;
+                for(let j = 0; j < 2; j++) {
+                    const basis = (i & ~qubitMask) | (j << (1 - qubit));
+                    sum += matrix[(i >> (1 - qubit)) & 1][j] * state[basis];
+                }
+                newState[i] = sum;
+            }
+            return newState;
+        }
+
+        function updateVisualization() {
+            // Update Bloch spheres
+            updateBlochSphere(0, document.getElementById('bloch0'));
+            updateBlochSphere(1, document.getElementById('bloch1'));
+            
+            // Update state vector display
+            const stateVector = document.getElementById('stateVector');
+            stateVector.innerHTML = quantumState.map((amp, i) => 
+                `${amp.toFixed(2)}|${i.toString(2).padStart(2, '0')}⟩`).join(' + ');
+        }
+
+        function updateBlochSphere(qubit, element) {
+            // Simplified Bloch sphere visualization
+            const alpha = quantumState[qubit === 0 ? 0 : 2] || 0;
+            const beta = quantumState[qubit === 0 ? 1 : 3] || 0;
+            
+            const theta = Math.acos(alpha) * 2;
+            const phi = Math.atan2(beta.imaginary || 0, beta.real || 0);
+            
+            const x = Math.sin(theta) * Math.cos(phi);
+            const y = Math.sin(theta) * Math.sin(phi);
+            
+            element.innerHTML = `
+                <div style="position: absolute; width: 10px; height: 10px; 
+                    background: #ff4444; border-radius: 50%; 
+                    left: ${50 + x*40}%; top: ${50 - y*40}%"></div>
+            `;
+        }
+
+        // Initialize the circuit board
+        initializeCircuit();
+        
+        // Add event listeners
+        document.querySelectorAll('.gate').forEach(gate => {
+            gate.ondragstart = dragStart;
+        });
+    </script>
+</body>
+</html>

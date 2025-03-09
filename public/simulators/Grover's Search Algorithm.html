@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grover's Search Algorithm Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .probability-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            margin: 20px 0;
+        }
+        .state {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .state.correct {
+            background-color: #4CAF50;
+        }
+        .probability-bar {
+            height: 150px;
+            width: 100%;
+            background-color: #444;
+            position: relative;
+        }
+        .probability-fill {
+            width: 100%;
+            background-color: #2196F3;
+            position: absolute;
+            bottom: 0;
+            transition: height 0.5s;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #circuit {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+        .iteration {
+            margin: 10px 0;
+            padding: 5px;
+            background-color: #444;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grover's Search Algorithm Simulator</h1>
+        <div class="controls">
+            <button onclick="initializeSystem()">Initialize</button>
+            <button onclick="applyOracle()">Apply Oracle</button>
+            <button onclick="applyDiffusion()">Apply Diffusion</button>
+            <button onclick="fullGroverStep()">Full Grover Step</button>
+            <button onclick="reset()">Reset</button>
+        </div>
+        <div>Search Space Size: 
+            <select id="sizeSelect" onchange="updateSize()">
+                <option value="2">2 items</option>
+                <option value="4">4 items</option>
+                <option value="8" selected>8 items</option>
+                <option value="16">16 items</option>
+            </select>
+        </div>
+        <div>Target Item: <input type="number" id="targetItem" min="0" max="7" value="3"></div>
+        
+        <div class="probability-grid" id="probabilityGrid"></div>
+        
+        <div id="circuit">
+            <h3>Quantum Circuit</h3>
+            <div id="circuitSteps"></div>
+        </div>
+        
+        <div id="results">
+            <h3>Measurement Results</h3>
+            <div id="iterationHistory"></div>
+        </div>
+    </div>
+
+    <script>
+        let nQubits = 3;
+        let state = [];
+        let iterations = 0;
+        let target = 3;
+
+        function initializeSystem() {
+            target = parseInt(document.getElementById('targetItem').value);
+            const size = Math.pow(2, nQubits);
+            state = new Array(size).fill(1/Math.sqrt(size));
+            updateDisplay();
+            addCircuitStep("Initialized superposition");
+        }
+
+        function applyOracle() {
+            // Flip the amplitude of the target state
+            state[target] *= -1;
+            updateDisplay();
+            addCircuitStep("Applied Oracle");
+        }
+
+        function applyDiffusion() {
+            const avg = state.reduce((a,b) => a + b, 0) / state.length;
+            state = state.map(v => 2*avg - v);
+            updateDisplay();
+            addCircuitStep("Applied Diffusion");
+        }
+
+        function fullGroverStep() {
+            applyOracle();
+            applyDiffusion();
+            iterations++;
+            addIterationResult();
+        }
+
+        function updateDisplay() {
+            const grid = document.getElementById('probabilityGrid');
+            grid.innerHTML = '';
+            
+            state.forEach((amplitude, index) => {
+                const probability = Math.pow(amplitude, 2);
+                const isTarget = index === target;
+                
+                const stateElement = document.createElement('div');
+                stateElement.className = `state ${isTarget ? 'correct' : ''}`;
+                stateElement.innerHTML = `
+                    <div class="probability-bar">
+                        <div class="probability-fill" 
+                             style="height: ${probability * 100}%"></div>
+                    </div>
+                    ${index}<br>
+                    ${(probability * 100).toFixed(1)}%
+                `;
+                
+                grid.appendChild(stateElement);
+            });
+        }
+
+        function addCircuitStep(step) {
+            const circuitSteps = document.getElementById('circuitSteps');
+            const stepElement = document.createElement('div');
+            stepElement.className = 'iteration';
+            stepElement.textContent = `Step ${iterations + 1}: ${step}`;
+            circuitSteps.appendChild(stepElement);
+        }
+
+        function addIterationResult() {
+            const history = document.getElementById('iterationHistory');
+            const iteration = document.createElement('div');
+            iteration.className = 'iteration';
+            const maxProb = Math.max(...state.map(a => Math.pow(a, 2)));
+            iteration.innerHTML = `
+                Iteration ${iterations}: 
+                Max Probability ${(maxProb * 100).toFixed(1)}%
+            `;
+            history.appendChild(iteration);
+        }
+
+        function updateSize() {
+            const size = parseInt(document.getElementById('sizeSelect').value);
+            nQubits = Math.log2(size);
+            document.getElementById('targetItem').max = size - 1;
+            initializeSystem();
+        }
+
+        function reset() {
+            iterations = 0;
+            document.getElementById('circuitSteps').innerHTML = '';
+            document.getElementById('iterationHistory').innerHTML = '';
+            initializeSystem();
+        }
+
+        // Initialize on load
+        initializeSystem();
+    </script>
+</body>
+</html>

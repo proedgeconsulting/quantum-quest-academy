@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Entanglement Distillation Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .simulation {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        canvas {
+            border: 2px solid #444;
+            background: #000;
+        }
+        .controls {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .protocol-step {
+            margin: 15px 0;
+        }
+        .chart-container {
+            margin-top: 20px;
+            height: 300px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Entanglement Distillation Simulator</h1>
+        
+        <div class="simulation">
+            <div id="blochSpheres" style="height: 600px;"></div>
+            <div class="controls">
+                <div class="protocol-step">
+                    <h3>Noise Parameters</h3>
+                    <label>Noise Level: <input type="range" id="noise" min="0" max="100" value="20"></label>
+                    <select id="noiseType">
+                        <option value="depolarizing">Depolarizing</option>
+                        <option value="amplitude_damping">Amplitude Damping</option>
+                        <option value="phase_damping">Phase Damping</option>
+                    </select>
+                </div>
+
+                <div class="protocol-step">
+                    <h3>Distillation Protocol</h3>
+                    <select id="protocol">
+                        <option value="DEJMPS">DEJMPS Protocol</option>
+                        <option value="BBPSSW">BBPSSW Protocol</option>
+                    </select>
+                    <button onclick="applyProtocol()">Apply Distillation</button>
+                </div>
+
+                <div class="protocol-step">
+                    <h3>Statistics</h3>
+                    <p>Input Pairs: <span id="inputPairs">1</span></p>
+                    <p>Output Fidelity: <span id="fidelity">0.95</span></p>
+                    <p>Success Probability: <span id="probability">100%</span></p>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+class EntangledState {
+    constructor() {
+        this.fidelity = 0.95;
+        this.pairsRequired = 1;
+    }
+
+    applyNoise(noiseLevel, type) {
+        const noise = noiseLevel / 100;
+        switch(type) {
+            case 'depolarizing':
+                this.fidelity *= (1 - noise);
+                break;
+            case 'amplitude_damping':
+                this.fidelity = this.fidelity * (1 - noise) + noise/2;
+                break;
+            case 'phase_damping':
+                this.fidelity *= Math.sqrt(1 - noise);
+                break;
+        }
+    }
+
+    distillDEJMPS() {
+        const successProb = this.fidelity**2 + (1 - this.fidelity)**2;
+        if(Math.random() < successProb) {
+            this.fidelity = (this.fidelity**2) / successProb;
+            this.pairsRequired *= 2;
+            return true;
+        }
+        return false;
+    }
+
+    distillBBPSSW() {
+        const successProb = this.fidelity**2;
+        if(Math.random() < successProb) {
+            this.fidelity = (this.fidelity**2 + (1 - this.fidelity)**2/3) / successProb;
+            this.pairsRequired *= 2;
+            return true;
+        }
+        return false;
+    }
+}
+
+let scene, camera, renderer, arrow1, arrow2;
+const state = new EntangledState();
+let chart;
+
+function initVisualization() {
+    const container = document.getElementById('blochSpheres');
+    
+    // Scene setup
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, container.offsetWidth/container.offsetHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    container.appendChild(renderer.domElement);
+
+    // Bloch Spheres
+    const sphereGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0x444444,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.3
+    });
+
+    const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere1.position.x = -3;
+    scene.add(sphere1);
+
+    const sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere2.position.x = 3;
+    scene.add(sphere2);
+
+    // Arrows
+    arrow1 = new THREE.ArrowHelper(
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(-3, 0, 0),
+        2.5,
+        0xff0000
+    );
+    scene.add(arrow1);
+
+    arrow2 = new THREE.ArrowHelper(
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(3, 0, 0),
+        2.5,
+        0x0000ff
+    );
+    scene.add(arrow2);
+
+    camera.position.z = 10;
+    animate();
+}
+
+function updateArrows() {
+    const theta = Math.acos(2*state.fidelity - 1);
+    const dir1 = new THREE.Vector3(
+        Math.sin(theta),
+        0,
+        Math.cos(theta)
+    ).normalize();
+    
+    arrow1.setDirection(dir1);
+    arrow2.setDirection(dir1.clone().negate());
+}
+
+function updateChart(success) {
+    if(!chart) {
+        chart = new Chart(document.getElementById('progressChart'), {
+            type: 'line',
+            data: {
+                labels: ['Initial'],
+                datasets: [{
+                    label: 'Fidelity',
+                    data: [state.fidelity],
+                    borderColor: '#4CAF50',
+                    tension: 0.1
+                }]
+            }
+        });
+    } else {
+        chart.data.labels.push(`Step ${chart.data.labels.length}`);
+        chart.data.datasets[0].data.push(success ? state.fidelity : null);
+        chart.update();
+    }
+}
+
+function applyProtocol() {
+    const protocol = document.getElementById('protocol').value;
+    const noiseLevel = document.getElementById('noise').value;
+    const noiseType = document.getElementById('noiseType').value;
+    
+    // Apply noise to all input pairs
+    state.applyNoise(noiseLevel, noiseType);
+    
+    // Apply distillation protocol
+    let success;
+    if(protocol === 'DEJMPS') {
+        success = state.distillDEJMPS();
+    } else {
+        success = state.distillBBPSSW();
+    }
+
+    updateDisplay();
+    updateChart(success);
+}
+
+function updateDisplay() {
+    document.getElementById('fidelity').textContent = state.fidelity.toFixed(3);
+    document.getElementById('inputPairs').textContent = state.pairsRequired;
+    document.getElementById('probability').textContent = 
+        `${(state.fidelity * 100).toFixed(1)}%`;
+    updateArrows();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+// Initialize simulation
+initVisualization();
+document.getElementById('noise').addEventListener('input', updateDisplay);
+updateDisplay();
+</script>
+</body>
+</html>

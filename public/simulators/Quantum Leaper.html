@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Leaper</title>
+    <style>
+        #gameCanvas {
+            border: 2px solid white;
+            background-color: #1a1a1a;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #2a2a2a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .controls {
+            margin: 20px;
+        }
+        .probability {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Leaper</h1>
+    <div>Level: <span id="level">1</span></div>
+    <div>Tunneling Attempts Left: <span id="attempts">3</span></div>
+    <div>Current Tunneling Probability: <span id="probability" class="probability">100%</span></div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <button onclick="resetLevel()">Reset Level</button>
+    </div>
+    <div style="margin-top: 20px;">
+        Use arrow keys to move | Spacebar to attempt tunnel
+    </div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let currentLevel = 1;
+let attemptsRemaining = 3;
+
+class Particle {
+    constructor() {
+        this.x = 50;
+        this.y = canvas.height/2;
+        this.size = 15;
+        this.speed = 5;
+        this.color = '#00ff88';
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+
+    move(direction) {
+        if (direction === 'right') this.x += this.speed;
+        if (direction === 'left') this.x -= this.speed;
+        if (direction === 'up') this.y -= this.speed;
+        if (direction === 'down') this.y += this.speed;
+    }
+}
+
+class Barrier {
+    constructor(thickness) {
+        this.x = canvas.width/2;
+        this.width = thickness;
+        this.height = canvas.height;
+        this.color = '#ff4444';
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x - this.width/2, 0, this.width, this.height);
+    }
+
+    getTunnelingProbability() {
+        const baseProbability = 0.7;
+        return Math.pow(baseProbability, this.width/20).toFixed(2);
+    }
+}
+
+let particle = new Particle();
+let barrier = createBarrierForLevel(currentLevel);
+
+function createBarrierForLevel(level) {
+    return new Barrier(20 + (level-1)*15);
+}
+
+function checkCollision() {
+    return particle.x + particle.size > barrier.x - barrier.width/2 && 
+           particle.x - particle.size < barrier.x + barrier.width/2;
+}
+
+function attemptTunnel() {
+    if (attemptsRemaining > 0 && checkCollision()) {
+        attemptsRemaining--;
+        document.getElementById('attempts').textContent = attemptsRemaining;
+        
+        const successProbability = barrier.getTunnelingProbability();
+        document.getElementById('probability').textContent = 
+            `${(successProbability * 100).toFixed(0)}%`;
+
+        if (Math.random() < successProbability) {
+            particle.x = barrier.x + barrier.width/2 + particle.size;
+            if (particle.x > canvas.width - 50) {
+                advanceLevel();
+            }
+        }
+    }
+}
+
+function advanceLevel() {
+    currentLevel++;
+    document.getElementById('level').textContent = currentLevel;
+    resetLevel();
+}
+
+function resetLevel() {
+    particle = new Particle();
+    barrier = createBarrierForLevel(currentLevel);
+    attemptsRemaining = 3;
+    document.getElementById('attempts').textContent = attemptsRemaining;
+    document.getElementById('probability').textContent = 
+        `${(barrier.getTunnelingProbability() * 100).toFixed(0)}%`;
+}
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particle.draw();
+    barrier.draw();
+    requestAnimationFrame(gameLoop);
+}
+
+document.addEventListener('keydown', (e) => {
+    switch(e.key) {
+        case 'ArrowRight': particle.move('right'); break;
+        case 'ArrowLeft': particle.move('left'); break;
+        case 'ArrowUp': particle.move('up'); break;
+        case 'ArrowDown': particle.move('down'); break;
+        case ' ': attemptTunnel(); break;
+    }
+});
+
+// Initialize game
+resetLevel();
+gameLoop();
+</script>
+</body>
+</html>

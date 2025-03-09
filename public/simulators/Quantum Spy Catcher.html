@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Spy Catcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .particle {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 5px;
+            text-align: center;
+            line-height: 30px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .spy {
+            color: #ff4444;
+            font-weight: bold;
+        }
+        .detected {
+            color: #00ff00;
+        }
+        .basis {
+            border: 2px solid;
+        }
+        .rectilinear { border-color: #ff9900; }
+        .diagonal { border-color: #0099ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Spy Catcher</h1>
+        <div id="gameState"></div>
+        <div id="particles"></div>
+        <div id="controls">
+            <button onclick="generatePairs()">Generate Entangled Pairs</button>
+            <button onclick="sendParticles()">Send Particles</button>
+            <button onclick="checkForSpy()">Check for Spy</button>
+            <button onclick="compareKeys()">Compare Keys</button>
+            <button onclick="resetGame()">Reset</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let particles = [];
+        let aliceKey = [];
+        let bobKey = [];
+        let spyPresent = false;
+        let spyCaught = false;
+
+        function generatePairs() {
+            particles = [];
+            for(let i = 0; i < 20; i++) {
+                const bit = Math.random() > 0.5 ? 1 : 0;
+                const basis = Math.random() > 0.5 ? 'rectilinear' : 'diagonal';
+                particles.push({
+                    aliceBit: bit,
+                    aliceBasis: basis,
+                    bobBasis: null,
+                    spyBasis: null,
+                    measured: false
+                });
+            }
+            updateDisplay();
+        }
+
+        function sendParticles() {
+            spyPresent = Math.random() > 0.5;
+            particles.forEach(particle => {
+                if(spyPresent) {
+                    particle.spyBasis = Math.random() > 0.5 ? 'rectilinear' : 'diagonal';
+                    if(particle.spyBasis !== particle.aliceBasis) {
+                        particle.aliceBit = Math.random() > 0.5 ? 1 : 0;
+                    }
+                }
+                particle.bobBasis = Math.random() > 0.5 ? 'rectilinear' : 'diagonal';
+            });
+            updateDisplay();
+        }
+
+        function checkForSpy() {
+            const matchingBases = particles.filter(p => p.aliceBasis === p.bobBasis);
+            const errorRate = matchingBases.filter(p => p.aliceBit !== p.bobBasis).length / matchingBases.length;
+            spyCaught = errorRate > 0.25;
+            showResult(`Error rate: ${(errorRate*100).toFixed(1)}% - ${spyCaught ? 'Spy detected!' : 'Secure connection'}`);
+        }
+
+        function compareKeys() {
+            aliceKey = particles
+                .filter(p => p.aliceBasis === p.bobBasis)
+                .map(p => p.aliceBit);
+            
+            bobKey = particles
+                .filter(p => p.aliceBasis === p.bobBasis)
+                .map(p => p.aliceBit);
+
+            showResult(`Final key: ${aliceKey.join('')}<br>
+                Spy present: ${spyPresent ? 'Yes' : 'No'}<br>
+                Spy detected: ${spyCaught ? 'Yes' : 'No'}`);
+        }
+
+        function updateDisplay() {
+            const particlesDiv = document.getElementById('particles');
+            particlesDiv.innerHTML = particles.map((p, i) => `
+                <div class="particle basis ${p.aliceBasis}" 
+                     style="background-color: ${p.aliceBit ? '#ff5555' : '#5555ff'}">
+                    ${i+1}
+                </div>
+            `).join('');
+
+            document.getElementById('gameState').innerHTML = `
+                Particles generated: ${particles.length}<br>
+                Spy active: ${spyPresent ? '<span class="spy">YES</span>' : 'No'}
+            `;
+        }
+
+        function showResult(text) {
+            document.getElementById('result').innerHTML = text;
+        }
+
+        function resetGame() {
+            particles = [];
+            aliceKey = [];
+            bobKey = [];
+            spyPresent = false;
+            spyCaught = false;
+            updateDisplay();
+            showResult('');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Teleportation Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .stage {
+            margin: 20px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .qubits {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .bloch-sphere {
+            width: 200px;
+            height: 200px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .classical-com {
+            border: 2px dashed #888;
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Teleportation Game</h1>
+        
+        <div class="stage">
+            <h2>Step 1: Prepare Qubits</h2>
+            <div class="qubits">
+                <div>
+                    <h3>Message Qubit</h3>
+                    <div class="bloch-sphere" id="messageSphere"></div>
+                    <label>θ: <input type="range" id="theta" min="0" max="180" value="90"></label>
+                    <label>φ: <input type="range" id="phi" min="0" max="360" value="0"></label>
+                </div>
+                <div>
+                    <h3>Alice's Qubit</h3>
+                    <div class="bloch-sphere" id="aliceSphere"></div>
+                    <button onclick="createEntanglement()">Create Entangled Pair</button>
+                </div>
+                <div>
+                    <h3>Bob's Qubit</h3>
+                    <div class="bloch-sphere" id="bobSphere"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stage">
+            <h2>Step 2: Perform Bell Measurement</h2>
+            <div class="controls">
+                <button onclick="performMeasurement()">Measure Alice+Message</button>
+                <div class="classical-com" id="classicalCom">
+                    Classical Bits: <span id="bits">--</span>
+                </div>
+                <button onclick="applyCorrection()">Apply Correction</button>
+            </div>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+<script>
+class QuantumState {
+    constructor() {
+        this.state = [1, 0]; // |0⟩
+    }
+
+    applyGate(matrix) {
+        const newState = [
+            matrix[0][0]*this.state[0] + matrix[0][1]*this.state[1],
+            matrix[1][0]*this.state[0] + matrix[1][1]*this.state[1]
+        ];
+        this.state = newState;
+    }
+
+    measure() {
+        const prob0 = Math.abs(this.state[0])**2;
+        return Math.random() < prob0 ? 0 : 1;
+    }
+}
+
+let messageQubit = new QuantumState();
+let aliceQubit = new QuantumState();
+let bobQubit = new QuantumState();
+let bellMeasurementResult = null;
+
+// Three.js Visualization
+let scene1, scene2, scene3, camera, renderer;
+
+function initBlochSphere(container) {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(200, 200);
+    container.appendChild(renderer.domElement);
+
+    const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 32, 32),
+        new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true })
+    );
+    scene.add(sphere);
+
+    const arrow = new THREE.ArrowHelper(
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(0, 0, 0),
+        1.5,
+        0xff0000
+    );
+    scene.add(arrow);
+
+    camera.position.z = 3;
+    return { scene, camera, arrow };
+}
+
+const messageSphere = initBlochSphere(document.getElementById('messageSphere'));
+const aliceSphere = initBlochSphere(document.getElementById('aliceSphere'));
+const bobSphere = initBlochSphere(document.getElementById('bobSphere'));
+
+function updateArrow(sphere, theta, phi) {
+    const x = Math.sin(theta) * Math.cos(phi);
+    const y = Math.sin(theta) * Math.sin(phi);
+    const z = Math.cos(theta);
+    sphere.arrow.setDirection(new THREE.Vector3(x, y, z).normalize());
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    
+    const theta = document.getElementById('theta').value * Math.PI / 180;
+    const phi = document.getElementById('phi').value * Math.PI / 180;
+    
+    // Update message qubit state
+    messageQubit.state = [
+        Math.cos(theta/2),
+        Math.sin(theta/2) * Math.exp(1i * phi)
+    ];
+    
+    updateArrow(messageSphere, theta, phi);
+    renderer.render(messageSphere.scene, messageSphere.camera);
+    renderer.render(aliceSphere.scene, aliceSphere.camera);
+    renderer.render(bobSphere.scene, bobSphere.camera);
+}
+
+function createEntanglement() {
+    // Create Bell pair
+    aliceQubit.applyGate([[1/Math.sqrt(2), 1/Math.sqrt(2)], [1/Math.sqrt(2), -1/Math.sqrt(2)]]); // H
+    bobQubit.state = aliceQubit.state.slice();
+    updateArrow(aliceSphere, Math.PI/2, 0);
+    updateArrow(bobSphere, Math.PI/2, Math.PI);
+}
+
+function performMeasurement() {
+    if(!aliceQubit.state.some(x => x !== 0)) {
+        alert("First create entangled pair!");
+        return;
+    }
+    
+    // Simulate Bell measurement
+    const results = [messageQubit.measure(), aliceQubit.measure()];
+    bellMeasurementResult = results;
+    document.getElementById('bits').textContent = results.join('');
+    
+    // Collapse message qubit
+    messageQubit.state = [0, 0];
+    updateArrow(messageSphere, 0, 0);
+}
+
+function applyCorrection() {
+    if(!bellMeasurementResult) {
+        alert("Perform measurement first!");
+        return;
+    }
+    
+    // Apply correction based on classical bits
+    const [b1, b2] = bellMeasurementResult;
+    if(b2) bobQubit.applyGate([[0, 1], [1, 0]]); // X gate
+    if(b1) bobQubit.applyGate([[1, 0], [0, -1]]); // Z gate
+    
+    // Verify teleportation
+    const originalState = [Math.cos(Math.PI/4), Math.sin(Math.PI/4)];
+    const success = bobQubit.state.every((val, i) => 
+        Math.abs(val - originalState[i]) < 0.1
+    );
+    
+    document.getElementById('result').innerHTML = success ?
+        "<h3 style='color:#4CAF50'>Teleportation Successful!</h3>" :
+        "<h3 style='color:#ff4444'>Teleportation Failed!</h3>";
+}
+
+animate();
+</script>
+</body>
+</html>

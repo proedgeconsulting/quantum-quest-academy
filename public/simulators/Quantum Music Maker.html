@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Symphony Composer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .gate-palette {
+            width: 150px;
+            padding: 10px;
+            background-color: #2d2d2d;
+            border-radius: 5px;
+        }
+        .gate {
+            padding: 10px;
+            margin: 5px;
+            background-color: #333;
+            border: 2px solid #444;
+            border-radius: 5px;
+            cursor: move;
+            user-select: none;
+        }
+        .circuit-board {
+            flex-grow: 1;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .qubit-line {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .wire {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #444;
+            margin: 0 10px;
+            position: relative;
+        }
+        .gate-slot {
+            width: 60px;
+            height: 40px;
+            border: 2px dashed #666;
+            margin: 0 5px;
+            position: relative;
+        }
+        .placed-gate {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background-color: #333;
+            border: 2px solid;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .visualization {
+            width: 300px;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        #musicCanvas {
+            border: 1px solid #444;
+            margin-top: 10px;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gate-palette">
+            <div class="gate" draggable="true" data-gate="H">H (Piano)</div>
+            <div class="gate" draggable="true" data-gate="X">X (Guitar)</div>
+            <div class="gate" draggable="true" data-gate="Y">Y (Strings)</div>
+            <div class="gate" draggable="true" data-gate="Z">Z (Drums)</div>
+            <div class="gate" draggable="true" data-gate="CNOT">CNOT (Chord)</div>
+        </div>
+
+        <div class="circuit-board" id="circuitBoard">
+            <div class="qubit-line">
+                <span>Qubit 1</span>
+                <div class="wire" id="wire0"></div>
+            </div>
+            <div class="qubit-line">
+                <span>Qubit 2</span>
+                <div class="wire" id="wire1"></div>
+            </div>
+        </div>
+
+        <div class="visualization">
+            <h3>Music Visualization</h3>
+            <canvas id="musicCanvas" width="260" height="150"></canvas>
+            <div class="controls">
+                <button onclick="playSymphony()">Play</button>
+                <button onclick="stopSymphony()">Stop</button>
+                <button onclick="saveSymphony()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let oscillators = [];
+        let gates = [];
+        const noteFrequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];
+        const instruments = {
+            H: 'sine',
+            X: 'square',
+            Y: 'sawtooth',
+            Z: 'triangle',
+            CNOT: 'custom'
+        };
+
+        function initializeCircuit() {
+            [0, 1].forEach(qubit => {
+                const wire = document.getElementById(`wire${qubit}`);
+                for(let i = 0; i < 5; i++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'gate-slot';
+                    slot.dataset.qubit = qubit;
+                    slot.dataset.position = i;
+                    slot.ondragover = allowDrop;
+                    slot.ondrop = drop;
+                    wire.appendChild(slot);
+                }
+            });
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function dragStart(ev) {
+            ev.dataTransfer.setData("text", ev.target.dataset.gate);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const gateType = ev.dataTransfer.getData("text");
+            const qubit = parseInt(ev.target.dataset.qubit);
+            const position = parseInt(ev.target.dataset.position);
+            
+            const gate = document.createElement('div');
+            gate.className = 'placed-gate';
+            gate.textContent = gateType;
+            gate.dataset.gate = gateType;
+            gate.dataset.qubit = qubit;
+            gate.dataset.position = position;
+            
+            gate.style.borderColor = getGateColor(gateType);
+            ev.target.appendChild(gate);
+            gates.push({type: gateType, qubit, position});
+            updateVisualization();
+        }
+
+        function getGateColor(gateType) {
+            const colors = {
+                H: '#4CAF50',
+                X: '#2196F3',
+                Y: '#E91E63',
+                Z: '#FF9800',
+                CNOT: '#9C27B0'
+            };
+            return colors[gateType];
+        }
+
+        function playSymphony() {
+            stopSymphony();
+            const canvas = document.getElementById('musicCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            gates.sort((a, b) => a.position - b.position).forEach((gate, index) => {
+                const time = audioContext.currentTime + (index * 0.5);
+                playNote(gate.type, time, gate.qubit);
+                visualizeNote(ctx, gate.type, index);
+            });
+        }
+
+        function playNote(gateType, startTime, qubit) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.type = instruments[gateType];
+            oscillator.frequency.setValueAtTime(
+                noteFrequencies[qubit * 3 + Math.floor(Math.random() * 3)], 
+                startTime
+            );
+            
+            gainNode.gain.setValueAtTime(0.5, startTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 1);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.start(startTime);
+            oscillator.stop(startTime + 1);
+            
+            oscillators.push(oscillator);
+        }
+
+        function visualizeNote(ctx, gateType, index) {
+            const colors = {
+                H: '#4CAF50',
+                X: '#2196F50',
+                Y: '#E91E63',
+                Z: '#FF9800',
+                CNOT: '#9C27B0'
+            };
+            
+            ctx.fillStyle = colors[gateType];
+            ctx.beginPath();
+            ctx.arc(50 + (index * 40), 75, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function stopSymphony() {
+            oscillators.forEach(osc => osc.stop());
+            oscillators = [];
+            const ctx = document.getElementById('musicCanvas').getContext('2d');
+            ctx.clearRect(0, 0, 260, 150);
+        }
+
+        function saveSymphony() {
+            const symphonyData = JSON.stringify(gates);
+            localStorage.setItem('quantumSymphony', symphonyData);
+            alert('Symphony saved!');
+        }
+
+        // Initialize the circuit board
+        initializeCircuit();
+        document.querySelectorAll('.gate').forEach(gate => {
+            gate.ondragstart = dragStart;
+        });
+    </script>
+</body>
+</html>

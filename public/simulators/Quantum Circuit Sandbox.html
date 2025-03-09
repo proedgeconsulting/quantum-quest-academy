@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Circuit Sandbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .gate {
+            padding: 8px 12px;
+            background: #4CAF50;
+            border-radius: 4px;
+            cursor: move;
+            user-select: none;
+        }
+        .circuit {
+            position: relative;
+            min-height: 300px;
+            background: #333;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .qubit-line {
+            position: relative;
+            height: 50px;
+            border-bottom: 2px solid #444;
+            margin: 10px 0;
+        }
+        .gate-slot {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            border: 2px dashed #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #results {
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .prob-bar {
+            height: 20px;
+            background: #4CAF50;
+            margin: 5px 0;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Circuit Sandbox</h1>
+        
+        <div class="toolbar" id="toolbar">
+            <div class="gate" draggable="true" data-gate="H">H</div>
+            <div class="gate" draggable="true" data-gate="X">X</div>
+            <div class="gate" draggable="true" data-gate="CNOT">CNOT</div>
+            <button onclick="addQubit()">Add Qubit</button>
+            <button onclick="runSimulation()">Run Simulation</button>
+        </div>
+
+        <div class="circuit" id="circuit">
+            <div class="qubit-line" id="qubit0">
+                <span style="position: absolute; left: -40px;">|0⟩</span>
+            </div>
+        </div>
+
+        <div id="results">
+            <h3>Measurement Probabilities</h3>
+            <div id="probabilities"></div>
+        </div>
+
+        <h2 style="margin-top: 40px;">Advanced Quantum Simulator</h2>
+        <iframe src="https://quantumjavascript.app/" 
+                width="100%" 
+                height="600" 
+                frameborder="0" 
+                allowfullscreen></iframe>
+    </div>
+
+<script>
+class QuantumSimulator {
+    constructor() {
+        this.qubits = 1;
+        this.state = [1, 0]; // Initial state |0>
+        this.gates = [];
+    }
+
+    addQubit() {
+        this.qubits++;
+        // Expand state vector (tensor product with |0>)
+        this.state = this.state.flatMap(v => [v, 0]);
+    }
+
+    applyGate(gate, targets, controls=[]) {
+        // Simplified gate application logic
+        switch(gate) {
+            case 'H':
+                this.applyH(targets[0]);
+                break;
+            case 'X':
+                this.applyX(targets[0]);
+                break;
+            case 'CNOT':
+                this.applyCNOT(controls[0], targets[0]);
+                break;
+        }
+    }
+
+    applyH(target) {
+        // Hadamard gate implementation
+        const newState = [];
+        const size = this.state.length;
+        const step = size / (2 ** (target + 1));
+        
+        for(let i = 0; i < size; i++) {
+            let sum = 0;
+            for(let j = 0; j < size; j += 2 * step) {
+                const base = j + (i % step);
+                sum += this.state[base] * (i < j + step ? 1 : -1);
+            }
+            newState[i] = sum / Math.sqrt(2);
+        }
+        this.state = newState;
+    }
+
+    applyX(target) {
+        // Pauli-X gate implementation
+        const mask = 1 << target;
+        const newState = [...this.state];
+        
+        for(let i = 0; i < this.state.length; i++) {
+            newState[i ^ mask] = this.state[i];
+        }
+        this.state = newState;
+    }
+
+    applyCNOT(control, target) {
+        // CNOT gate implementation
+        const controlMask = 1 << control;
+        const targetMask = 1 << target;
+        const newState = [...this.state];
+        
+        for(let i = 0; i < this.state.length; i++) {
+            if(i & controlMask) {
+                newState[i ^ targetMask] = this.state[i];
+            }
+        }
+        this.state = newState;
+    }
+
+    measure() {
+        // Calculate probabilities
+        return this.state.map((v, i) => ({
+            state: i.toString(2).padStart(this.qubits, '0'),
+            probability: Math.abs(v) ** 2
+        }));
+    }
+}
+
+const simulator = new QuantumSimulator();
+let currentSlot = 0;
+
+function addQubit() {
+    simulator.addQubit();
+    const circuit = document.getElementById('circuit');
+    const newQubit = document.createElement('div');
+    newQubit.className = 'qubit-line';
+    newQubit.innerHTML = `<span style="position: absolute; left: -40px;">|${simulator.qubits - 1}⟩</span>`;
+    circuit.appendChild(newQubit);
+}
+
+function createGateSlot(qubitIndex) {
+    const slot = document.createElement('div');
+    slot.className = 'gate-slot';
+    slot.style.left = `${100 + currentSlot * 80}px`;
+    slot.dataset.qubit = qubitIndex;
+    slot.dataset.step = currentSlot;
+    return slot;
+}
+
+document.addEventListener('dragstart', e => {
+    if(e.target.classList.contains('gate')) {
+        e.dataTransfer.setData('text/plain', e.target.dataset.gate);
+    }
+});
+
+document.addEventListener('dragover', e => {
+    e.preventDefault();
+    if(e.target.classList.contains('gate-slot')) {
+        e.target.style.backgroundColor = '#444';
+    }
+});
+
+document.addEventListener('drop', e => {
+    e.preventDefault();
+    if(e.target.classList.contains('gate-slot')) {
+        const gate = e.dataTransfer.getData('text/plain');
+        e.target.textContent = gate;
+        e.target.dataset.gate = gate;
+        e.target.style.backgroundColor = '';
+        currentSlot++;
+        
+        // Add new slots
+        document.querySelectorAll('.qubit-line').forEach(line => {
+            line.appendChild(createGateSlot(line.id.replace('qubit', '')));
+        });
+    }
+});
+
+function runSimulation() {
+    // Reset simulator
+    simulator.state = new Array(2 ** simulator.qubits).fill(0);
+    simulator.state[0] = 1;
+    
+    // Apply gates
+    document.querySelectorAll('.gate-slot').forEach(slot => {
+        if(slot.dataset.gate) {
+            const targets = [parseInt(slot.dataset.qubit)];
+            const controls = slot.dataset.gate === 'CNOT' ? [targets[0] : [];
+            simulator.applyGate(slot.dataset.gate, targets, controls);
+        }
+    });
+
+    // Display results
+    const probabilities = simulator.measure();
+    const resultsDiv = document.getElementById('probabilities');
+    resultsDiv.innerHTML = '';
+    
+    probabilities.forEach(p => {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = `
+            <div>|${p.state}⟩</div>
+            <div class="prob-bar" style="width: ${p.probability * 100}%"></div>
+            <div>${(p.probability * 100).toFixed(1)}%</div>
+        `;
+        resultsDiv.appendChild(wrapper);
+    });
+}
+
+// Initialize first gate slot
+document.querySelectorAll('.qubit-line').forEach(line => {
+    line.appendChild(createGateSlot(0));
+});
+</script>
+</body>
+</html>
