@@ -20,10 +20,20 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
     const resolveSimulatorPath = async () => {
       console.log(`SimulatorPathResolver: Trying to resolve paths for ${url}`);
       
-      // First check if the URL is already absolute (starts with http or https)
+      // First check if the URL is already absolute (starts with http or https) or contains a local path
       if (url.startsWith('http://') || url.startsWith('https://')) {
         console.log(`SimulatorPathResolver: URL is already absolute: ${url}`);
         onResolve(url);
+        setIsResolved(true);
+        return;
+      }
+      
+      // Check if it's already a local file path
+      if (url.includes('C:\\Users\\Lenovo\\quantum-quest-academy\\public')) {
+        console.log(`SimulatorPathResolver: URL is already a local path: ${url}`);
+        // Convert local path to web-friendly path for the browser
+        const webPath = url.replace('C:\\Users\\Lenovo\\quantum-quest-academy\\public', '');
+        onResolve(webPath.replace(/\\/g, '/'));
         setIsResolved(true);
         return;
       }
@@ -40,7 +50,14 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
       
       if (validPath) {
         console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${validPath}`);
-        onResolve(validPath);
+        
+        // If it's a local path, convert it to a web path
+        if (validPath.includes('C:\\Users\\Lenovo\\quantum-quest-academy\\public')) {
+          const webPath = validPath.replace('C:\\Users\\Lenovo\\quantum-quest-academy\\public', '');
+          onResolve(webPath.replace(/\\/g, '/'));
+        } else {
+          onResolve(validPath);
+        }
         setIsResolved(true);
       } else {
         // If we get here, none of the paths worked

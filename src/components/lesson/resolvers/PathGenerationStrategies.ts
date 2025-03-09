@@ -3,6 +3,8 @@
  * Collection of strategies for generating possible file paths to try
  */
 
+const LOCAL_SIMULATOR_BASE = "C:\\Users\\Lenovo\\quantum-quest-academy\\public";
+
 // Generate paths with various leading slash patterns
 export const generateSlashVariations = (baseUrl: string): string[] => {
   const paths = [];
@@ -12,6 +14,10 @@ export const generateSlashVariations = (baseUrl: string): string[] => {
   paths.push(baseUrl);
   if (!baseUrl.startsWith('/')) paths.push('/' + baseUrl);
   else paths.push(baseUrl.substring(1));
+
+  // Add local paths
+  paths.push(`${LOCAL_SIMULATOR_BASE}${baseUrl}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\${fileName}`);
   
   return paths;
 };
@@ -24,6 +30,10 @@ export const generateSubfolderVariations = (baseUrl: string): string[] => {
   // Try with simulators subfolder
   paths.push(`/simulators/${fileName}`);
   paths.push(`simulators/${fileName}`);
+  
+  // Add local paths with simulators subfolder
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${fileName}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${fileName.replace(/\//g, '\\')}`);
   
   return paths;
 };
@@ -45,6 +55,14 @@ export const generateSpacingVariations = (baseUrl: string): string[] => {
   paths.push(underscoreName);
   paths.push(`/simulators/${underscoreName}`);
   
+  // Add local paths with hyphen
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\${hyphenatedName.replace(/\//g, '\\')}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${hyphenatedName.replace(/\//g, '\\')}`);
+  
+  // Add local paths with underscore
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\${underscoreName.replace(/\//g, '\\')}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${underscoreName.replace(/\//g, '\\')}`);
+  
   return paths;
 };
 
@@ -55,6 +73,9 @@ export const generateExtensionVariations = (baseUrl: string): string[] => {
   
   // Skip if already has .html extension
   if (baseUrl.endsWith('.html')) {
+    // Still add local path for html files
+    paths.push(`${LOCAL_SIMULATOR_BASE}\\${fileName.replace(/\//g, '\\')}`);
+    paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${fileName.replace(/\//g, '\\')}`);
     return paths;
   }
   
@@ -64,18 +85,24 @@ export const generateExtensionVariations = (baseUrl: string): string[] => {
   paths.push(htmlFileName);
   paths.push(`/simulators/${htmlFileName}`);
   
+  // Add local paths with html extension
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\${htmlFileName.replace(/\//g, '\\')}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${htmlFileName.replace(/\//g, '\\')}`);
+  
   // With hyphen and underscore variants
   const hyphenatedName = fileName.replace(/ /g, '-');
   const hyphenatedHtml = hyphenatedName + '.html';
   paths.push('/' + hyphenatedHtml);
   paths.push(hyphenatedHtml);
   paths.push(`/simulators/${hyphenatedHtml}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${hyphenatedHtml.replace(/\//g, '\\')}`);
   
   const underscoreName = fileName.replace(/ /g, '_');
   const underscoreHtml = underscoreName + '.html';
   paths.push('/' + underscoreHtml);
   paths.push(underscoreHtml);
   paths.push(`/simulators/${underscoreHtml}`);
+  paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${underscoreHtml.replace(/\//g, '\\')}`);
   
   return paths;
 };
@@ -91,11 +118,13 @@ export const generateCaseVariations = (baseUrl: string): string[] => {
     paths.push('/' + lowerCaseName);
     paths.push(lowerCaseName);
     paths.push(`/simulators/${lowerCaseName}`);
+    paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${lowerCaseName.replace(/\//g, '\\')}`);
     
     if (!baseUrl.endsWith('.html')) {
       paths.push('/' + lowerCaseName + '.html');
       paths.push(lowerCaseName + '.html');
       paths.push(`/simulators/${lowerCaseName}.html`);
+      paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${lowerCaseName.replace(/\//g, '\\')}.html`);
     }
   }
   
@@ -113,11 +142,13 @@ export const generateAbbreviationVariations = (baseUrl: string): string[] => {
     paths.push('/' + abbreviatedName);
     paths.push(abbreviatedName);
     paths.push(`/simulators/${abbreviatedName}`);
+    paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${abbreviatedName.replace(/\//g, '\\')}`);
     
     if (!baseUrl.endsWith('.html')) {
       paths.push('/' + abbreviatedName + '.html');
       paths.push(abbreviatedName + '.html');
       paths.push(`/simulators/${abbreviatedName}.html`);
+      paths.push(`${LOCAL_SIMULATOR_BASE}\\simulators\\${abbreviatedName.replace(/\//g, '\\')}.html`);
     }
   }
   
