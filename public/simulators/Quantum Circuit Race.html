@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Circuit Race</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        #circuit {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            min-height: 100px;
+            border: 2px dashed #444;
+            padding: 10px;
+        }
+        .gate {
+            background-color: #2196F3;
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+            cursor: move;
+            user-select: none;
+        }
+        .qubit-line {
+            height: 2px;
+            background-color: #666;
+            margin: 15px 0;
+            grid-column: 1 / -1;
+        }
+        #controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        #timer, #score {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .correct {
+            background-color: #4CAF50 !important;
+        }
+        .gate-bank {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .draggable-gate {
+            padding: 10px 20px;
+            background-color: #666;
+            border-radius: 5px;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Circuit Race</h1>
+    <div id="controls">
+        <div id="timer">Time: 0s</div>
+        <div id="score">Score: 0</div>
+        <div id="gates-used">Gates: 0</div>
+    </div>
+    <div id="challenge"></div>
+    <div class="gate-bank" id="gate-bank"></div>
+    <div id="circuit"></div>
+    <button id="start-btn" onclick="startChallenge()">Start Challenge!</button>
+    <div id="message"></div>
+
+    <script>
+        const challenges = [
+            {
+                description: "Flip the qubit from |0⟩ to |1⟩",
+                target: '1',
+                gates: ['X'],
+                timeLimit: 30
+            },
+            {
+                description: "Create superposition (|+⟩ state)",
+                target: '+',
+                gates: ['H'],
+                timeLimit: 45
+            },
+            {
+                description: "Entangle two qubits (|00⟩ → |Φ+⟩)",
+                target: 'Φ+',
+                gates: ['H', 'CNOT'],
+                timeLimit: 60
+            }
+        ];
+
+        let currentChallenge = 0;
+        let startTime;
+        let timerInterval;
+        let gateCount = 0;
+        let score = 0;
+        let circuitState = '0';
+        let draggedGate = null;
+
+        function updateState() {
+            document.getElementById('circuit').innerHTML = 
+                `<div class="qubit-line"></div>`;
+            document.getElementById('gates-used').textContent = `Gates: ${gateCount}`;
+        }
+
+        function applyGateEffect(gate) {
+            const stateMap = {
+                'X': s => s === '0' ? '1' : '0',
+                'H': s => s === '0' ? '+' : (s === '+' ? '0' : '1'),
+                'CNOT': s => s === '00' ? 'Φ+' : s
+            };
+            
+            if (gate === 'CNOT' && circuitState.length === 1) {
+                circuitState += '0';
+            }
+            
+            circuitState = stateMap[gate](circuitState);
+        }
+
+        function checkSolution() {
+            if (circuitState === challenges[currentChallenge].target) {
+                const timeTaken = Math.round((Date.now() - startTime) / 1000);
+                clearInterval(timerInterval);
+                
+                const timeScore = Math.max(0, challenges[currentChallenge].timeLimit - timeTaken);
+                const efficiencyScore = (5 - gateCount) * 20;
+                score += timeScore + efficiencyScore;
+                
+                document.getElementById('score').textContent = `Score: ${score}`;
+                document.getElementById('message').innerHTML = `
+                    Success! Time: ${timeTaken}s (${timeScore}pts) 
+                    Efficiency: ${gateCount} gates (${efficiencyScore}pts)
+                    ${currentChallenge < challenges.length - 1 ? 
+                        '<button onclick="nextChallenge()">Next Challenge</button>' : 
+                        'Game Complete!'}
+                `;
+            }
+        }
+
+        function startChallenge() {
+            const challenge = challenges[currentChallenge];
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('message').textContent = '';
+            circuitState = '0';
+            gateCount = 0;
+            startTime = Date.now();
+            
+            // Setup gate bank
+            document.getElementById('gate-bank').innerHTML = 
+                challenge.gates.map(g => `
+                    <div class="draggable-gate" draggable="true" ondragstart="dragGate(event)">
+                        ${g}
+                    </div>
+                `).join('');
+
+            // Setup circuit area
+            document.getElementById('circuit').ondragover = allowDrop;
+            document.getElementById('circuit').ondrop = dropGate;
+            
+            document.getElementById('challenge').textContent = challenge.description;
+            
+            timerInterval = setInterval(() => {
+                const elapsed = Math.round((Date.now() - startTime) / 1000);
+                document.getElementById('timer').textContent = `Time: ${elapsed}s`;
+                if (elapsed >= challenge.timeLimit) {
+                    clearInterval(timerInterval);
+                    document.getElementById('message').textContent = "Time's up!";
+                    document.getElementById('start-btn').disabled = false;
+                }
+            }, 1000);
+
+            updateState();
+        }
+
+        function dragGate(ev) {
+            draggedGate = ev.target.textContent.trim();
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function dropGate(ev) {
+            ev.preventDefault();
+            if (!draggedGate) return;
+            
+            gateCount++;
+            applyGateEffect(draggedGate);
+            updateState();
+            checkSolution();
+            
+            const gateElement = document.createElement('div');
+            gateElement.className = 'gate';
+            gateElement.textContent = draggedGate;
+            document.getElementById('circuit').appendChild(gateElement);
+        }
+
+        function nextChallenge() {
+            currentChallenge++;
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('message').textContent = '';
+            startChallenge();
+        }
+    </script>
+</body>
+</html>

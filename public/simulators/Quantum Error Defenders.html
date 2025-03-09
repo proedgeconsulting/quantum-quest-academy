@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Error Defenders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            text-align: center;
+        }
+        #gameContainer {
+            margin: 20px auto;
+            width: 800px;
+        }
+        .qubit {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            margin: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 50%;
+            line-height: 60px;
+            position: relative;
+        }
+        .error {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-size: cover;
+            animation: pulse 1s infinite;
+        }
+        .bit-flip { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff0000"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'); }
+        .phase-flip { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ffff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'); }
+        .shield {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid gold;
+            animation: shield 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shield {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        #controls {
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        #progress {
+            width: 300px;
+            height: 20px;
+            border: 2px solid #4CAF50;
+            margin: 20px auto;
+        }
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: #4CAF50;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <h1>Quantum Error Defenders</h1>
+        <div id="qubits"></div>
+        <div id="controls">
+            <button onclick="applyCorrection('X')">Apply X Shield (Bit Flip)</button>
+            <button onclick="applyCorrection('Z')">Apply Z Shield (Phase Flip)</button>
+        </div>
+        <div id="progress">
+            <div id="progressBar"></div>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const qubitCount = 5;
+        const gameDuration = 25000; // 25 seconds
+        let gameActive = true;
+        let selectedQubit = null;
+        let errors = [];
+        
+        class Qubit {
+            constructor(element) {
+                this.element = element;
+                this.state = '|0>';
+                this.error = null;
+                this.shield = null;
+            }
+        }
+
+        function initializeGame() {
+            const qubitsContainer = document.getElementById('qubits');
+            for (let i = 0; i < qubitCount; i++) {
+                const qubitDiv = document.createElement('div');
+                qubitDiv.className = 'qubit';
+                qubitDiv.textContent = '|0>';
+                qubitDiv.onclick = () => selectQubit(i);
+                qubitsContainer.appendChild(qubitDiv);
+                qubits.push(new Qubit(qubitDiv));
+            }
+
+            // Start error spawning
+            setInterval(spawnError, 2000);
+            
+            // Update progress bar
+            const startTime = Date.now();
+            const progressInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const progress = (elapsed / gameDuration) * 100;
+                document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
+                
+                if (elapsed >= gameDuration) {
+                    clearInterval(progressInterval);
+                    endGame(true);
+                }
+            }, 100);
+        }
+
+        function selectQubit(index) {
+            selectedQubit = index;
+            document.querySelectorAll('.qubit').forEach(q => 
+                q.style.borderColor = q === qubits[index].element ? 'gold' : '#4CAF50');
+        }
+
+        function applyCorrection(type) {
+            if (selectedQubit === null) return;
+            
+            const qubit = qubits[selectedQubit];
+            qubit.shield = type;
+            qubit.element.innerHTML += `<div class="shield"></div>`;
+            setTimeout(() => {
+                qubit.shield = null;
+                qubit.element.querySelector('.shield')?.remove();
+            }, 3000);
+        }
+
+        function spawnError() {
+            if (!gameActive) return;
+            
+            const type = Math.random() < 0.5 ? 'bit-flip' : 'phase-flip';
+            const qubitIndex = Math.floor(Math.random() * qubitCount);
+            const qubit = qubits[qubitIndex];
+            
+            if (qubit.error) return;
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = `error ${type}`;
+            qubit.element.appendChild(errorDiv);
+            qubit.error = type;
+            
+            setTimeout(() => {
+                if (qubit.shield !== (type === 'bit-flip' ? 'X' : 'Z')) {
+                    endGame(false);
+                }
+                errorDiv.remove();
+                qubit.error = null;
+            }, 5000);
+        }
+
+        function endGame(win) {
+            gameActive = false;
+            document.getElementById('message').textContent = win ? 
+                "Success! Quantum computation completed!" : 
+                "Game Over! Errors corrupted the circuit!";
+        }
+
+        const qubits = [];
+        initializeGame();
+    </script>
+</body>
+</html>

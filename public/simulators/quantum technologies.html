@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Technologies Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .tab {
+            display: none;
+            padding: 20px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .active-tab {
+            display: block;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .quantum-circuit {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .qubit-line {
+            height: 2px;
+            background-color: #666;
+            margin: 15px 0;
+        }
+        .gate {
+            background-color: #2196F3;
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .sensor-output {
+            border: 1px solid #444;
+            padding: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Technologies Simulator</h1>
+    
+    <!-- Navigation Tabs -->
+    <div>
+        <button onclick="showTab('computing')">Quantum Computing</button>
+        <button onclick="showTab('qkd')">Quantum Cryptography</button>
+        <button onclick="showTab('sensors')">Quantum Sensors</button>
+    </div>
+
+    <!-- Quantum Computing Tab -->
+    <div id="computing" class="tab active-tab">
+        <h2>Quantum Circuit Builder</h2>
+        <div class="quantum-circuit" id="circuit"></div>
+        <button onclick="addGate('H')">Add Hadamard</button>
+        <button onclick="addGate('CNOT')">Add CNOT</button>
+        <button onclick="addGate('MEASURE')">Add Measurement</button>
+        <button onclick="simulate()">Simulate</button>
+        <div id="results"></div>
+    </div>
+
+    <!-- Quantum Cryptography Tab -->
+    <div id="qkd" class="tab">
+        <h2>Quantum Key Distribution (BB84)</h2>
+        <div id="qkd-steps">
+            <p>Alice's Photon Polarizations: <span id="alice-bits"></span></p>
+            <p>Bob's Measurement Basis: <span id="bob-basis"></span></p>
+            <button onclick="runBB84()">Run Protocol</button>
+            <div id="qkd-results"></div>
+        </div>
+    </div>
+
+    <!-- Quantum Sensors Tab -->
+    <div id="sensors" class="tab">
+        <h2>Quantum Sensor Array</h2>
+        <div>
+            <label>Magnetic Field Strength: </label>
+            <input type="range" id="magnetic-field" min="0" max="100" value="50">
+            <span id="field-value">50 nT</span>
+        </div>
+        <div class="sensor-output" id="sensor-readings"></div>
+    </div>
+
+    <script>
+        // Tab navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            document.getElementById(tabName).classList.add('active-tab');
+        }
+
+        // Quantum Computing Simulator
+        let circuitState = [];
+        function addGate(gate) {
+            const circuit = document.getElementById('circuit');
+            const newGate = document.createElement('div');
+            newGate.className = 'gate';
+            newGate.textContent = gate;
+            circuit.appendChild(newGate);
+        }
+
+        function simulate() {
+            const results = document.getElementById('results');
+            results.innerHTML = "<h3>Simulation Results:</h3>";
+            // Simple quantum state simulation
+            const probabilities = {
+                "|00⟩": Math.random().toFixed(2),
+                "|01⟩": Math.random().toFixed(2),
+                "|10⟩": Math.random().toFixed(2),
+                "|11⟩": Math.random().toFixed(2)
+            };
+            results.innerHTML += "Qubit Probabilities:<br>";
+            for(let state in probabilities) {
+                results.innerHTML += `${state}: ${probabilities[state]}<br>`;
+            }
+        }
+
+        // Quantum Key Distribution Simulator
+        function runBB84() {
+            const aliceBits = Array.from({length: 8}, () => Math.random() > 0.5 ? '1' : '0');
+            const aliceBasis = Array.from({length: 8}, () => Math.random() > 0.5 ? '+' : '×');
+            const bobBasis = Array.from({length: 8}, () => Math.random() > 0.5 ? '+' : '×');
+            
+            let sharedKey = [];
+            aliceBits.forEach((bit, index) => {
+                if(aliceBasis[index] === bobBasis[index]) {
+                    sharedKey.push(bit);
+                }
+            });
+            
+            document.getElementById('qkd-results').innerHTML = `
+                Shared Key: ${sharedKey.join('')}<br>
+                Key Length: ${sharedKey.length} bits
+            `;
+        }
+
+        // Quantum Sensor Simulator
+        document.getElementById('magnetic-field').addEventListener('input', (e) => {
+            document.getElementById('field-value').textContent = `${e.target.value} nT`;
+            const noiseLevel = (Math.random() * 0.1).toFixed(3);
+            document.getElementById('sensor-readings').innerHTML = `
+                Magnetic Field: ${e.target.value} nT ± ${noiseLevel} nT<br>
+                Temperature: ${(Math.random() * 0.05).toFixed(3)} K<br>
+                Vibration: ${(Math.random() * 0.01).toFixed(4)} µm/s²
+            `;
+        });
+
+        // Initial setup
+        document.getElementById('sensor-readings').innerHTML = "Adjust the slider to simulate sensor readings";
+    </script>
+</body>
+</html>
