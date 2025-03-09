@@ -1,16 +1,24 @@
 
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Book } from "lucide-react";
+import { Home, Book, AlertTriangle } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();
+  const [isSimulatorPath, setIsSimulatorPath] = useState(false);
 
   useEffect(() => {
     console.error(
       "404 Error: User attempted to access non-existent route:",
       location.pathname
+    );
+    
+    // Check if this is likely a simulator path
+    setIsSimulatorPath(
+      location.pathname.includes('simulator') || 
+      location.pathname.endsWith('.html') ||
+      location.pathname.includes('quantum_')
     );
   }, [location.pathname]);
 
@@ -19,6 +27,21 @@ const NotFound = () => {
       <div className="text-center bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-6xl font-bold mb-4 text-quantum-500">404</h1>
         <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">Oops! This page has quantum tunneled away</p>
+        
+        {isSimulatorPath && (
+          <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-md">
+            <div className="flex items-center mb-2">
+              <AlertTriangle size={20} className="text-amber-500 mr-2" />
+              <h3 className="text-amber-700 dark:text-amber-400 font-medium">Simulator Not Found</h3>
+            </div>
+            <p className="text-sm text-amber-700 dark:text-amber-400">
+              This appears to be a simulator path. Make sure you've placed your HTML files in the correct location:
+            </p>
+            <code className="mt-2 block text-xs bg-amber-100 dark:bg-amber-800/50 p-2 rounded">
+              public/simulators/{location.pathname.split('/').pop()}
+            </code>
+          </div>
+        )}
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button variant="default" className="flex items-center gap-2" asChild>
