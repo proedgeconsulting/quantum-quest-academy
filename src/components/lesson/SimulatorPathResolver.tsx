@@ -20,7 +20,7 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
     const resolveSimulatorPath = async () => {
       console.log(`SimulatorPathResolver: Trying to resolve paths for ${url}`);
       
-      // First check if the URL is already absolute (starts with http or https) or contains a local path
+      // First check if the URL is already absolute (starts with http or https)
       if (url.startsWith('http://') || url.startsWith('https://')) {
         console.log(`SimulatorPathResolver: URL is already absolute: ${url}`);
         onResolve(url);
@@ -36,6 +36,26 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
         onResolve(webPath.replace(/\\/g, '/'));
         setIsResolved(true);
         return;
+      }
+      
+      // Handle URLs that start with "/public/" by removing the leading slash
+      // This prevents duplicate "public" in the path
+      if (url.startsWith('/public/')) {
+        const cleanedUrl = url.substring(1); // Remove the leading slash
+        console.log(`SimulatorPathResolver: Cleaned URL from /public/ prefix: ${cleanedUrl}`);
+        
+        // Try the direct path first
+        try {
+          const response = await fetch(cleanedUrl);
+          if (response.ok) {
+            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${cleanedUrl}`);
+            onResolve(cleanedUrl);
+            setIsResolved(true);
+            return;
+          }
+        } catch (error) {
+          console.log(`Direct path failed for ${cleanedUrl}, trying alternatives...`);
+        }
       }
       
       // Generate all possible paths based on our strategies

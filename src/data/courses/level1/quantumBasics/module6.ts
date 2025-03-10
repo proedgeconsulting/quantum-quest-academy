@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 6: Quantum Technologies
@@ -35,7 +36,7 @@ export const module6: Module = {
       points: 20,
       externalSimulator: {
         type: "iframe",
-        url: "/public/simulators/Quantum Technologies.html",
+        url: "simulators/Quantum Technologies.html",
         height: 600,
         width: "100%"
       }
