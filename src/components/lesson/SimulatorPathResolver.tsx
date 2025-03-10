@@ -20,7 +20,7 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
     const resolveSimulatorPath = async () => {
       console.log(`SimulatorPathResolver: Trying to resolve paths for ${url}`);
       
-      // First check if the URL is already absolute (starts with http or https) or contains a local path
+      // First check if the URL is already absolute (starts with http or https)
       if (url.startsWith('http://') || url.startsWith('https://')) {
         console.log(`SimulatorPathResolver: URL is already absolute: ${url}`);
         onResolve(url);
@@ -28,18 +28,12 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
         return;
       }
       
-      // Check if it's already a local file path
-      if (url.includes('C:\\Users\\Lenovo\\quantum-quest-academy\\public')) {
-        console.log(`SimulatorPathResolver: URL is already a local path: ${url}`);
-        // Convert local path to web-friendly path for the browser
-        const webPath = url.replace('C:\\Users\\Lenovo\\quantum-quest-academy\\public', '');
-        onResolve(webPath.replace(/\\/g, '/'));
-        setIsResolved(true);
-        return;
-      }
+      // Clean up the URL - remove any leading "public" directory if present
+      // This ensures we don't have duplicate "public" in the path
+      const cleanUrl = url.replace(/^\/public\/|^public\//, '/');
       
       // Generate all possible paths based on our strategies
-      const possiblePaths = generateAllPossiblePaths(url);
+      const possiblePaths = generateAllPossiblePaths(cleanUrl);
       
       // Log all paths we're going to try
       console.log('Attempting the following paths:');
@@ -50,14 +44,7 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
       
       if (validPath) {
         console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${validPath}`);
-        
-        // If it's a local path, convert it to a web path
-        if (validPath.includes('C:\\Users\\Lenovo\\quantum-quest-academy\\public')) {
-          const webPath = validPath.replace('C:\\Users\\Lenovo\\quantum-quest-academy\\public', '');
-          onResolve(webPath.replace(/\\/g, '/'));
-        } else {
-          onResolve(validPath);
-        }
+        onResolve(validPath);
         setIsResolved(true);
       } else {
         // If we get here, none of the paths worked
