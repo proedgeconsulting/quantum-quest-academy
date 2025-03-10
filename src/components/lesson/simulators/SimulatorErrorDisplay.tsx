@@ -16,20 +16,23 @@ const SimulatorErrorDisplay: React.FC<SimulatorErrorDisplayProps> = ({
   const fileName = simulatorUrl ? simulatorUrl.split('/').pop() : '';
   
   return (
-    <div className="p-4 text-red-500 text-center">
-      <AlertCircle className="h-6 w-6 mx-auto mb-2" />
-      <p>{errorMessage}</p>
-      
-      {simulatorUrl && (
-        <p className="text-sm mt-2">
-          Make sure the file exists at one of the following locations:
-          <ul className="list-disc mt-1 text-left pl-6 text-gray-500">
-            <li><code>public/{simulatorUrl}</code></li>
-            <li><code>public/simulators/{fileName}</code></li>
-          </ul>
-        </p>
-      )}
-    </div>
+    <Alert variant="destructive" className="p-4">
+      <AlertCircle className="h-6 w-6" />
+      <AlertTitle className="ml-2">Simulator Error</AlertTitle>
+      <AlertDescription className="mt-2">
+        {errorMessage}
+        
+        {simulatorUrl && (
+          <div className="text-sm mt-2">
+            <p>Make sure the file exists at one of the following locations:</p>
+            <ul className="list-disc mt-1 text-left pl-6 text-gray-500">
+              <li><code>public/simulators/{fileName}</code></li>
+              <li><code>public/{simulatorUrl}</code></li>
+            </ul>
+          </div>
+        )}
+      </AlertDescription>
+    </Alert>
   );
 };
 

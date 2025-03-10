@@ -27,25 +27,19 @@ export const generateAllPossiblePaths = (url: string): string[] => {
   // Generate normalized paths
   addPathIfNew(cleanUrl); // Without public prefix
   addPathIfNew('public/' + cleanUrl); // With public/ prefix
-  addPathIfNew('/public/' + cleanUrl); // With /public/ prefix
-  addPathIfNew('/simulators/' + cleanUrl.split('/').pop()); // Try looking directly in simulators root
   
   // If URL contains spaces, try with encoding
   if (cleanUrl.includes(' ')) {
     const encodedUrl = cleanUrl.replace(/ /g, '%20');
     addPathIfNew(encodedUrl);
     addPathIfNew('public/' + encodedUrl);
-    addPathIfNew('/public/' + encodedUrl);
   }
   
   // Special case for simulators directory
   if (!cleanUrl.startsWith('simulators/')) {
-    addPathIfNew('simulators/' + cleanUrl);
-    addPathIfNew('public/simulators/' + cleanUrl);
-  } else {
-    // If already starts with simulators/, don't add another simulators/ prefix
     const fileName = cleanUrl.split('/').pop() || '';
-    addPathIfNew('public/' + cleanUrl);
+    addPathIfNew('simulators/' + fileName);
+    addPathIfNew('public/simulators/' + fileName);
   }
   
   return paths;

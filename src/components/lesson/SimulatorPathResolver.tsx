@@ -41,13 +41,10 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
       // Normalize the URL before processing
       let normalizedUrl = url;
       
-      // Handle URLs that start with "/public/" by removing the leading slash
-      // This prevents duplicate paths like public/public/ or /public/public/
-      if (normalizedUrl.startsWith('/public/')) {
-        normalizedUrl = normalizedUrl.substring(1); // Remove the leading slash
-      }
+      // Remove any leading slashes
+      normalizedUrl = normalizedUrl.replace(/^\/+/, '');
       
-      // Also handle the case where the URL starts with just "public/"
+      // Handle URLs that start with "public/"
       if (normalizedUrl.startsWith('public/')) {
         // Extract the path after "public/"
         const pathAfterPublic = normalizedUrl.substring(7);

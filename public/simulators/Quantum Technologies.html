@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Technologies Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .tech-section {
+            margin-bottom: 30px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .simulation-area {
+            height: 300px;
+            background-color: #333;
+            border-radius: 10px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Technologies Simulator</h1>
+    
+    <div class="container">
+        <div class="tech-section">
+            <h2>Quantum Computing</h2>
+            <p>Explore basic elements of quantum computing with this interactive circuit simulator.</p>
+            <div class="controls">
+                <button onclick="showTech('computing')">Quantum Computing Simulator</button>
+            </div>
+            <div id="computing-sim" class="simulation-area">
+                <canvas id="computing-canvas" width="900" height="300"></canvas>
+            </div>
+        </div>
+        
+        <div class="tech-section">
+            <h2>Quantum Cryptography</h2>
+            <p>See how quantum key distribution works for secure communication.</p>
+            <div class="controls">
+                <button onclick="showTech('crypto')">Quantum Cryptography Simulator</button>
+            </div>
+            <div id="crypto-sim" class="simulation-area">
+                <canvas id="crypto-canvas" width="900" height="300"></canvas>
+            </div>
+        </div>
+        
+        <div class="tech-section">
+            <h2>Quantum Sensing</h2>
+            <p>Discover how quantum sensors can detect tiny changes in physical properties.</p>
+            <div class="controls">
+                <button onclick="showTech('sensing')">Quantum Sensing Simulator</button>
+            </div>
+            <div id="sensing-sim" class="simulation-area">
+                <canvas id="sensing-canvas" width="900" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple canvas animations for each technology
+        const techSimulations = {};
+        
+        function showTech(tech) {
+            if (!techSimulations[tech]) {
+                initSimulation(tech);
+            }
+            
+            // Hide all simulation areas
+            document.querySelectorAll('.simulation-area').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected simulation
+            document.getElementById(`${tech}-sim`).style.display = 'block';
+        }
+        
+        function initSimulation(tech) {
+            const canvas = document.getElementById(`${tech}-canvas`);
+            const ctx = canvas.getContext('2d');
+            
+            switch(tech) {
+                case 'computing':
+                    initQuantumComputingSimulation(canvas, ctx);
+                    break;
+                case 'crypto':
+                    initQuantumCryptoSimulation(canvas, ctx);
+                    break;
+                case 'sensing':
+                    initQuantumSensingSimulation(canvas, ctx);
+                    break;
+            }
+        }
+        
+        function initQuantumComputingSimulation(canvas, ctx) {
+            const particles = [];
+            
+            for(let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 3 + 1,
+                    color: '#00aaff',
+                    vx: Math.random() * 2 - 1,
+                    vy: Math.random() * 2 - 1
+                });
+            }
+            
+            techSimulations['computing'] = {
+                animate: function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw gates
+                    ctx.fillStyle = '#cc5500';
+                    ctx.fillRect(100, 100, 40, 40);
+                    ctx.fillRect(300, 100, 40, 40);
+                    ctx.fillRect(500, 100, 40, 40);
+                    
+                    // Draw connections
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 100);
+                    ctx.lineTo(700, 100);
+                    ctx.stroke();
+                    
+                    // Draw particles
+                    particles.forEach(p => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        
+                        if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                        if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                        
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    
+                    requestAnimationFrame(techSimulations['computing'].animate);
+                }
+            };
+            
+            techSimulations['computing'].animate();
+        }
+        
+        function initQuantumCryptoSimulation(canvas, ctx) {
+            const particles = [];
+            let time = 0;
+            
+            techSimulations['crypto'] = {
+                animate: function() {
+                    time += 0.01;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw sender and receiver
+                    ctx.fillStyle = '#55aa55';
+                    ctx.fillRect(50, 100, 100, 100);
+                    ctx.fillRect(750, 100, 100, 100);
+                    
+                    // Draw quantum channel
+                    ctx.strokeStyle = '#ff00ff';
+                    ctx.setLineDash([5, 15]);
+                    ctx.beginPath();
+                    ctx.moveTo(150, 150);
+                    ctx.lineTo(750, 150);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    // Draw photons traveling
+                    for(let i = 0; i < 5; i++) {
+                        const x = ((time * 100) + i * 120) % 600 + 150;
+                        ctx.fillStyle = '#ff00ff';
+                        ctx.beginPath();
+                        ctx.arc(x, 150, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    requestAnimationFrame(techSimulations['crypto'].animate);
+                }
+            };
+            
+            techSimulations['crypto'].animate();
+        }
+        
+        function initQuantumSensingSimulation(canvas, ctx) {
+            let time = 0;
+            const waves = [];
+            
+            for(let i = 0; i < 3; i++) {
+                waves.push({
+                    frequency: 0.02 + i * 0.01,
+                    amplitude: 30 + i * 10,
+                    phase: i * Math.PI / 4
+                });
+            }
+            
+            techSimulations['sensing'] = {
+                animate: function() {
+                    time += 0.05;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw sensor
+                    ctx.fillStyle = '#ffaa00';
+                    ctx.fillRect(canvas.width / 2 - 25, 50, 50, 50);
+                    
+                    // Draw waves
+                    waves.forEach((wave, index) => {
+                        ctx.strokeStyle = index === 0 ? '#ff5555' : 
+                                         index === 1 ? '#55ff55' : '#5555ff';
+                        
+                        ctx.beginPath();
+                        
+                        for(let x = 0; x < canvas.width; x++) {
+                            const y = 200 + Math.sin(x * wave.frequency + time + wave.phase) * wave.amplitude;
+                            if(x === 0) {
+                                ctx.moveTo(x, y);
+                            } else {
+                                ctx.lineTo(x, y);
+                            }
+                        }
+                        
+                        ctx.stroke();
+                    });
+                    
+                    requestAnimationFrame(techSimulations['sensing'].animate);
+                }
+            };
+            
+            techSimulations['sensing'].animate();
+        }
+        
+        // Initialize the first simulation by default
+        showTech('computing');
+    </script>
+</body>
+</html>
