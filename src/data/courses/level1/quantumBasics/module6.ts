@@ -36,7 +36,7 @@ export const module6: Module = {
       points: 20,
       externalSimulator: {
         type: "iframe",
-        url: "simulators/Quantum Technologies.html",
+        url: "public/simulators/Quantum Technologies.html",
         height: 600,
         width: "100%"
       }

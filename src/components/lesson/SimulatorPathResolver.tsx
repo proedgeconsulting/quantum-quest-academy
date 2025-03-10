@@ -20,7 +20,7 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
     const resolveSimulatorPath = async () => {
       console.log(`SimulatorPathResolver: Trying to resolve paths for ${url}`);
       
-      // First check if the URL is already absolute (starts with http or https)
+      // First check if the URL is already absolute (starts with http or https) or contains a local path
       if (url.startsWith('http://') || url.startsWith('https://')) {
         console.log(`SimulatorPathResolver: URL is already absolute: ${url}`);
         onResolve(url);
@@ -38,32 +38,8 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
         return;
       }
       
-      // Normalize the URL before processing
-      let normalizedUrl = url;
-      
-      // Remove any leading slashes
-      normalizedUrl = normalizedUrl.replace(/^\/+/, '');
-      
-      // Handle URLs that start with "public/"
-      if (normalizedUrl.startsWith('public/')) {
-        // Extract the path after "public/"
-        const pathAfterPublic = normalizedUrl.substring(7);
-        // Try the direct path first
-        try {
-          const response = await fetch(pathAfterPublic);
-          if (response.ok) {
-            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${pathAfterPublic}`);
-            onResolve(pathAfterPublic);
-            setIsResolved(true);
-            return;
-          }
-        } catch (error) {
-          console.log(`Direct path failed for ${pathAfterPublic}, trying alternatives...`);
-        }
-      }
-      
       // Generate all possible paths based on our strategies
-      const possiblePaths = generateAllPossiblePaths(normalizedUrl);
+      const possiblePaths = generateAllPossiblePaths(url);
       
       // Log all paths we're going to try
       console.log('Attempting the following paths:');
