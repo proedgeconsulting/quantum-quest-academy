@@ -36,12 +36,17 @@ export const generateAllPossiblePaths = (url: string): string[] => {
   }
   
   // Handle specific case for "Quantum Technologies"
-  if (cleanUrl === 'simulators/Quantum Technologies.html' || 
-      cleanUrl === 'Quantum Technologies.html') {
+  if (cleanUrl.includes('Quantum Technologies') || 
+      cleanUrl.includes('quantum technologies')) {
+    // Try all case variations
     addPathIfNew('quantum-technologies.html');
     addPathIfNew('public/quantum-technologies.html');
     addPathIfNew('simulators/quantum-technologies.html');
     addPathIfNew('public/simulators/quantum-technologies.html');
+    addPathIfNew('quantum technologies.html');
+    addPathIfNew('public/quantum technologies.html');
+    addPathIfNew('simulators/quantum technologies.html');
+    addPathIfNew('public/simulators/quantum technologies.html');
   }
   
   // Special case for simulators directory
@@ -55,6 +60,13 @@ export const generateAllPossiblePaths = (url: string): string[] => {
     if (hyphenatedFileName !== fileName.toLowerCase()) {
       addPathIfNew('simulators/' + hyphenatedFileName);
       addPathIfNew('public/simulators/' + hyphenatedFileName);
+    }
+    
+    // Try lowercase version
+    const lowercaseFileName = fileName.toLowerCase();
+    if (lowercaseFileName !== fileName) {
+      addPathIfNew('simulators/' + lowercaseFileName);
+      addPathIfNew('public/simulators/' + lowercaseFileName);
     }
   }
   

@@ -19,12 +19,26 @@ const SimulatorErrorDisplay: React.FC<SimulatorErrorDisplayProps> = ({
   const getAlternateFileNames = (name: string) => {
     if (!name) return [];
     
-    const hyphenated = name.replace(/ /g, '-').toLowerCase();
-    const spaceSeparated = name.includes('-') 
-      ? name.replace(/-/g, ' ') 
-      : undefined;
+    const alternates = [];
     
-    return [hyphenated, spaceSeparated].filter(Boolean);
+    // Hyphenated version
+    const hyphenated = name.replace(/ /g, '-').toLowerCase();
+    if (hyphenated !== name.toLowerCase()) {
+      alternates.push(hyphenated);
+    }
+    
+    // Space-separated version (if it has hyphens)
+    if (name.includes('-')) {
+      alternates.push(name.replace(/-/g, ' '));
+    }
+    
+    // Lowercase version with spaces
+    const lowercased = name.toLowerCase();
+    if (lowercased !== name) {
+      alternates.push(lowercased);
+    }
+    
+    return alternates;
   };
   
   const alternateNames = fileName ? getAlternateFileNames(fileName) : [];
@@ -49,7 +63,7 @@ const SimulatorErrorDisplay: React.FC<SimulatorErrorDisplayProps> = ({
             
             {simulatorUrl.includes('Quantum Technologies') && (
               <p className="mt-2 font-medium text-red-600">
-                Note: For "Quantum Technologies", try using the filename "quantum-technologies.html" instead.
+                Note: For "Quantum Technologies", try using the filename "quantum technologies.html" (with lowercase and space) or "quantum-technologies.html" (with hyphen).
               </p>
             )}
           </div>

@@ -62,10 +62,23 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
         }
       }
       
-      // Special case for Quantum Technologies
-      if (url.includes('Quantum Technologies')) {
+      // Special case for Quantum Technologies - try with the exact case shown in the repo
+      if (url.includes('Quantum Technologies') || url.includes('quantum technologies')) {
         try {
-          const hyphenatedPath = 'quantum-technologies.html';
+          const exactPath = 'simulators/quantum technologies.html';
+          const response = await fetch(exactPath);
+          if (response.ok) {
+            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${exactPath}`);
+            onResolve(exactPath);
+            setIsResolved(true);
+            return;
+          }
+        } catch (error) {
+          console.log(`Exact path failed for 'quantum technologies.html', trying alternatives...`);
+        }
+        
+        try {
+          const hyphenatedPath = 'simulators/quantum-technologies.html';
           const response = await fetch(hyphenatedPath);
           if (response.ok) {
             console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${hyphenatedPath}`);
@@ -74,20 +87,7 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
             return;
           }
         } catch (error) {
-          console.log(`Direct hyphenated path failed, continuing with other options...`);
-        }
-        
-        try {
-          const altPath = 'simulators/quantum-technologies.html';
-          const response = await fetch(altPath);
-          if (response.ok) {
-            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${altPath}`);
-            onResolve(altPath);
-            setIsResolved(true);
-            return;
-          }
-        } catch (error) {
-          console.log(`Alternate path failed, continuing with other options...`);
+          console.log(`Hyphenated path failed, continuing with other options...`);
         }
       }
       
