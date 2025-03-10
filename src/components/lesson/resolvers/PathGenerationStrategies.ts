@@ -6,8 +6,13 @@
 export const generateAllPossiblePaths = (url: string): string[] => {
   const paths: string[] = [];
   
-  // Clean the URL by removing any leading slashes
-  const cleanUrl = url.replace(/^\/+/, '');
+  // Clean the URL by removing any leading slashes and normalizing public prefixes
+  let cleanUrl = url.replace(/^\/+/, '');
+  
+  // Handle the case where the URL already includes 'public/'
+  if (cleanUrl.startsWith('public/')) {
+    cleanUrl = cleanUrl.substring(7); // Remove the 'public/' prefix
+  }
   
   // Always try the original URL first
   paths.push(url);
@@ -19,22 +24,13 @@ export const generateAllPossiblePaths = (url: string): string[] => {
     }
   };
   
-  // If the URL starts with "public/"
-  if (cleanUrl.startsWith('public/')) {
-    // Try without public prefix (in case we're already in public directory)
-    addPathIfNew(cleanUrl.substring(7));
-    
-    // Try with just a leading slash
-    addPathIfNew('/' + cleanUrl);
-  } else {
-    // If URL doesn't start with public/, try with public/ prefix
-    addPathIfNew('public/' + cleanUrl);
-    
-    // Try with /public/ prefix
-    addPathIfNew('/public/' + cleanUrl);
-  }
+  // Generate normalized paths
+  addPathIfNew(cleanUrl); // Without public prefix
+  addPathIfNew('public/' + cleanUrl); // With public/ prefix
+  addPathIfNew('/public/' + cleanUrl); // With /public/ prefix
+  addPathIfNew('/simulators/' + cleanUrl.split('/').pop()); // Try looking directly in simulators root
   
-  // If URL contains spaces, try with and without encoding
+  // If URL contains spaces, try with encoding
   if (cleanUrl.includes(' ')) {
     const encodedUrl = cleanUrl.replace(/ /g, '%20');
     addPathIfNew(encodedUrl);
@@ -42,12 +38,14 @@ export const generateAllPossiblePaths = (url: string): string[] => {
     addPathIfNew('/public/' + encodedUrl);
   }
   
-  // If URL refers specifically to a simulator, try in the simulators folder
-  if (!cleanUrl.includes('/simulators/')) {
+  // Special case for simulators directory
+  if (!cleanUrl.startsWith('simulators/')) {
+    addPathIfNew('simulators/' + cleanUrl);
+    addPathIfNew('public/simulators/' + cleanUrl);
+  } else {
+    // If already starts with simulators/, don't add another simulators/ prefix
     const fileName = cleanUrl.split('/').pop() || '';
-    addPathIfNew(`/simulators/${fileName}`);
-    addPathIfNew(`public/simulators/${fileName}`);
-    addPathIfNew(`/public/simulators/${fileName}`);
+    addPathIfNew('public/' + cleanUrl);
   }
   
   return paths;

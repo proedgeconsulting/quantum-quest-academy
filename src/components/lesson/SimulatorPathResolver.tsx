@@ -38,28 +38,35 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
         return;
       }
       
+      // Normalize the URL before processing
+      let normalizedUrl = url;
+      
       // Handle URLs that start with "/public/" by removing the leading slash
-      // This prevents duplicate "public" in the path
-      if (url.startsWith('/public/')) {
-        const cleanedUrl = url.substring(1); // Remove the leading slash
-        console.log(`SimulatorPathResolver: Cleaned URL from /public/ prefix: ${cleanedUrl}`);
-        
+      // This prevents duplicate paths like public/public/ or /public/public/
+      if (normalizedUrl.startsWith('/public/')) {
+        normalizedUrl = normalizedUrl.substring(1); // Remove the leading slash
+      }
+      
+      // Also handle the case where the URL starts with just "public/"
+      if (normalizedUrl.startsWith('public/')) {
+        // Extract the path after "public/"
+        const pathAfterPublic = normalizedUrl.substring(7);
         // Try the direct path first
         try {
-          const response = await fetch(cleanedUrl);
+          const response = await fetch(pathAfterPublic);
           if (response.ok) {
-            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${cleanedUrl}`);
-            onResolve(cleanedUrl);
+            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${pathAfterPublic}`);
+            onResolve(pathAfterPublic);
             setIsResolved(true);
             return;
           }
         } catch (error) {
-          console.log(`Direct path failed for ${cleanedUrl}, trying alternatives...`);
+          console.log(`Direct path failed for ${pathAfterPublic}, trying alternatives...`);
         }
       }
       
       // Generate all possible paths based on our strategies
-      const possiblePaths = generateAllPossiblePaths(url);
+      const possiblePaths = generateAllPossiblePaths(normalizedUrl);
       
       // Log all paths we're going to try
       console.log('Attempting the following paths:');
