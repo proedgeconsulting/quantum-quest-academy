@@ -62,6 +62,35 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
         }
       }
       
+      // Special case for Quantum Technologies
+      if (url.includes('Quantum Technologies')) {
+        try {
+          const hyphenatedPath = 'quantum-technologies.html';
+          const response = await fetch(hyphenatedPath);
+          if (response.ok) {
+            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${hyphenatedPath}`);
+            onResolve(hyphenatedPath);
+            setIsResolved(true);
+            return;
+          }
+        } catch (error) {
+          console.log(`Direct hyphenated path failed, continuing with other options...`);
+        }
+        
+        try {
+          const altPath = 'simulators/quantum-technologies.html';
+          const response = await fetch(altPath);
+          if (response.ok) {
+            console.log(`SimulatorPathResolver: Successfully resolved ${url} to ${altPath}`);
+            onResolve(altPath);
+            setIsResolved(true);
+            return;
+          }
+        } catch (error) {
+          console.log(`Alternate path failed, continuing with other options...`);
+        }
+      }
+      
       // Generate all possible paths based on our strategies
       const possiblePaths = generateAllPossiblePaths(normalizedUrl);
       

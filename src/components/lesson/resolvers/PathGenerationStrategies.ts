@@ -35,11 +35,27 @@ export const generateAllPossiblePaths = (url: string): string[] => {
     addPathIfNew('public/' + encodedUrl);
   }
   
+  // Handle specific case for "Quantum Technologies"
+  if (cleanUrl === 'simulators/Quantum Technologies.html' || 
+      cleanUrl === 'Quantum Technologies.html') {
+    addPathIfNew('quantum-technologies.html');
+    addPathIfNew('public/quantum-technologies.html');
+    addPathIfNew('simulators/quantum-technologies.html');
+    addPathIfNew('public/simulators/quantum-technologies.html');
+  }
+  
   // Special case for simulators directory
   if (!cleanUrl.startsWith('simulators/')) {
     const fileName = cleanUrl.split('/').pop() || '';
     addPathIfNew('simulators/' + fileName);
     addPathIfNew('public/simulators/' + fileName);
+    
+    // Also try with hyphenated version of the filename
+    const hyphenatedFileName = fileName.replace(/ /g, '-').toLowerCase();
+    if (hyphenatedFileName !== fileName.toLowerCase()) {
+      addPathIfNew('simulators/' + hyphenatedFileName);
+      addPathIfNew('public/simulators/' + hyphenatedFileName);
+    }
   }
   
   return paths;
