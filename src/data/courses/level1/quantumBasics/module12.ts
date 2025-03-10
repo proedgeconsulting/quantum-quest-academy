@@ -23,7 +23,7 @@ export const module12: Module = {
       type: "video",
       duration: 10,
       points: 10,
-      videoUrl: "https://www.youtube.com/shorts/Nbvu1M1KA5E"
+      videoUrl: "https://www.youtube.com/watch?v=m8fi0fODVDw"
     },
     {
       id: "1.1.12.3",
