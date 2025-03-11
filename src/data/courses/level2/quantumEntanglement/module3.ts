@@ -1,11 +1,10 @@
-
 import { Module } from "@/data/types/courseTypes";
 
-// Module 3: Entanglement in the Lab
+// Module 3: Quantum Photon Entanglement
 export const module3: Module = {
   id: "2.2.3",
-  title: "Entanglement in the Lab",
-  description: "Learn how scientists create and measure entangled quantum states in laboratory settings.",
+  title: "Quantum Photon Entanglement",
+  description: "Explore entanglement using photons.",
   lessons: [
     {
       id: "2.2.3.1",
@@ -27,11 +26,16 @@ export const module3: Module = {
     },
     {
       id: "2.2.3.3",
-      title: "Quantum Entanglement Simulation",
-      description: "Use an interactive simulator to visualize and experiment with entangled quantum states.",
-      content: "Quantum entanglement is often described as 'spooky action at a distance,' but what does it really look like when two quantum systems become entangled? In this interactive lesson, you'll use a quantum simulator to create, manipulate, and measure entangled qubits.\n\nYou'll start by preparing two individual qubits in superposition states, then apply a CNOT gate to entangle them. The simulator will visualize the resulting quantum state, showing how the probabilities of different measurement outcomes change when the qubits become entangled.\n\nMost importantly, you'll perform virtual experiments that demonstrate the non-local nature of quantum entanglement by seeing how measuring one qubit instantaneously affects its entangled partner, regardless of simulated distance.\n\nThis hands-on approach will help you develop an intuition for quantum entanglement that goes beyond mathematical formulas, allowing you to grasp one of the most profound and counterintuitive aspects of quantum mechanics.",
+      title: "Photon Explorer",
+      description: "Use an interactive simulator to explore entangled photon states.",
+      content: "In this interactive session, you'll use our Photon Explorer to investigate entangled photon states. You'll be able to create entangled photon pairs, manipulate their polarization states, and observe how measurements on one photon affect its entangled partner.",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Photon-Explorer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     }

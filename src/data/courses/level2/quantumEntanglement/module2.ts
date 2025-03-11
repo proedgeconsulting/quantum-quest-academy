@@ -1,7 +1,6 @@
-
 import { Module } from "@/data/types/courseTypes";
 
-// Module 2: Applications of Entanglement
+// Module 2: Applications of Entanglement 
 export const module2: Module = {
   id: "2.2.2",
   title: "Applications of Entanglement",
@@ -22,7 +21,12 @@ export const module2: Module = {
       description: "Learn how entanglement enables secure quantum key distribution.",
       content: "Quantum cryptography uses the principles of quantum mechanics to enable secure communication between parties. In particular, quantum key distribution (QKD) protocols like BB84 and E91 allow two parties to produce a shared random secret key that can be used to encrypt and decrypt messages.\n\nIn this lesson, we'll focus on entanglement-based QKD protocols, explaining how the unique properties of entangled states make it possible to detect any eavesdropping attempt. We'll walk through the E91 protocol designed by Artur Ekert, which uses Bell's inequality to guarantee security, and discuss the advantages of quantum cryptography over classical cryptographic methods.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Cryptography.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },
