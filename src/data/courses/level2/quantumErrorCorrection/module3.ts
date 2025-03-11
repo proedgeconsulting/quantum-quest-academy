@@ -31,7 +31,12 @@ export const module3: Module = {
       description: "Experiment with stabilizer states and see how they respond to errors and corrections.",
       content: "In this interactive lesson, you'll use our Stabilizer Simulator to visualize and manipulate stabilizer states. This tool will help you develop intuition for how these mathematical objects behave in the presence of errors.\n\nYou'll be able to construct different stabilizer codes, introduce various types of errors, and perform syndrome measurements to diagnose and correct those errors. The simulator provides both circuit-level visualization and abstract group-theoretic representations, helping you connect these different perspectives.\n\nBy experimenting with different scenarios, you'll gain a deeper understanding of how stabilizer codes work and why they're so useful for quantum error correction. The interactive nature of this lesson will help solidify the concepts from the previous theoretical lessons.",
       type: "interactive",
-      interactiveComponent: "RandomNumberSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Stabilizer-Simulator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

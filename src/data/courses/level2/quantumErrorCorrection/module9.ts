@@ -13,7 +13,12 @@ export const module9: Module = {
       description: "Save an important quantum message from being corrupted during transmission.",
       content: "An important quantum message is being sent across the galaxy, but it must pass through a dangerous region of space filled with cosmic radiation that can corrupt quantum information! Your mission is to ensure the message arrives safely by implementing quantum error correction.\n\nIn this adventure, you'll play the role of a Quantum Communications Officer who must encode the message before transmission and decode it upon arrival. You'll need to choose the right error correction code based on the types of errors you expect to encounter in different regions of space.\n\nAs you progress through the mission, you'll face unexpected challenges like solar flares that cause burst errors or gravitational anomalies that twist your qubits in strange ways. Your quick thinking and knowledge of quantum error correction will be the difference between mission success and failure!",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Message-Rescue.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },
@@ -32,7 +37,12 @@ export const module9: Module = {
       description: "Play a fun board game that teaches quantum error correction strategies.",
       content: "In this interactive lesson, you'll play a digital version of \"Quantum Guardians,\" a board game where players work together to protect quantum information from errors.\n\nEach player takes on a different role in the quantum error correction team: the Encoder, the Syndrome Extractor, the Error Corrector, and the Decoder. You'll need to coordinate your actions to successfully process quantum information while the game introduces random errors and challenges.\n\nThe game board represents a quantum circuit with qubits moving through different gates. Players must place error detection components, perform syndrome measurements, and apply correction operations at the right times. With each successfully processed qubit, you'll earn points and unlock new error correction tools for your team. Can you achieve a perfect score?",
       type: "interactive",
-      interactiveComponent: "QuantumCoinSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Guardians-Game.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },
@@ -42,7 +52,12 @@ export const module9: Module = {
       description: "Compete in fun challenges that test your quantum error correction skills.",
       content: "Welcome to the Quantum Error Correction Olympics! In this lesson, you'll participate in a series of fun challenges that test different aspects of your quantum error correction knowledge.\n\nEvents include:\n\n- The Error Detection Sprint: Identify errors as quickly as possible\n\n- The Syndrome Decoding Relay: Work with teammates to interpret syndrome measurements and apply corrections\n\n- The Quantum Code Construction Challenge: Build an error correction code that satisfies specific requirements\n\n- The Fault-Tolerance Marathon: Maintain a quantum computation for as long as possible while errors accumulate\n\nYou'll earn medals based on your performance in each event, and your combined score will determine your overall ranking. This olympic-style competition makes learning quantum error correction fun while reinforcing key concepts through friendly competition!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Error-Olympics.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 35,
       points: 30
     }

@@ -31,7 +31,12 @@ export const module6: Module = {
       description: "Experience the challenges of implementing error correction on realistic quantum hardware.",
       content: "In this interactive lesson, you'll use our Quantum Hardware Simulator to explore the practical challenges of implementing error correction on different hardware platforms. This simulator provides a more realistic model of quantum hardware than the idealized circuit model.\n\nYou'll be able to design and implement small error correction experiments on simulated hardware with realistic constraints like limited connectivity, gate errors, measurement errors, and decoherence. The simulator will help you visualize how errors propagate through the system and how error correction procedures attempt to mitigate them.\n\nBy experimenting with different hardware parameters and error correction strategies, you'll develop intuition for the practical challenges of quantum error correction implementation. This hands-on experience will help you understand the engineering trade-offs involved in building fault-tolerant quantum computers.",
       type: "interactive",
-      interactiveComponent: "RandomNumberSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Hardware-Simulator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

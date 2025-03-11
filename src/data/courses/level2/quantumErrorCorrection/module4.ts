@@ -31,7 +31,12 @@ export const module4: Module = {
       description: "Test your understanding by playing a game where you must correct errors efficiently.",
       content: "In this interactive lesson, you'll put your quantum error correction knowledge to the test in a strategic game environment. You'll be presented with a quantum memory affected by various errors, and your job is to diagnose and correct these errors using the minimum resources possible.\n\nThe game becomes progressively more challenging as you advance, introducing more complex error patterns, measurement uncertainties, and resource constraints. You'll need to decide which syndrome measurements to perform, interpret the results correctly, and apply the appropriate corrections.\n\nPoints are awarded based on how efficiently you preserve the quantum information and how few resources you consume. This gamified approach will test your understanding of quantum error correction concepts and help you develop intuition for error diagnosis and correction strategies.",
       type: "interactive",
-      interactiveComponent: "QuantumCoinSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Error-Strategy-Game.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

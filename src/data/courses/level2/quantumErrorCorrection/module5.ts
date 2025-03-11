@@ -31,7 +31,12 @@ export const module5: Module = {
       description: "Design and test quantum circuits that operate on error-corrected logical qubits.",
       content: "In this interactive lesson, you'll use our Logical Circuit Simulator to design quantum algorithms that operate at the logical level, with underlying error correction automatically handled by the system. This tool bridges the gap between abstract quantum algorithms and their fault-tolerant implementations.\n\nYou'll be able to construct circuits using logical qubits protected by error correction codes, and the simulator will show both the high-level logical operations and the underlying physical operations including error correction procedures. You can introduce different noise models to see how your circuit performs under realistic conditions.\n\nBy experimenting with different logical gates and error correction strategies, you'll gain practical experience with the concepts of fault-tolerant quantum computation. This hands-on approach will help you understand the trade-offs between computational power, error protection, and resource requirements.",
       type: "interactive",
-      interactiveComponent: "QubitStateSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Logical-Circuit-Simulator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

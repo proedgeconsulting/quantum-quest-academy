@@ -31,7 +31,12 @@ export const module1: Module = {
       description: "Learn how to quantify and benchmark errors in quantum systems.",
       content: "Before we can correct quantum errors, we need to be able to measure them accurately. This lesson covers the experimental techniques and mathematical frameworks used to characterize errors in quantum systems.\n\nWe'll explore concepts like fidelity, which measures how close a quantum state is to its ideal form, and quantum process tomography, which characterizes the errors in quantum operations. We'll also discuss noise models that help us predict and simulate how real quantum hardware will behave under different conditions.\n\nFinally, we'll look at benchmarking protocols like Randomized Benchmarking and Quantum Volume that allow us to compare the performance of different quantum processors in a standardized way.",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Error-Measurement.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },

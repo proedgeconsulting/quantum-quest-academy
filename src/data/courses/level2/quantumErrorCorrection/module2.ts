@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 2: Basic Error Types

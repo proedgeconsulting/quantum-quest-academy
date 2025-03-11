@@ -13,7 +13,12 @@ export const module10: Module = {
       description: "Construct a basic quantum error correction system for your city.",
       content: "Welcome to Quantum Error Correction City! In this simulation game, you'll build and manage quantum error correction systems that protect the city's quantum computing infrastructure.\n\nYou'll start by constructing a basic error correction facility that can detect and correct simple errors. You'll need to place encoder stations, syndrome extractors, and correction units in the right configuration to effectively protect quantum information.\n\nAs your facility processes quantum data, you'll earn resources that can be used to upgrade your equipment or expand your facility. But be careful - if too many errors go uncorrected, your facility's reliability rating will drop, and citizens will lose trust in your quantum systems!",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Error-City-Builder.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },
@@ -32,7 +37,12 @@ export const module10: Module = {
       description: "Implement more sophisticated error correction systems in your quantum city.",
       content: "Your quantum error correction facilities have been running successfully, and now it's time to upgrade to more advanced systems! In this interactive lesson, you'll research and implement sophisticated error correction codes like surface codes.\n\nYou'll redesign your facilities to implement these advanced codes, which offer better protection but require more qubits and more complex syndrome extraction. You'll need to carefully test your new systems before fully deploying them across the city.\n\nAs you upgrade, you'll face new challenges like correlated errors that affect multiple qubits simultaneously or adaptive noise that seems to learn from your correction patterns. Your advanced error correction systems will need to be both powerful and flexible to handle these sophisticated error models.",
       type: "interactive",
-      interactiveComponent: "QubitStateSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Advanced-Error-Correction.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },
@@ -42,7 +52,12 @@ export const module10: Module = {
       description: "Compete with other cities to build the most efficient error correction system.",
       content: "The annual Quantum City Competition has arrived! Cities from around the world are competing to demonstrate the most efficient and reliable quantum error correction systems, and your city is participating.\n\nIn this challenge, you'll optimize your quantum error correction infrastructure to achieve the highest score across multiple categories: error correction effectiveness, resource efficiency, processing speed, and scalability.\n\nYou'll have a limited budget to make final improvements to your systems before the competition begins. During the competition, all cities will face the same sequence of quantum computing tasks and error patterns. Your city's performance will be measured and scored in real-time, with a live leaderboard showing your ranking. Can your city become the world champion of quantum error correction?",
       type: "interactive",
-      interactiveComponent: "RandomNumberSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/City-Competition.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 35,
       points: 30
     }
