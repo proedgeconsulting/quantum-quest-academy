@@ -22,7 +22,12 @@ export const module8: Module = {
       description: "Use quantum algorithms to create beautiful patterns that classical computers can't make!",
       content: "Time to become a quantum artist! In this interactive lesson, you'll use a special quantum pattern generator to create amazing designs that would be difficult or impossible to create with regular computers.\n\nYour quantum pattern generator uses the principles of quantum interference and entanglement to create unique patterns. You'll get to:\n\n1. Set up different quantum circuits that generate patterns\n2. Change parameters to create variations of your designs\n3. Use quantum randomness to add unexpected elements to your art\n4. Save your favorite quantum masterpieces\n\nThe patterns you create aren't just random - they follow the special rules of quantum physics, creating designs with unique symmetries and properties. No two quantum artists will create exactly the same art!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-pattern-generator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },
@@ -41,7 +46,12 @@ export const module8: Module = {
       description: "Create amazing stories with help from a quantum algorithm.",
       content: "Everyone loves a good story, but have you ever had a story created with help from a quantum computer? Today you'll use a quantum story generator to create tales that might be too wild for classical computers to dream up!\n\nIn this interactive lesson, you'll help build a quantum circuit that can generate story elements like:\n- Unusual characters with surprising combinations of traits\n- Unexpected plot twists using quantum randomness\n- Strange new worlds with quantum-inspired features\n- Multiple story paths that exist in superposition until you choose one\n\nYour quantum story generator uses a special kind of quantum algorithm called a 'Quantum Generative Model' that can create new ideas by learning patterns from existing stories, then using quantum properties to make them unique.\n\nWhat bizarre and fantastic stories will your quantum computer help you tell? Let's find out!",
       type: "interactive",
-      interactiveComponent: "RandomNumberSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-story-generator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     }

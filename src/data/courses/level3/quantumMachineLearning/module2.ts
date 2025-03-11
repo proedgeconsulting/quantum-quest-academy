@@ -31,7 +31,12 @@ export const module2: Module = {
       description: "Implement and train a simple quantum neural network for classification.",
       content: "In this interactive lesson, we'll implement a simple quantum neural network for a binary classification task and learn how to train it effectively. We'll use a variational circuit with several trainable parameters and explore how different hyperparameters affect training performance.\n\nWe'll walk through:\n\n- **Preparing the dataset** and encoding it into quantum states\n- **Designing the variational quantum circuit** with trainable parameters\n- **Setting up the classical optimizer** to update the parameters\n- **Training the network** and visualizing the learning process\n- **Evaluating performance** on test data\n\nThis hands-on experience will give you practical insight into the challenges and techniques involved in training quantum machine learning models.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/training-quantum-neural-networks.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 35,
       points: 30
     },

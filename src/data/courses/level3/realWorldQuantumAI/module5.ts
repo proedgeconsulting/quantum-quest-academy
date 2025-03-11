@@ -22,9 +22,14 @@ export const quantumGenerativeModelsModule: Module = {
       description: "Create a quantum AI that can compose original music in different styles.",
       content: "Become a quantum music producer! In this fun activity, you'll build a quantum generative model that can compose original music in different styles, from classical to pop to electronic.\n\nYour quantum AI will learn patterns from existing music and then use quantum superposition to explore countless musical possibilities simultaneously. You can guide your AI by selecting instruments, tempo, and musical style, then listen to the unique compositions it creates. Will your quantum composer create the next hit song? Let's make some quantum music!",
       type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-music-composer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
-      points: 100,
-      interactiveComponent: "QuantumSimulator"
+      points: 100
     },
     {
       id: "3.2.5.3",
@@ -32,9 +37,14 @@ export const quantumGenerativeModelsModule: Module = {
       description: "Use quantum generative models to create unique fashion designs.",
       content: "Step into the shoes of a quantum fashion designer! In this creative challenge, you'll use quantum generative models to create unique clothing designs that have never been seen before.\n\nYour quantum AI will analyze thousands of existing fashion designs and then use quantum computing to explore new combinations of colors, patterns, and styles. You can guide the creative process by selecting different design elements and seeing what your quantum AI comes up with. Who knows - your quantum-generated design might become the next fashion trend!",
       type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-fashion-designer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
-      points: 120,
-      interactiveComponent: "AtomSimulation"
+      points: 120
     }
   ]
 };

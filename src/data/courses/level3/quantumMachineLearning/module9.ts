@@ -22,7 +22,12 @@ export const module9: Module = {
       description: "Play and design a maze game where the paths exist in superposition!",
       content: "Get ready for a maze like no other! In a quantum maze, the paths can exist in multiple configurations at once until you try to walk down them.\n\nIn this interactive lesson, you'll first play a quantum maze game where:\n- Paths exist in superposition (they might or might not be there)\n- Your observations change the maze as you explore it\n- Entangled paths affect each other when you interact with them\n- Quantum teleportation helps you find shortcuts\n\nAfter playing the game, you'll get to design your own quantum maze levels using a simple quantum circuit editor. The circuits you create will determine how the paths in your maze behave according to quantum rules.\n\nCan you create a quantum maze that's challenging but still possible to solve? Your friends can try to solve it too!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-maze-adventure.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },
@@ -41,7 +46,12 @@ export const module9: Module = {
       description: "Design a simple quantum game using drag-and-drop quantum circuits.",
       content: "Now it's your turn to become a quantum game designer! In this interactive lesson, you'll create your very own simple quantum game from scratch.\n\nUsing a drag-and-drop quantum circuit builder and game elements, you'll:\n1. Choose a game style (puzzle, action, or strategy)\n2. Add quantum elements that use superposition and entanglement\n3. Create game rules that follow quantum physics principles\n4. Test your game and refine it to make it fun\n\nYou don't need to know complex programming - our quantum game engine will translate your quantum circuits into game behavior automatically. You can focus on the creative part of game design!\n\nAt the end of the lesson, you'll have a playable quantum game that you designed yourself. Who knows? Maybe you'll be the creator of the next big quantum gaming hit!",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-game-builder.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     }

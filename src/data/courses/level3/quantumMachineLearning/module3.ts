@@ -31,7 +31,12 @@ export const module3: Module = {
       description: "Build quantum circuits that can compress and reconstruct quantum data.",
       content: "Quantum autoencoders use quantum circuits to perform dimensionality reduction on quantum data, potentially offering exponential compression advantages for certain quantum states. In this interactive lesson, you'll design and implement a simple quantum autoencoder.\n\nYou'll learn how to:\n\n1. Design the encoding and decoding quantum circuits\n2. Define appropriate cost functions for training\n3. Implement the training loop using variational methods\n4. Evaluate the reconstruction fidelity\n\nThis hands-on exercise will provide practical experience with quantum data compression techniques that could be valuable for quantum state preparation and quantum memory applications.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-autoencoder-design.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 35,
       points: 30
     },

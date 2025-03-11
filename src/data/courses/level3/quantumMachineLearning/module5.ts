@@ -31,7 +31,12 @@ export const module5: Module = {
       description: "Implement a hybrid model that transfers features between classical and quantum domains.",
       content: "In this interactive session, you'll implement a hybrid model that uses a pre-trained classical network for feature extraction and a quantum circuit for enhanced classification. This practical approach allows you to leverage the strengths of both paradigms.\n\nYou'll learn to:\n\n1. Extract meaningful features from a pre-trained classical convolutional network\n2. Design an appropriate quantum circuit to process these features\n3. Train only the quantum portion while keeping the classical weights frozen\n4. Evaluate the performance compared to fully classical and fully quantum approaches\n\nThis hands-on experience will provide practical skills for implementing hybrid models that could offer advantages on near-term quantum hardware.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-feature-transfer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 40,
       points: 35
     },

@@ -22,7 +22,12 @@ export const module7: Module = {
       description: "Help train a quantum computer to recognize different types of space objects!",
       content: "Calling all space explorers! The Intergalactic Space Agency needs your help to train their quantum computer to identify different types of space objects like planets, stars, asteroids, and mysterious objects!\n\nIn this interactive challenge, you'll use a simple quantum neural network to classify different space objects based on their features like size, brightness, and color. You'll get to:\n\n1. Collect training data by observing different space objects\n2. Feed this data to your quantum classifier\n3. Test how well your classifier works on new, unseen space objects\n4. Improve your classifier to make it more accurate\n\nCan you train the quantum computer to correctly identify all the space objects? The future of space exploration depends on you!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-classifier-challenge.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 20,
       points: 15
     },
@@ -41,7 +46,12 @@ export const module7: Module = {
       description: "Play a game to see if you can beat a quantum computer at finding patterns!",
       content: "It's human vs. quantum computer in this exciting pattern matching game! Can you find patterns faster than a quantum algorithm?\n\nIn this interactive game, you'll be shown a series of patterns, and you'll race against a simulated quantum computer to identify what comes next in the sequence. Sometimes the patterns will be in numbers, sometimes in shapes, colors, or even sounds!\n\nThe game starts simple, but gets more challenging as you progress. The quantum computer uses something called 'Grover's algorithm' which gives it a special advantage in searching through many possibilities quickly.\n\nAs you play, you'll learn:\n- How quantum computers approach pattern recognition problems\n- When quantum computers have advantages over classical ones\n- How to develop your own pattern recognition skills\n\nDo you have what it takes to beat the quantum computer? Let's find out!",
       type: "interactive",
-      interactiveComponent: "QuantumCoinSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-pattern-matching-game.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     }

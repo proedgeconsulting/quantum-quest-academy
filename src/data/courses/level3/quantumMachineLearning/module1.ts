@@ -31,7 +31,12 @@ export const module1: Module = {
       description: "Explore how quantum computers can transform data into higher-dimensional feature spaces.",
       content: "Quantum feature maps are quantum circuits that transform classical data into quantum states in a higher-dimensional Hilbert space, similar to how kernel methods work in classical machine learning. This lesson explores how quantum computers can potentially perform feature mapping exponentially more efficiently than classical computers.\n\nWe'll discuss:\n\n- The connection between quantum feature maps and kernel methods\n- How to design quantum circuits that implement useful feature maps\n- The concept of quantum kernel estimation\n- Potential advantages for classification problems\n\nWe'll also examine recent research on quantum feature maps that might offer advantages for specific types of data, particularly in chemistry and materials science applications where the data already has quantum structure.",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-feature-maps.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

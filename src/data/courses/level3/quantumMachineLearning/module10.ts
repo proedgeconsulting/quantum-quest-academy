@@ -22,7 +22,12 @@ export const module10: Module = {
       description: "Program a quantum robot to find the fastest path through complex mazes.",
       content: "Your quantum robot needs your help! It needs to navigate through a complicated maze, and you're going to program its quantum AI brain to find the best path.\n\nIn this interactive lesson, you'll:\n1. Set up a quantum search algorithm (a simplified version of Grover's algorithm)\n2. Help your robot analyze multiple paths simultaneously using quantum superposition\n3. Use quantum interference to amplify the probability of finding the optimal path\n4. Test your quantum navigation algorithm against a classical algorithm\n\nYou'll see how a quantum robot can potentially find solutions faster than a classical robot for certain types of problems. The maze will get more complex as you progress, challenging your quantum programming skills!\n\nCan your quantum robot find the fastest way through the Super Mega Maze Challenge at the end?",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-maze-navigator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },
@@ -41,7 +46,12 @@ export const module10: Module = {
       description: "Put your quantum robot's skills to the test in the Robot Olympics!",
       content: "It's time for the Quantum Robot Olympics! In this exciting challenge, you'll program your quantum robot to compete in a series of Olympic events designed to test its quantum AI capabilities.\n\nThe Olympic events include:\n1. **Quantum Sprint**: Program your robot to find the fastest route through a changing obstacle course\n2. **Pattern Recognition Challenge**: Train your robot to quickly identify patterns in quantum noise\n3. **Resource Optimization**: Help your robot distribute limited resources to maximize points\n4. **Quantum Strategy Game**: Play a strategy game where quantum moves give special advantages\n\nFor each event, you'll use different quantum algorithms and techniques you've learned throughout the course. Your robot will earn medals based on its performance compared to classical AI robots.\n\nDo you have what it takes to coach your quantum robot to Olympic glory? Let the games begin!",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-robot-olympics.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     }
