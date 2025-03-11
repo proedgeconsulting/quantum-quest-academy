@@ -31,7 +31,12 @@ export const quantumCodingLiteCourse: Course = {
           description: "Learn how to create and manipulate qubits in code.",
           content: "Let's create our first qubit! In quantum programming, we start with qubits in a known state (usually |0⟩, pronounced 'ket 0'). Then we apply operations, called 'gates', to manipulate them.\n\nThe most basic quantum gate is the Hadamard gate (H), which puts a qubit into superposition - meaning it has a 50% chance of being measured as 0 and a 50% chance of being measured as 1.\n\nHere's what a simple program to create a superposition looks like in our simplified quantum coding language:\n\n```\n// Create a qubit in state |0⟩\nqubit q = 0;\n\n// Apply Hadamard gate to put it in superposition\nH(q);\n\n// Measure the qubit - will be either 0 or 1 with 50% probability each\nresult = measure(q);\n```\n\nIn our interactive simulator below, you can try creating and measuring qubits in different states. Use the simulator to create a qubit, apply gates, and see how the measurement probabilities change:",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-bits.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 20,
           points: 15
         },
@@ -41,7 +46,12 @@ export const quantumCodingLiteCourse: Course = {
           description: "Explore the basic building blocks of quantum circuits.",
           content: "Just like classical computers have logic gates (AND, OR, NOT), quantum computers have quantum gates. Let's explore the fundamental gates that we'll use in our programs:\n\n1. **X Gate (NOT Gate)**: Flips the state of a qubit (|0⟩ becomes |1⟩ and vice versa)\n\n2. **H Gate (Hadamard)**: Creates superposition (|0⟩ becomes a mix of |0⟩ and |1⟩)\n\n3. **Z Gate**: Adds a phase difference, key for interference effects\n\n4. **CNOT Gate (Controlled-NOT)**: A two-qubit gate that flips the second qubit if the first qubit is |1⟩. This is how we create entanglement!\n\nHere's a simple program that uses these gates:\n\n```\n// Create two qubits\nqubit q1 = 0;\nqubit q2 = 0;\n\n// Put first qubit in superposition\nH(q1);\n\n// Entangle the qubits\nCNOT(q1, q2);\n\n// Now q1 and q2 are entangled!\n// If q1 is measured as 0, q2 will also be 0\n// If q1 is measured as 1, q2 will also be 1\n```\n\nThis is one of the most powerful aspects of quantum computing - creating entangled states that are impossible to describe independently!\n\nExperiment with these gates using our interactive simulator below:",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-gate-puzzle.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 15,
           points: 10
         },
@@ -67,7 +77,12 @@ export const quantumCodingLiteCourse: Course = {
           description: "Create a simple program that generates true random numbers using quantum principles.",
           content: "One of the simplest and most practical applications of quantum computing is generating truly random numbers. Classical computers can only create pseudo-random numbers using mathematical formulas, but quantum computers can generate genuine randomness based on the fundamental uncertainty of quantum measurements.\n\nLet's build a quantum random number generator (QRNG) to generate a random number between 0 and 3:\n\n```\n// We need 2 qubits to represent numbers 0-3\nqubit q1 = 0;\nqubit q2 = 0;\n\n// Put both qubits in superposition\nH(q1);\nH(q2);\n\n// Measure both qubits\nbit b1 = measure(q1);\nbit b2 = measure(q2);\n\n// Combine the results to get a number between 0-3\nresult = (b1 << 1) | b2;\n```\n\nThis gives us a truly random number between 0 and 3. Each time you run the program, you'll get an unpredictable result - not because of a complex algorithm, but because of the fundamental nature of quantum mechanics.\n\nTry running a quantum random number generator in our simulator below:",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/Quantum-Random-Number-Generator.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 20,
           points: 15
         },
@@ -77,7 +92,12 @@ export const quantumCodingLiteCourse: Course = {
           description: "Implement a quantum program to simulate fair and biased coin flips.",
           content: "Now let's create a more flexible random generator - a quantum coin flipper that can simulate both fair and biased coins!\n\nA fair coin flip is easy - we just put a qubit in superposition and measure it:\n\n```\n// Create a qubit\nqubit q = 0;\n\n// Put it in superposition (50% chance of 0, 50% chance of 1)\nH(q);\n\n// Measure the qubit\nresult = measure(q); // 0 = heads, 1 = tails\n```\n\nBut what if we want a biased coin that lands on heads 70% of the time and tails 30% of the time? In quantum computing, we can use a special operation called a 'rotation gate' to control these probabilities.\n\n```\n// Create a qubit\nqubit q = 0;\n\n// Apply rotation to create a 70/30 bias instead of 50/50\nRY(q, 0.93); // The angle 0.93 gives approximately a 70% probability of 0\n\n// Measure the qubit\nresult = measure(q); // 0 = heads (70%), 1 = tails (30%)\n```\n\nThis demonstrates how quantum computers give us fine-grained control over probabilities, which becomes incredibly powerful for more complex algorithms like quantum search or quantum machine learning.\n\nExperiment with our Quantum Coin Flipper below, where you can adjust the bias and see the results in real-time:",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-superposition.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 15,
           points: 10
         },
