@@ -1,49 +1,59 @@
 
 import { Module } from "@/data/types/courseTypes";
 
-// Module 10: Quantum Teleportation
+// Module 10: Quantum Games and Puzzles
 export const module10: Module = {
   id: "2.2.10",
-  title: "Quantum Teleportation",
-  description: "Learn how scientists can 'teleport' quantum information using entanglement.",
+  title: "Quantum Games and Puzzles",
+  description: "Have fun with quantum games while deepening your understanding of entanglement.",
   lessons: [
     {
       id: "2.2.10.1",
-      title: "What is Quantum Teleportation?",
-      description: "Discover how quantum information can be 'teleported' using entanglement.",
-      content: "Quantum teleportation sounds like science fiction, but it's real science! In this lesson, we'll learn how scientists can teleport quantum information from one place to another using entanglement.\n\nFirst, let's be clear - quantum teleportation doesn't transport matter like in Star Trek! Instead, it transfers the quantum state of one particle to another particle somewhere else. It's like taking all the information about Particle A and making Particle B become exactly like Particle A was!\n\nThe amazing thing is that this works instantly, no matter how far apart the particles are! Scientists have successfully teleported quantum information between particles separated by mountains, and even between Earth and satellites in space!\n\nQuantum teleportation is a key technology for future quantum computers and the quantum internet, where quantum information will need to be transferred between different quantum processors.",
+      title: "Quantum Game Theory",
+      description: "Learn how entanglement changes the landscape of game theory.",
+      content: "Classical game theory has revolutionized economics, political science, and evolutionary biology by providing a framework for analyzing strategic decision-making. Quantum game theory extends this framework to the quantum realm, where entanglement and superposition can lead to surprising new equilibria and strategies.\n\nIn this lesson, we'll explore how quantum mechanics changes familiar games like the Prisoner's Dilemma, the Battle of the Sexes, and coordination games. We'll discuss quantum strategies that can outperform classical ones and the concept of quantum Nash equilibria. You'll discover how entanglement can enable cooperation in scenarios where classical game theory predicts defection.",
       type: "reading",
+      duration: 25,
+      points: 20
+    },
+    {
+      id: "2.2.10.2",
+      title: "Quantum Nonlocal Games",
+      description: "Explore games that demonstrate the nonlocal nature of quantum entanglement.",
+      content: "Quantum nonlocal games are scenarios where separated players can achieve better coordination than would be possible classically by sharing entangled states. These games provide an intuitive demonstration of Bell's theorem and the nonlocal nature of quantum mechanics.\n\nIn this lesson, we'll examine well-known nonlocal games, such as the CHSH game, the Magic Square game, and the Mermin-Peres Magic Square. We'll walk through the optimal quantum strategies for these games and explain how they surpass classical bounds. We'll also discuss the connection between nonlocal games and device-independent quantum cryptography.",
+      type: "video",
+      duration: 20,
+      points: 15
+    },
+    {
+      id: "2.2.10.3",
+      title: "Quantum Heroes Card Game",
+      description: "Test your knowledge of quantum pioneers and concepts in this fun card matching game.",
+      content: "Take a break from technical details and have some fun while reinforcing your knowledge of key quantum physics concepts and pioneers. In this interactive card game, you'll match quantum heroes with their discoveries while learning interesting facts about the history of quantum mechanics.",
+      type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Heroes-Card-Game.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 15,
       points: 10
     },
     {
-      id: "2.2.10.2",
-      title: "Teleportation Experiments",
-      description: "See how scientists perform real quantum teleportation in labs.",
-      content: "Let's watch quantum teleportation happen in real laboratories! In this video, we'll see scientists teleport quantum information from one place to another.\n\nYou'll watch as they create entangled particle pairs and use them to transfer the quantum state of a third particle. It looks simple from the outside - just some lasers, mirrors, and detectors - but what's happening is truly amazing: the complete quantum state of one particle is disappearing from one location and reappearing at another!\n\nThe video will show both simple demonstrations and cutting-edge experiments where scientists have teleported quantum information across cities and even to satellites in space. It's not science fiction - it's real quantum physics happening today!",
-      type: "video",
-      duration: 15,
-      points: 10,
-      videoUrl: "https://www.youtube.com/embed/DxQK1WDYI_k"
-    },
-    {
-      id: "2.2.10.3",
-      title: "Quantum Teleportation Game",
-      description: "Master the steps of quantum teleportation in this interactive game.",
-      content: "Ready to try quantum teleportation yourself? In this interactive game, you'll perform all the steps needed to teleport quantum information from one particle to another!\n\nYou'll start by creating an entangled pair of particles, then prepare a third particle with the quantum information you want to teleport. Next, you'll perform special measurements and send the results through a classical communication channel (like a regular phone call).\n\nFinally, you'll apply the right quantum operations to complete the teleportation process. If you've done everything correctly, the quantum information will disappear from the original particle and appear in the target particle!\n\nDon't worry if it seems complicated - the game will guide you through each step and show you how this amazing quantum process works!",
-      type: "interactive",
-      interactiveComponent: "QuantumSimulator",
-      duration: 25,
-      points: 25
-    },
-    {
       id: "2.2.10.4",
-      title: "Quantum Teleportation Quiz",
-      description: "Test your understanding of quantum teleportation.",
-      content: "Let's check what you've learned about quantum teleportation!",
-      type: "quiz",
-      duration: 10,
-      points: 15
+      title: "Quantum Chess",
+      description: "Play a version of chess that incorporates quantum superposition and entanglement.",
+      content: "In this interactive game, you'll play a version of chess where pieces can exist in superposition of multiple locations and become entangled with each other. You'll need to think quantum mechanically to develop winning strategies in this mind-bending variant of the classic game!",
+      type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Chess.html",
+        height: 600,
+        width: "100%"
+      },
+      duration: 30,
+      points: 25
     }
   ]
 };

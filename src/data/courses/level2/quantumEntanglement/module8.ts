@@ -1,54 +1,44 @@
 
 import { Module } from "@/data/types/courseTypes";
 
-// Module 8: Quantum Spooky Action
+// Module 8: Entanglement in Quantum Algorithms
 export const module8: Module = {
   id: "2.2.8",
-  title: "Quantum Spooky Action",
-  description: "Explore why Einstein called entanglement 'spooky action at a distance'.",
+  title: "Entanglement in Quantum Algorithms",
+  description: "Explore how entanglement powers quantum algorithms.",
   lessons: [
     {
       id: "2.2.8.1",
-      title: "Einstein's Spooky Mystery",
-      description: "Learn why Einstein was puzzled by quantum entanglement.",
-      content: "Did you know that even the brilliant Albert Einstein was puzzled by quantum entanglement? He called it 'spooky action at a distance' because he couldn't explain how entangled particles seem to communicate instantly, no matter how far apart they are!\n\nIn this lesson, we'll travel back in time to the 1930s when Einstein and his friends were debating about quantum physics. Einstein thought there must be some hidden explanation for entanglement because he believed nothing could travel faster than light. But quantum physics seemed to say that entangled particles could affect each other instantly across any distance!\n\nThis mystery puzzled Einstein for the rest of his life, and it's one of the most fascinating parts of quantum physics that scientists are still exploring today!",
+      title: "Entanglement as a Resource",
+      description: "Understand why entanglement is the key resource that powers quantum computation.",
+      content: "Quantum entanglement is widely regarded as the key resource that gives quantum computers their computational advantage. But why exactly is entanglement so important for quantum algorithms? In this lesson, we'll explore the role of entanglement in quantum computation.\n\nWe'll discuss how entanglement enables quantum parallelism and interference, allowing quantum algorithms to explore multiple computational paths simultaneously. We'll examine research that quantifies the entanglement content of various quantum algorithms and its correlation with quantum speedup. You'll gain a deeper understanding of why entanglement is considered the \"magic ingredient\" in quantum computation.",
       type: "reading",
-      duration: 12,
-      points: 10
-    },
-    {
-      id: "2.2.8.2",
-      title: "Spooky Experiments",
-      description: "Watch scientists prove that entanglement really is 'spooky'!",
-      content: "How do we know that quantum entanglement really is as 'spooky' as Einstein thought? In this video, we'll see the amazing experiments that scientists have done to prove that entanglement is real!\n\nWe'll watch as scientists create pairs of entangled particles and separate them by long distances. Then, when they measure one particle, the other particle instantly shows matching properties, as if by magic! These experiments have been done across rooms, across cities, and even with particles separated by many kilometers!\n\nThese amazing experiments show that Einstein's 'spooky action at a distance' is really happening in our universe, and it's one of the strangest and most exciting discoveries in all of science!",
-      type: "video",
-      duration: 15,
-      points: 10,
-      videoUrl: "https://www.youtube.com/embed/ZuvK-od647c"
-    },
-    {
-      id: "2.2.8.3",
-      title: "Spooky Action Game",
-      description: "Play a game to experience the 'spooky' nature of quantum entanglement.",
-      content: "Ready to experience some 'spooky action' for yourself? In this interactive game, you'll control two entangled quantum particles that are separated by a great distance.\n\nYou'll discover that when you measure one particle to have a certain property (like spinning up), the other particle instantly shows the opposite property (spinning down), no matter how far apart they are! It's as if they're communicating faster than light - which is why Einstein found it so spooky!\n\nCan you complete all the challenges and master this strange quantum behavior? Let's find out how 'spooky' quantum entanglement really is!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/spooky-action-game.html",
-        height: 600,
-        width: "100%"
-      },
-      duration: 20,
+      duration: 25,
       points: 20
     },
     {
-      id: "2.2.8.4",
-      title: "Spooky Action Quiz",
-      description: "Test your understanding of the 'spooky' nature of quantum entanglement.",
-      content: "Let's test what you've learned about Einstein's 'spooky action at a distance'!",
-      type: "quiz",
-      duration: 10,
-      points: 15
+      id: "2.2.8.2",
+      title: "Entanglement in Shor's Algorithm",
+      description: "Learn how entanglement enables Shor's algorithm to factor large numbers efficiently.",
+      content: "Shor's algorithm is one of the most famous quantum algorithms, capable of factoring large numbers exponentially faster than the best known classical algorithms. This has significant implications for modern cryptography, which often relies on the difficulty of factoring large numbers. Entanglement plays a crucial role in giving Shor's algorithm its computational advantage.\n\nIn this lesson, we'll walk through Shor's algorithm, highlighting where and how entanglement is created and utilized. We'll examine the quantum Fourier transform, a key component of the algorithm, and explain how entanglement enables this transform to be performed efficiently. You'll gain insight into how entanglement contributes to the algorithm's exponential speedup.",
+      type: "video",
+      duration: 30,
+      points: 25
+    },
+    {
+      id: "2.2.8.3",
+      title: "Grover's Search Algorithm",
+      description: "Examine how entanglement contributes to the quadratic speedup in Grover's algorithm.",
+      content: "Grover's algorithm provides a quadratic speedup for unstructured search problems, a more modest improvement than Shor's algorithm but applicable to a wide range of problems. In this interactive lesson, you'll explore how entanglement enables this speedup and see the algorithm in action.",
+      type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Grover's-Search-Algorithm.html",
+        height: 600,
+        width: "100%"
+      },
+      duration: 30,
+      points: 25
     }
   ]
 };

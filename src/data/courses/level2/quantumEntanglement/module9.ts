@@ -1,54 +1,44 @@
 
 import { Module } from "@/data/types/courseTypes";
 
-// Module 9: Quantum Communication
+// Module 9: Entanglement in Quantum Many-Body Systems
 export const module9: Module = {
   id: "2.2.9",
-  title: "Quantum Communication",
-  description: "Discover how quantum entanglement enables super-secure messaging.",
+  title: "Entanglement in Quantum Many-Body Systems",
+  description: "Explore entanglement in systems with many interacting quantum particles.",
   lessons: [
     {
       id: "2.2.9.1",
-      title: "Secret Quantum Messages",
-      description: "Learn how quantum entanglement can create unbreakable secret codes.",
-      content: "Did you know that quantum entanglement can help us send super-secret messages that no one can spy on? It's true! In this lesson, we'll discover how quantum physics creates the most secure communication method ever invented!\n\nImagine you want to send a secret message to your friend without anyone else being able to read it. With quantum communication, you can use entangled particles to create a special secret key that only you and your friend know. The amazing thing is that if anyone tries to spy on your quantum message, the entanglement breaks and you know immediately that someone is eavesdropping!\n\nScientists and governments are already building quantum communication networks because they're so secure. In the future, your personal messages might be protected by quantum entanglement!",
+      title: "Entanglement Entropy",
+      description: "Learn about entanglement entropy and its role in quantum many-body physics.",
+      content: "Entanglement entropy provides a powerful tool for quantifying the entanglement in quantum many-body systems. Unlike in simple few-qubit systems, where we can directly analyze the quantum state, in many-body systems with hundreds or thousands of particles, entanglement entropy offers a more tractable approach.\n\nIn this lesson, we'll define entanglement entropy and explore its properties. We'll discuss how it scales with system size in different quantum phases, including area laws and volume laws. We'll examine how entanglement entropy has revolutionized our understanding of quantum phase transitions, topological order, and quantum criticality. You'll also learn about measurement techniques for entanglement entropy in experimental systems.",
       type: "reading",
-      duration: 15,
-      points: 10
+      duration: 30,
+      points: 25
     },
     {
       id: "2.2.9.2",
-      title: "Quantum Messaging in Action",
-      description: "See how scientists use quantum entanglement to send secure messages.",
-      content: "Let's see quantum communication in action! In this video, we'll watch scientists use entangled particles to send secure messages that can't be hacked.\n\nFirst, we'll see how they create pairs of entangled photons (particles of light) using special crystals. Then, they'll separate these photons and send them to different locations. When they measure these entangled photons, they get random results that match each other - and these matching random results become their secret key!\n\nThe coolest part? If anyone tries to intercept the photons, the quantum properties change and the sender and receiver can immediately tell that someone is trying to spy on them! This makes quantum communication the most secure way to send messages ever invented!",
+      title: "Quantum Phase Transitions",
+      description: "Understand how entanglement changes during quantum phase transitions.",
+      content: "Quantum phase transitions occur at absolute zero temperature when the ground state of a quantum system changes abruptly as a parameter in the Hamiltonian is varied. Unlike classical phase transitions, which are driven by thermal fluctuations, quantum phase transitions are driven by quantum fluctuations and often involve dramatic changes in entanglement structure.\n\nIn this lesson, we'll explore how entanglement behaves across quantum phase transitions. We'll discuss the concept of universality in quantum critical points and how entanglement entropy can reveal the central charge of the underlying conformal field theory. We'll examine specific examples, such as the transverse-field Ising model and the Bose-Hubbard model, to illustrate these concepts.",
       type: "video",
-      duration: 12,
-      points: 10,
-      videoUrl: "https://www.youtube.com/embed/JvgpDTDyvdk"
-    },
-    {
-      id: "2.2.9.3",
-      title: "Quantum Spy Catcher",
-      description: "Play a game to detect quantum spies using entanglement.",
-      content: "It's time to become a quantum security expert! In this interactive game, you'll use quantum entanglement to send secret messages and catch spies who try to intercept them.\n\nYou'll create pairs of entangled particles and use them to establish a secret key with your friend. Then, a spy will try to intercept your quantum message without being detected. Your job is to use the properties of quantum entanglement to figure out when the spy is listening in!\n\nAs you play, you'll learn why quantum communication is considered 'unhackable' and how it could revolutionize cybersecurity in the future. Are you ready to become a quantum spy catcher?",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-spy-catcher.html",
-        height: 600,
-        width: "100%"
-      },
-      duration: 20,
+      duration: 25,
       points: 20
     },
     {
-      id: "2.2.9.4",
-      title: "Quantum Communication Quiz",
-      description: "Test your knowledge about quantum communication and security.",
-      content: "Let's check what you've learned about quantum communication and how it can create super-secure messages!",
-      type: "quiz",
-      duration: 10,
-      points: 15
+      id: "2.2.9.3",
+      title: "Quantum Many-Body Simulator",
+      description: "Simulate entanglement in quantum many-body systems with this interactive tool.",
+      content: "In this interactive simulation, you'll explore how entanglement propagates and evolves in quantum many-body systems. You can adjust parameters like interaction strength, system size, and initial conditions to see how they affect the entanglement dynamics.",
+      type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-circuit-designer.html",
+        height: 600,
+        width: "100%"
+      },
+      duration: 35,
+      points: 30
     }
   ]
 };

@@ -1,49 +1,53 @@
 
 import { Module } from "@/data/types/courseTypes";
 
-// Module 12: Quantum Entanglement Challenge
+// Module 12: Course Review and Future Directions
 export const module12: Module = {
   id: "2.2.12",
-  title: "Quantum Entanglement Challenge",
-  description: "Put all your quantum entanglement knowledge to the test in exciting challenges.",
+  title: "Course Review and Future Directions",
+  description: "Review key concepts from the course and explore emerging research in quantum entanglement.",
   lessons: [
     {
       id: "2.2.12.1",
-      title: "Entanglement Escape Room",
-      description: "Use your quantum knowledge to solve puzzles and escape!",
-      content: "Welcome to the Quantum Entanglement Escape Room! You've been trapped in a special room where the only way out is to solve puzzles using your knowledge of quantum entanglement.\n\nThe room contains various devices that use entangled particles. You'll need to figure out how to use entanglement properties to unlock doors, decode messages, and eventually find your way out!\n\nYou'll need to remember what you've learned about how entangled particles behave, how measuring one affects the other, and how to use this strange quantum connection to your advantage. Good luck, quantum explorer - the clock is ticking!",
+      title: "Course Review",
+      description: "Recap the key concepts and insights from the course.",
+      content: "In this lesson, we'll review the key concepts and insights from the entire course on quantum entanglement. We'll revisit the mathematical formalism of entanglement, Bell inequalities and nonlocality, entanglement measures, entanglement in quantum information and computation, multipartite entanglement, and applications in various fields.\n\nThis recap will help consolidate your understanding of quantum entanglement and how it relates to various aspects of quantum science and technology. We'll also address some common misconceptions about entanglement and clarify subtle points that may have been challenging during the course.",
       type: "reading",
-      duration: 15,
-      points: 10
+      duration: 30,
+      points: 25
     },
     {
       id: "2.2.12.2",
-      title: "Quantum Game Show",
-      description: "Watch contestants compete in a quantum knowledge competition.",
-      content: "It's time for the Quantum Game Show! In this fun video, we'll watch as contestants compete to answer questions and solve challenges all about quantum entanglement.\n\nContestants will face brain-teasing questions about entangled particles, demonstrate quantum principles using everyday objects, and race to complete quantum experiments before time runs out. The competition gets more challenging with each round!\n\nAs you watch, see if you can answer the questions before the contestants do. How much quantum knowledge have you gained through this course?",
+      title: "Frontier Research in Entanglement",
+      description: "Learn about current research frontiers in quantum entanglement.",
+      content: "Quantum entanglement remains an active area of research with many open questions and exciting new directions. In this lesson, we'll survey some of the cutting-edge research topics in quantum entanglement, including:\n\n- Entanglement in gravity and spacetime, including the ER=EPR conjecture and holographic entanglement entropy\n\n- Resource theories of entanglement and their applications\n\n- Entanglement in quantum many-body systems and its connections to quantum field theory\n\n- Novel experimental platforms for generating and manipulating entanglement\n\n- Device-independent protocols based on quantum nonlocality\n\nThis lesson will give you a glimpse of the forefront of research in quantum entanglement and potential future developments in the field.",
       type: "video",
-      duration: 15,
-      points: 10,
-      videoUrl: "https://www.youtube.com/embed/wUPBY0Iw9Co"
+      duration: 25,
+      points: 20
     },
     {
       id: "2.2.12.3",
-      title: "Ultimate Quantum Challenge",
-      description: "Face the ultimate test of your quantum entanglement knowledge.",
-      content: "Are you ready for the Ultimate Quantum Challenge? This interactive activity combines everything you've learned about quantum entanglement into one epic final challenge!\n\nYou'll navigate through a series of increasingly difficult quantum puzzles, each requiring you to apply different aspects of quantum entanglement. You might need to:  \n\n- Create specific entangled states  \n- Use entanglement to send secure messages  \n- Perform quantum teleportation  \n- Detect quantum 'spies' trying to intercept your particles  \n- Design quantum experiments to test entanglement properties  \n\nThis challenge brings together all the quantum concepts you've mastered throughout the course. Do you have what it takes to become a true Quantum Entanglement Master?",
+      title: "Quantum Heroes Match-Up",
+      description: "Test your knowledge of quantum entanglement concepts in this interactive game.",
+      content: "In this fun interactive game, you'll match key quantum entanglement concepts with their proper descriptions and applications. This activity will help reinforce your understanding of the main ideas from the course while providing an enjoyable review experience.",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
-      duration: 30,
-      points: 30
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Heroes-Match-Up.html",
+        height: 600,
+        width: "100%"
+      },
+      duration: 20,
+      points: 15
     },
     {
       id: "2.2.12.4",
-      title: "Quantum Entanglement Final Quiz",
-      description: "The ultimate test of everything you've learned about quantum entanglement.",
-      content: "This is it - the final quiz to test everything you've learned about quantum entanglement! This comprehensive quiz covers all aspects of quantum entanglement from across the entire course.",
+      title: "Final Course Assessment",
+      description: "Demonstrate your mastery of quantum entanglement concepts.",
+      content: "This comprehensive assessment covers all the key topics from the course on quantum entanglement. Successfully completing this assessment will demonstrate your thorough understanding of quantum entanglement and its applications.",
       type: "quiz",
-      duration: 15,
-      points: 25
+      duration: 45,
+      points: 50
     }
   ]
 };
