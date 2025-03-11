@@ -1,7 +1,7 @@
 
 import { Course } from "@/data/types/courseTypes";
 import { quantumBasicsCourse } from "./quantumBasics";
-import { quantumPlaygroundCourse } from "./quantumPlayground";
+import { quantumPlaygroundCourse } from "./quantumPlayground/index";
 import { quantumCodingLiteCourse } from "./quantumCodingLite";
 
 // All Level 1 courses
