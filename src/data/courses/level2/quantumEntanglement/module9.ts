@@ -32,7 +32,12 @@ export const module9: Module = {
       description: "Play a game to detect quantum spies using entanglement.",
       content: "It's time to become a quantum security expert! In this interactive game, you'll use quantum entanglement to send secret messages and catch spies who try to intercept them.\n\nYou'll create pairs of entangled particles and use them to establish a secret key with your friend. Then, a spy will try to intercept your quantum message without being detected. Your job is to use the properties of quantum entanglement to figure out when the spy is listening in!\n\nAs you play, you'll learn why quantum communication is considered 'unhackable' and how it could revolutionize cybersecurity in the future. Are you ready to become a quantum spy catcher?",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-spy-catcher.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 20,
       points: 20
     },

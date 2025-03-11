@@ -32,7 +32,12 @@ export const module12: Module = {
       description: "Complete the multi-part quantum circuit challenge.",
       content: "The time has come to prove your quantum circuit mastery! In this interactive challenge, you'll work through the three tasks we discussed in the previous lesson.\n\nYou'll have access to all the quantum gates and tools you've learned about throughout the course. For each task, you'll build a quantum circuit that meets the specified requirements, test it to make sure it works correctly, and then submit your solution.\n\nThere may be multiple ways to solve each challenge - try to find the most elegant solution! Can you complete all three parts of the challenge and earn your Quantum Circuit Master badge?",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-circuit-challenge.html",
+        height: 650,
+        width: "100%"
+      },
       duration: 30,
       points: 30
     },

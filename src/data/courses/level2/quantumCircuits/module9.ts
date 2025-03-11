@@ -32,7 +32,12 @@ export const module9: Module = {
       description: "Use a simulator to perform quantum teleportation and save the spacecraft.",
       content: "The stranded spacecraft is waiting for your help! In this interactive activity, you'll use our quantum teleportation simulator to send the rescue codes through space.\n\nYou'll prepare the quantum state that contains the rescue code, create entangled qubits to establish the quantum channel, perform the necessary measurements, and apply the correct operations to complete the teleportation process. Watch in amazement as your quantum state disappears from one qubit and appears on another!\n\nWill you successfully teleport the rescue codes and save the day?",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-teleportation.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 25
     },

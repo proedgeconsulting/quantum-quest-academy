@@ -22,7 +22,12 @@ export const module7: Module = {
       description: "Build quantum circuits by dragging and dropping components.",
       content: "Time to get creative! In this interactive activity, you'll use our drag-and-drop interface to build your own quantum circuits. It's as easy as playing a video game!\n\nYou'll start with a blank canvas and a toolbox of quantum components. Drag qubits onto your circuit, add gates to manipulate them, and place measurement tools to see the results. As you build, you'll see your circuit come to life with animations showing how the quantum states change.\n\nTry completing the circuit challenges to unlock new components and achievements!",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-circuit-builder.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },

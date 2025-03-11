@@ -32,7 +32,12 @@ export const module11: Module = {
       description: "Use a quantum music generator to compose your own quantum-inspired music.",
       content: "It's time to become a quantum composer! In this interactive activity, you'll use our Quantum Music Maker to create your own musical compositions based on quantum circuits.\n\nStart by designing a quantum circuit with different gates and qubit configurations. As you build your circuit, you'll hear how each element affects the music. The quantum interference patterns will create melodies, harmonies, and rhythms that change based on your circuit design.\n\nExperiment with different quantum gates to find the sound you like best, then save your quantum symphony to share with friends and family!",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-music-maker.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },

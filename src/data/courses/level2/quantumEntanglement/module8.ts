@@ -32,7 +32,12 @@ export const module8: Module = {
       description: "Play a game to experience the 'spooky' nature of quantum entanglement.",
       content: "Ready to experience some 'spooky action' for yourself? In this interactive game, you'll control two entangled quantum particles that are separated by a great distance.\n\nYou'll discover that when you measure one particle to have a certain property (like spinning up), the other particle instantly shows the opposite property (spinning down), no matter how far apart they are! It's as if they're communicating faster than light - which is why Einstein found it so spooky!\n\nCan you complete all the challenges and master this strange quantum behavior? Let's find out how 'spooky' quantum entanglement really is!",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/spooky-action-game.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 20,
       points: 20
     },

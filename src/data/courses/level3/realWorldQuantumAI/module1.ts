@@ -22,9 +22,14 @@ export const quantumAIApplicationsModule: Module = {
       description: "Play a game where you compete against a quantum AI to solve puzzles.",
       content: "It's game time! In this fun activity, you'll play against a quantum AI in a series of puzzles and challenges. The AI uses quantum computing to think about many possible moves at once, making it a tough opponent!\n\nAs you play, you'll learn how quantum AI thinks differently from regular computer AI, and you'll discover strategies to solve problems in new ways. Can you outsmart the quantum AI? Let's find out!",
       type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-ai-challenge.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
-      points: 100,
-      interactiveComponent: "QuantumSimulator"
+      points: 100
     },
     {
       id: "3.2.1.3",
@@ -32,9 +37,14 @@ export const quantumAIApplicationsModule: Module = {
       description: "Get creative and design your own quantum AI application to solve a problem you care about.",
       content: "Now it's your turn to be an inventor! In this creative challenge, you'll design your own quantum AI application to solve a problem that matters to you. Maybe you want to help protect endangered animals, create amazing music, or build the ultimate video game.\n\nYou'll learn about the special powers of quantum AI and how to apply them to your idea. Then you'll create a simple design for your application and explain how it would work. Who knows - your idea might be the next big quantum breakthrough!",
       type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-ai-designer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
-      points: 120,
-      interactiveComponent: "BuildAtomActivity"
+      points: 120
     }
   ]
 };

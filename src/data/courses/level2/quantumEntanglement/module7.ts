@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 7: Entanglement Adventures
@@ -32,7 +31,12 @@ export const module7: Module = {
       description: "Play an exciting game using quantum entanglement principles.",
       content: "Time to join Captain Qubit on an interactive mission! In this game, you'll help Captain Qubit use quantum entanglement to solve puzzles and complete a mission.\n\nYou control two entangled particles - when one moves up, the other moves down; when one turns left, the other turns right. Use this strange quantum behavior to navigate through mazes, collect quantum energy crystals, and unlock the path to success!\n\nCan you master the mysterious rules of entanglement to help Captain Qubit save the day?",
       type: "interactive",
-      interactiveComponent: "QuantumSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/captain-qubit-game.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 20,
       points: 20
     },

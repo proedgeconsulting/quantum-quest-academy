@@ -22,9 +22,14 @@ export const quantumAIEthicsModule: Module = {
       description: "Navigate ethical dilemmas in a simulation game featuring quantum AI scenarios.",
       content: "Put your ethical thinking to the test in the Quantum Ethics Simulator! In this interactive game, you'll face a series of scenarios involving quantum AI technology and have to make difficult decisions.\n\nShould a quantum AI be allowed to make medical decisions? How much privacy should people give up for better quantum AI services? Should quantum AI be used in military applications? There are no perfect answers, but your choices will have consequences in the simulation. See how your decisions affect different stakeholders and compare your choices with other players!",
       type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-ethics-simulator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
-      points: 100,
-      interactiveComponent: "QuantumSimulator"
+      points: 100
     },
     {
       id: "3.2.6.3",
@@ -32,9 +37,14 @@ export const quantumAIEthicsModule: Module = {
       description: "Create a set of ethical guidelines for a quantum AI application of your choice.",
       content: "Now it's your turn to become an ethics expert! In this creative challenge, you'll develop a set of ethical guidelines for a quantum AI application of your choice. Maybe you're creating guidelines for a quantum medical diagnosis system, a quantum criminal justice AI, or a quantum-powered social media platform.\n\nYou'll think about who might be affected by your quantum AI, what risks it might create, and how to make it fair and transparent. Then you'll create a simple 'code of ethics' that explains how your quantum AI should be designed and used. Your guidelines might help shape the future of responsible quantum AI!",
       type: "interactive",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-ethics-guidelines.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
-      points: 120,
-      interactiveComponent: "BuildAtomActivity"
+      points: 120
     }
   ]
 };
