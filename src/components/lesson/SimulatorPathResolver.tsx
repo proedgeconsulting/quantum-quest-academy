@@ -20,6 +20,9 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
     const resolveSimulatorPath = async () => {
       console.log(`SimulatorPathResolver: Trying to resolve paths for ${url}`);
       
+      // Reset resolved state when URL changes
+      setIsResolved(false);
+      
       // First check if the URL is already absolute (starts with http or https)
       if (url.startsWith('http://') || url.startsWith('https://')) {
         console.log(`SimulatorPathResolver: URL is already absolute: ${url}`);
@@ -30,7 +33,12 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
       
       // Clean up the URL - remove any leading "public" directory if present
       // This ensures we don't have duplicate "public" in the path
-      const cleanUrl = url.replace(/^\/public\/|^public\//, '/');
+      let cleanUrl = url.replace(/^\/public\/|^public\//, '/');
+      
+      // Ensure URL starts with a slash
+      if (!cleanUrl.startsWith('/')) {
+        cleanUrl = '/' + cleanUrl;
+      }
       
       // Generate all possible paths based on our strategies
       const possiblePaths = generateAllPossiblePaths(cleanUrl);
@@ -49,6 +57,7 @@ const SimulatorPathResolver: React.FC<SimulatorPathResolverProps> = ({
       } else {
         // If we get here, none of the paths worked
         console.error(`SimulatorPathResolver: Failed to resolve any path for ${url}`);
+        console.error(`Attempted paths: ${possiblePaths.join(', ')}`);
         onError();
       }
     };

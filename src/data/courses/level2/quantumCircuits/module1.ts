@@ -32,7 +32,12 @@ export const module1: Module = {
       description: "Interactive activity to build a simple quantum circuit using basic gates.",
       content: "Now it's time to put your knowledge into practice! In this interactive activity, you'll build your first quantum circuit by arranging quantum gates in the correct order.\n\nYou'll create a simple circuit that generates a Bell state, which is one of the simplest examples of quantum entanglement. Follow the step-by-step instructions to place the Hadamard and CNOT gates correctly.",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-circuit-designer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 20
     },
