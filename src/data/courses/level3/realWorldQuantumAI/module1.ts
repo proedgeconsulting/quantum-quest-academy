@@ -24,7 +24,7 @@ export const quantumAIApplicationsModule: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum-ai-challenge.html",
+        url: "/simulators/Quantum-AI-Challenge.html",
         height: 600,
         width: "100%"
       },

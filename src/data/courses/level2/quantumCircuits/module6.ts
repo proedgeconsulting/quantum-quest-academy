@@ -31,7 +31,12 @@ export const module6: Module = {
       description: "Use optimization tools to improve the efficiency of quantum circuits.",
       content: "In this interactive session, you'll work with quantum circuit optimization tools to transform inefficient circuits into more streamlined versions.\n\nYou'll have the opportunity to:\n\n- Analyze circuits to identify optimization opportunities\n\n- Apply various transformation rules to reduce gate count and depth\n\n- Optimize circuits for specific hardware architectures\n\n- Compare the performance of original and optimized circuits\n\n- Create a multi-stage optimization pipeline\n\nThrough this hands-on experience, you'll develop practical skills in quantum circuit optimization that are directly applicable to real-world quantum programming.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-circuit-optimizer.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

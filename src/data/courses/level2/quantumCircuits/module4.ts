@@ -31,7 +31,12 @@ export const module4: Module = {
       description: "Use simulation tools to explore the behavior of quantum circuits.",
       content: "In this interactive session, you'll use quantum simulation tools to explore how quantum circuits behave under different conditions. You'll be able to modify circuit parameters, observe the resulting quantum states, and gain intuition about quantum behavior.\n\nYou'll experiment with:\n\n- Simulating the Deutsch-Jozsa algorithm with different oracle functions\n\n- Observing how noise affects quantum teleportation\n\n- Exploring how the number of iterations in Grover's algorithm affects the probability of finding the correct answer\n\n- Testing quantum error correction codes\n\nBy running these simulations and seeing the results firsthand, you'll develop a deeper understanding of quantum algorithms and the challenges of quantum computation.",
       type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Circuit-Sandbox.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

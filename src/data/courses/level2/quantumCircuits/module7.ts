@@ -24,7 +24,7 @@ export const module7: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum-circuit-builder.html",
+        url: "/simulators/building-quantum-circuits.html",
         height: 600,
         width: "100%"
       },

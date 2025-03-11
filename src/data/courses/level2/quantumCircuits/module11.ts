@@ -34,7 +34,7 @@ export const module11: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum-music-maker.html",
+        url: "/simulators/Quantum-Music-Maker.html",
         height: 600,
         width: "100%"
       },

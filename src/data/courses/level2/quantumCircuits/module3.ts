@@ -31,7 +31,12 @@ export const module3: Module = {
       description: "Build your own quantum circuits using various quantum gates.",
       content: "It's time to put your knowledge of quantum gates into practice! In this interactive session, you'll use our Quantum Circuit Designer to create and test your own quantum circuits.\n\nYou'll be able to:\n\n- Drag and drop different gates onto qubits\n\n- Connect gates to form circuits\n\n- Run simulations to see how your circuit transforms input states\n\n- Visualize the quantum states at each step\n\nStart with simple circuits like creating Bell states and quantum teleportation, then progress to more complex designs. You'll gain hands-on experience with how different gates interact and how to compose them into meaningful quantum algorithms.",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-circuit-builder.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

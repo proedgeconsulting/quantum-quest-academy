@@ -31,7 +31,12 @@ export const module5: Module = {
       description: "Apply error mitigation techniques to improve quantum circuit performance.",
       content: "In this interactive session, you'll apply various error mitigation techniques to quantum circuits and observe how they improve results.\n\nYou'll work with a simulated noisy quantum environment to:\n\n- Implement zero-noise extrapolation on a simple algorithm\n\n- Design pulse sequences for dynamical decoupling\n\n- Apply readout error mitigation to improve measurement accuracy\n\n- Compare the performance of different mitigation strategies\n\n- Optimize circuit designs to minimize error sensitivity\n\nBy the end of this activity, you'll have practical experience implementing error mitigation techniques that are used in real quantum computing research and applications.",
       type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-error-mitigation.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     },

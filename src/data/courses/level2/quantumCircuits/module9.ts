@@ -34,7 +34,7 @@ export const module9: Module = {
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/quantum-teleportation.html",
+        url: "/simulators/Quantum-Teleportation.html",
         height: 600,
         width: "100%"
       },

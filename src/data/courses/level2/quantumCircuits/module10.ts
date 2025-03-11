@@ -32,7 +32,12 @@ export const module10: Module = {
       description: "Build and run a circuit to solve a quantum detective case.",
       content: "Time to put your quantum detective skills to the test! In this interactive activity, you'll build a quantum circuit using Grover's algorithm to solve a mystery.\n\nThe mystery involves finding which of 16 suspects committed the crime. A classical detective would need to check up to all 16 suspects one by one, but as a quantum detective, you can find the culprit much faster using your quantum circuit. \n\nFollow the step-by-step instructions to build your quantum search circuit, run it, and measure the results to identify the culprit. How quickly can you solve the case?",
       type: "interactive",
-      interactiveComponent: "QuantumCircuitSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Spy-Catcher.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 25,
       points: 25
     },
@@ -74,7 +79,12 @@ In Quantum Chess:
 
 Try the interactive Quantum Chess simulator below:`,
       type: "interactive",
-      interactiveComponent: "QuantumChessSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/Quantum-Chess.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 35
     }
