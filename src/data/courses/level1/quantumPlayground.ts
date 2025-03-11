@@ -39,17 +39,14 @@ In this interactive simulator, you can experiment with quantum bits (qubits) and
 1. Adjust the sliders to change the probability amplitudes
 2. Observe how the quantum state vector moves on the Bloch sphere
 3. Click "Measure" to collapse the superposition into either state |0⟩ or |1⟩
-4. Notice how probabilities affect measurement outcomes when repeated
-
-## External Simulator
-
-<iframe src="https://phet.colorado.edu/sims/html/quantum-bound-states/latest/quantum-bound-states_en.html" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-This simulator, developed by PhET Interactive Simulations at the University of Colorado Boulder, allows you to visualize quantum states and explore the fundamental principles of quantum mechanics.
-
-Experiment with different parameters and observe how quantum states behave!`,
+4. Notice how probabilities affect measurement outcomes when repeated`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-superposition.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 30,
           points: 25
         },
@@ -77,17 +74,14 @@ In classical billiards, balls follow predictable paths based on Newton's laws of
 1. Launch the "quantum ball" with varying energy levels
 2. Observe how it behaves differently from a classical ball
 3. Create barriers and see quantum tunneling in action
-4. Score points by getting the quantum ball to reach target positions
-
-## External Game
-
-<iframe src="https://lab.quantumflytrap.com/lab/quantum-billiards" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-This interactive game developed by Quantum Flytrap allows you to experience quantum mechanics in an intuitive, game-like environment.
-
-Challenge yourself to predict the quantum behavior and beat the levels!`,
+4. Score points by getting the quantum ball to reach target positions`,
           type: "interactive",
-          interactiveComponent: "AtomSimulation",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/Quantum-Billiards.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 35,
           points: 30
         },
@@ -131,17 +125,14 @@ In this interactive sandbox, you can:
 - Drag and drop gates onto the circuit
 - Connect gates to create your circuit
 - Click "Run" to simulate the quantum computation
-- Observe the output probabilities
-
-## External Quantum Circuit Simulator
-
-<iframe src="https://quantumjavascript.app/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-This browser-based quantum circuit simulator allows you to build and experiment with quantum circuits directly in your browser.
-
-Try recreating basic quantum algorithms like Bell state preparation or Deutsch's algorithm!`,
+- Observe the output probabilities`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-circuit-designer.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 40,
           points: 30
         },
@@ -168,17 +159,14 @@ You'll work with several quantum concepts:
 1. Each puzzle presents a quantum circuit with missing gates
 2. Your goal is to complete the circuit to achieve the target output state
 3. Choose from available quantum gates to fill in the blanks
-4. Test your solution by running the completed circuit
-
-## External Quantum Puzzle Game
-
-<iframe src="https://helloquantum.mybluemix.net/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-Hello Quantum is a puzzle game based on real quantum computing principles, developed by IBM Research. Each puzzle requires you to manipulate qubits to achieve a specific target state.
-
-Can you solve all the puzzles and master quantum logic?`,
+4. Test your solution by running the completed circuit`,
           type: "interactive",
-          interactiveComponent: "AtomSimulation",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-gate-puzzle.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 35,
           points: 30
         },
@@ -221,17 +209,14 @@ This simulator allows you to:
 The key quantum mystery you'll observe:
 - When unobserved, particles create an interference pattern (wave behavior)
 - When observed at the slits, the interference pattern disappears (particle behavior)
-- This demonstrates the fundamental role of measurement in quantum mechanics
-
-## External Simulator
-
-<iframe src="https://www.physicsclassroom.com/Physics-Interactives/Wave-Basics/Double-Slit/Double-Slit-Experiment-Interactive" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-This interactive simulator from The Physics Classroom lets you reproduce the famous double-slit experiment and observe the quantum weirdness firsthand.
-
-Try different configurations and see how measurement affects the outcome!`,
+- This demonstrates the fundamental role of measurement in quantum mechanics`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/Quantum-Teleportation.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 35,
           points: 30
         },
@@ -258,17 +243,14 @@ With this interactive tool, you can:
 - Wave functions and probability amplitudes
 - Born rule for calculating probabilities
 - Wave function collapse upon measurement
-- Time evolution according to Schrödinger's equation
-
-## External Wave Function Simulator
-
-<iframe src="https://falstad.com/qm1d/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-This quantum wave simulation by Paul Falstad allows you to see how quantum wave functions behave in different potential wells, demonstrating fundamental quantum mechanical principles.
-
-Experiment with different initial states and potential shapes to see how quantum systems evolve!`,
+- Time evolution according to Schrödinger's equation`,
           type: "interactive",
-          interactiveComponent: "AtomSimulation",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/Qubit-Measurement-Probability.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 30,
           points: 25
         },
@@ -311,17 +293,14 @@ In Quantum Chess:
 1. Make classical moves as in regular chess
 2. Use quantum moves to place pieces in superposition
 3. Strategic measurement forces pieces to resolve to definite positions
-4. Win by checkmating the opponent's king
-
-## External Quantum Chess Game
-
-<iframe src="https://quantumchess.net/" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-Quantum Chess, developed by Quantum Realm Games, is a fully playable quantum variation of chess where you can experience quantum mechanics through a familiar game.
-
-Challenge yourself against the AI or play with friends to master this quantum version of the classic game!`,
+4. Win by checkmating the opponent's king`,
           type: "interactive",
-          interactiveComponent: "BuildAtomActivity",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/Quantum-Chess.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 40,
           points: 35
         },
@@ -348,17 +327,14 @@ Quantum Tic-Tac-Toe requires:
 - Thinking about probabilities and possibilities
 - Creating advantageous entanglements
 - Forcing collapses at strategically beneficial times
-- Planning several moves ahead with branching possibilities
-
-## External Quantum Tic-Tac-Toe Game
-
-<iframe src="https://ducky.org/quantum-tictactoe" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
-
-This online implementation of Quantum Tic-Tac-Toe lets you play against friends or an AI opponent, experiencing quantum game principles firsthand.
-
-Can you master the quantum strategy and become unbeatable?`,
+- Planning several moves ahead with branching possibilities`,
           type: "interactive",
-          interactiveComponent: "AtomSimulation",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/Quantum-Tic-Tac-Toe.html",
+            height: 500,
+            width: "100%"
+          },
           duration: 30,
           points: 25
         },
