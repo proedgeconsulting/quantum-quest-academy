@@ -45,13 +45,7 @@ export const module10: Module = {
       title: "Quantum Robot Olympics",
       description: "Put your quantum robot's skills to the test in the Robot Olympics!",
       content: "It's time for the Quantum Robot Olympics! In this exciting challenge, you'll program your quantum robot to compete in a series of Olympic events designed to test its quantum AI capabilities.\n\nThe Olympic events include:\n1. **Quantum Sprint**: Program your robot to find the fastest route through a changing obstacle course\n2. **Pattern Recognition Challenge**: Train your robot to quickly identify patterns in quantum noise\n3. **Resource Optimization**: Help your robot distribute limited resources to maximize points\n4. **Quantum Strategy Game**: Play a strategy game where quantum moves give special advantages\n\nFor each event, you'll use different quantum algorithms and techniques you've learned throughout the course. Your robot will earn medals based on its performance compared to classical AI robots.\n\nDo you have what it takes to coach your quantum robot to Olympic glory? Let the games begin!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-robot-olympics.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 25
     }

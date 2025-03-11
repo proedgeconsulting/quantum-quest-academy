@@ -45,13 +45,7 @@ export const module8: Module = {
       title: "Quantum Story Generator",
       description: "Create amazing stories with help from a quantum algorithm.",
       content: "Everyone loves a good story, but have you ever had a story created with help from a quantum computer? Today you'll use a quantum story generator to create tales that might be too wild for classical computers to dream up!\n\nIn this interactive lesson, you'll help build a quantum circuit that can generate story elements like:\n- Unusual characters with surprising combinations of traits\n- Unexpected plot twists using quantum randomness\n- Strange new worlds with quantum-inspired features\n- Multiple story paths that exist in superposition until you choose one\n\nYour quantum story generator uses a special kind of quantum algorithm called a 'Quantum Generative Model' that can create new ideas by learning patterns from existing stories, then using quantum properties to make them unique.\n\nWhat bizarre and fantastic stories will your quantum computer help you tell? Let's find out!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-story-generator.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 25,
       points: 20
     }

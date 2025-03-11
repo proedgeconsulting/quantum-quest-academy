@@ -45,13 +45,7 @@ export const module7: Module = {
       title: "Quantum Pattern Matching Game",
       description: "Play a game to see if you can beat a quantum computer at finding patterns!",
       content: "It's human vs. quantum computer in this exciting pattern matching game! Can you find patterns faster than a quantum algorithm?\n\nIn this interactive game, you'll be shown a series of patterns, and you'll race against a simulated quantum computer to identify what comes next in the sequence. Sometimes the patterns will be in numbers, sometimes in shapes, colors, or even sounds!\n\nThe game starts simple, but gets more challenging as you progress. The quantum computer uses something called 'Grover's algorithm' which gives it a special advantage in searching through many possibilities quickly.\n\nAs you play, you'll learn:\n- How quantum computers approach pattern recognition problems\n- When quantum computers have advantages over classical ones\n- How to develop your own pattern recognition skills\n\nDo you have what it takes to beat the quantum computer? Let's find out!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-pattern-matching-game.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 25,
       points: 20
     }

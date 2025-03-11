@@ -45,13 +45,7 @@ export const module9: Module = {
       title: "Build Your Own Quantum Game",
       description: "Design a simple quantum game using drag-and-drop quantum circuits.",
       content: "Now it's your turn to become a quantum game designer! In this interactive lesson, you'll create your very own simple quantum game from scratch.\n\nUsing a drag-and-drop quantum circuit builder and game elements, you'll:\n1. Choose a game style (puzzle, action, or strategy)\n2. Add quantum elements that use superposition and entanglement\n3. Create game rules that follow quantum physics principles\n4. Test your game and refine it to make it fun\n\nYou don't need to know complex programming - our quantum game engine will translate your quantum circuits into game behavior automatically. You can focus on the creative part of game design!\n\nAt the end of the lesson, you'll have a playable quantum game that you designed yourself. Who knows? Maybe you'll be the creator of the next big quantum gaming hit!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-game-builder.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 25
     }
