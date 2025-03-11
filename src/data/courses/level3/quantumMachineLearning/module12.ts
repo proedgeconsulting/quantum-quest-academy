@@ -20,9 +20,8 @@ export const module12: Module = {
       id: "3.1.12.2",
       title: "Design Your Quantum Future",
       description: "Create an interactive simulation of how quantum AI might impact daily life in the future.",
-      content: "What will daily life be like when quantum AI technology is all around us? In this interactive lesson, you'll design and explore your vision of a quantum-powered future!\n\nUsing a future scenario builder, you'll create an interactive simulation of life with advanced quantum AI. You can choose to focus on:\n1. Home life (smart homes, entertainment, education)\n2. Transportation (autonomous vehicles, flying taxis, space travel)\n3. Healthcare (personalized medicine, diagnostic tools)\n4. Environmental management (climate mitigation, conservation)\n\nFor each area, you'll select quantum AI technologies to include and see how they interact in your simulation. Your choices will affect outcomes like quality of life, environmental impact, and social connection.\n\nThere's no single 'correct' quantum future - your design will reflect your values and priorities. After creating your simulation, you can compare it with alternate futures designed by other students. What kind of quantum future would you want to live in?",
-      type: "interactive",
-      interactiveComponent: "AtomSimulation",
+      content: "What will daily life be like when quantum AI technology is all around us? In this interactive lesson, you'll design and explore your vision of a quantum-powered future!\n\nUsing a future scenario builder, you'll learn about creating an interactive simulation of life with advanced quantum AI. You can focus on areas like:\n1. Home life (smart homes, entertainment, education)\n2. Transportation (autonomous vehicles, flying taxis, space travel)\n3. Healthcare (personalized medicine, diagnostic tools)\n4. Environmental management (climate mitigation, conservation)\n\nFor each area, the lesson discusses quantum AI technologies that might be included and how they could interact in your simulation. Your choices would affect outcomes like quality of life, environmental impact, and social connection.\n\nThe lesson emphasizes that there's no single 'correct' quantum future - your design would reflect your values and priorities. You'll learn about comparing different possible quantum futures and considering the ethical implications of each. What kind of quantum future would you want to live in?",
+      type: "reading",
       duration: 25,
       points: 20
     },
@@ -39,9 +38,14 @@ export const module12: Module = {
       id: "3.1.12.4",
       title: "Quantum Ethics Challenge",
       description: "Navigate tricky ethical dilemmas related to powerful quantum AI technology.",
-      content: "With great quantum power comes great responsibility! As quantum AI becomes more powerful, we'll face important questions about how to use it wisely and fairly.\n\nIn this interactive challenge, you'll navigate through a series of ethical dilemmas related to quantum AI, such as:\n\n- Privacy: If quantum AI can process and analyze huge amounts of data, how do we protect people's privacy?\n- Access: Who should have access to powerful quantum AI tools? Should they be available to everyone?\n- Decision-making: When should we let quantum AI make important decisions, and when should humans stay in charge?\n- Unexpected consequences: How do we prepare for unexpected effects of quantum AI on society?\n\nFor each scenario, you'll make choices and see how they might affect individuals and society. There are no perfect answers - you'll need to balance different values like innovation, safety, fairness, and freedom.\n\nBy thinking about these issues now, you can help shape how quantum AI is developed and used in the future. What kind of quantum world do you want to help create?",
+      content: "With great quantum power comes great responsibility! As quantum AI becomes more powerful, we'll face important questions about how to use it wisely and fairly.\n\nIn this interactive lesson, you'll learn about navigating through a series of ethical dilemmas related to quantum AI, such as:\n\n- Privacy: If quantum AI can process and analyze huge amounts of data, how do we protect people's privacy?\n- Access: Who should have access to powerful quantum AI tools? Should they be available to everyone?\n- Decision-making: When should we let quantum AI make important decisions, and when should humans stay in charge?\n- Unexpected consequences: How do we prepare for unexpected effects of quantum AI on society?\n\nFor each scenario, the lesson presents choices and explores how they might affect individuals and society. There are no perfect answers - you'll need to balance different values like innovation, safety, fairness, and freedom.\n\nThe lesson emphasizes the importance of thinking about these issues now, as we develop quantum AI technologies, so we can help shape how they're used in the future. What kind of quantum world do you want to help create?",
       type: "interactive",
-      interactiveComponent: "QuantumCoinSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-ethics-challenge.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     }

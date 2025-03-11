@@ -21,8 +21,7 @@ export const module11: Module = {
       title: "Quantum Molecule Designer",
       description: "Build molecules atom by atom using quantum simulation!",
       content: "Become a quantum chemist and design your own molecules! In this interactive lesson, you'll use a quantum simulator to build and analyze molecular structures.\n\nMolecules are governed by quantum physics, which makes them perfect for quantum computers to simulate. You'll get to:\n1. Build different molecules by arranging atoms\n2. Use a simplified quantum circuit to calculate the molecule's properties\n3. Discover which molecular configurations are stable or unstable\n4. Design molecules with specific properties like flexibility, strength, or reactivity\n\nYou'll learn how quantum computers can model molecules much more accurately than classical computers because they speak the same 'quantum language' that atoms and molecules use in nature.\n\nWho knows? Maybe the molecules you design could inspire future scientists to create new materials, medicines, or clean energy solutions!",
-      type: "interactive",
-      interactiveComponent: "BuildAtomActivity",
+      type: "reading",
       duration: 25,
       points: 20
     },
@@ -39,9 +38,14 @@ export const module11: Module = {
       id: "3.1.11.4",
       title: "Quantum Ecosystem Simulator",
       description: "Create and balance your own ecosystem using quantum simulation tools.",
-      content: "Ecosystems are incredibly complex with many plants and animals all affecting each other. In this interactive lesson, you'll use a quantum ecosystem simulator to create and manage your own balanced ecosystem.\n\nYour quantum simulator uses quantum algorithms to model the complex relationships between:\n- Different plant species and their growth patterns\n- Herbivores that eat plants\n- Predators that eat herbivores\n- Decomposers that recycle nutrients\n- Weather and climate factors\n\nYou'll start with a simple ecosystem and gradually add more species and environmental factors. Your challenge is to create a stable ecosystem that can survive different challenges like changes in climate, introduction of new species, or loss of habitat.\n\nThe quantum simulator can model multiple possible ecosystem states simultaneously, helping you see how small changes might have big effects over time. Can you create an ecosystem that stays in balance for 100 simulated years?",
+      content: "Ecosystems are incredibly complex with many plants and animals all affecting each other. In this interactive lesson, you'll learn about a quantum ecosystem simulator used to create and manage balanced ecosystems.\n\nA quantum simulator can model the complex relationships between:\n- Different plant species and their growth patterns\n- Herbivores that eat plants\n- Predators that eat herbivores\n- Decomposers that recycle nutrients\n- Weather and climate factors\n\nThe lesson explains how you would start with a simple ecosystem and gradually add more species and environmental factors. Your challenge would be to create a stable ecosystem that can survive different challenges like changes in climate, introduction of new species, or loss of habitat.\n\nYou'll learn how quantum simulators can model multiple possible ecosystem states simultaneously, helping scientists see how small changes might have big effects over time. Through detailed examples and case studies, you'll understand how quantum computing could revolutionize ecological modeling and conservation planning.",
       type: "interactive",
-      interactiveComponent: "RandomNumberSimulator",
+      externalSimulator: {
+        type: "iframe",
+        url: "/simulators/quantum-ecosystem-simulator.html",
+        height: 600,
+        width: "100%"
+      },
       duration: 30,
       points: 25
     }

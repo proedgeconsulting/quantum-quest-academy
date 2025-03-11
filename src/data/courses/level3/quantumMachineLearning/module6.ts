@@ -29,14 +29,8 @@ export const module6: Module = {
       id: "3.1.6.3",
       title: "Quantum Anomaly Detection",
       description: "Build quantum circuits that can identify outliers and unusual patterns in data.",
-      content: "Anomaly detection is critical in many domains, from fraud detection to equipment maintenance. In this interactive lesson, you'll implement quantum approaches to identifying anomalies in data.\n\nYou'll learn how to:\n\n1. Encode data into quantum states for anomaly analysis\n2. Design quantum circuits that can measure data point isolation or distinctness\n3. Implement quantum distance-based and density-based anomaly detection\n4. Compare quantum and classical approaches on benchmark datasets\n\nThis hands-on experience will provide practical skills for implementing quantum anomaly detection systems that might offer advantages for high-dimensional or complex pattern recognition.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-anomaly-detection.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Anomaly detection is critical in many domains, from fraud detection to equipment maintenance. In this interactive lesson, you'll learn about implementing quantum approaches to identifying anomalies in data.\n\nThe lesson covers how to:\n\n1. Encode data into quantum states for anomaly analysis\n2. Design quantum circuits that can measure data point isolation or distinctness\n3. Implement quantum distance-based and density-based anomaly detection\n4. Compare quantum and classical approaches on benchmark datasets\n\nThis comprehensive explanation provides practical insights for implementing quantum anomaly detection systems that might offer advantages for high-dimensional or complex pattern recognition. Through detailed circuit diagrams and pseudocode examples, you'll gain a deep understanding of how quantum algorithms can potentially identify outliers more efficiently than classical methods.",
+      type: "reading",
       duration: 35,
       points: 30
     },

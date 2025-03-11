@@ -29,14 +29,8 @@ export const module4: Module = {
       id: "3.1.4.3",
       title: "Quantum Multi-Agent RL Systems",
       description: "Design reinforcement learning systems where multiple quantum agents interact.",
-      content: "Multi-agent reinforcement learning presents unique challenges in coordination, competition, and communication between agents. In this interactive lesson, you'll experiment with quantum approaches to multi-agent systems.\n\nYou'll explore:\n\n1. Quantum game theory and its application to multi-agent decision making\n2. Entanglement-based communication protocols between quantum agents\n3. Quantum approaches to the credit assignment problem in cooperative settings\n4. Designing quantum reward structures that encourage desired emergent behaviors\n\nThrough hands-on simulations, you'll see how quantum properties might lead to new strategies for cooperation and competition in multi-agent environments.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-multi-agent-rl.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Multi-agent reinforcement learning presents unique challenges in coordination, competition, and communication between agents. In this reading lesson, we'll explore quantum approaches to multi-agent systems.\n\nWe'll examine:\n\n1. Quantum game theory and its application to multi-agent decision making\n2. Entanglement-based communication protocols between quantum agents\n3. Quantum approaches to the credit assignment problem in cooperative settings\n4. Designing quantum reward structures that encourage desired emergent behaviors\n\nThrough detailed examples and theoretical frameworks, we'll show how quantum properties might lead to new strategies for cooperation and competition in multi-agent environments. The lesson includes descriptions of simulated scenarios that demonstrate how quantum agents might interact differently from classical ones, potentially finding more optimal collaborative solutions to complex problems.",
+      type: "reading",
       duration: 40,
       points: 35
     },

@@ -29,14 +29,8 @@ export const module3: Module = {
       id: "3.1.3.3",
       title: "Quantum Autoencoder Design",
       description: "Build quantum circuits that can compress and reconstruct quantum data.",
-      content: "Quantum autoencoders use quantum circuits to perform dimensionality reduction on quantum data, potentially offering exponential compression advantages for certain quantum states. In this interactive lesson, you'll design and implement a simple quantum autoencoder.\n\nYou'll learn how to:\n\n1. Design the encoding and decoding quantum circuits\n2. Define appropriate cost functions for training\n3. Implement the training loop using variational methods\n4. Evaluate the reconstruction fidelity\n\nThis hands-on exercise will provide practical experience with quantum data compression techniques that could be valuable for quantum state preparation and quantum memory applications.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-autoencoder-design.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Quantum autoencoders use quantum circuits to perform dimensionality reduction on quantum data, potentially offering exponential compression advantages for certain quantum states. In this reading lesson, we'll explore the design and implementation principles of quantum autoencoders.\n\nWe'll cover how to:\n\n1. Design the encoding and decoding quantum circuits\n2. Define appropriate cost functions for training\n3. Implement the training loop using variational methods\n4. Evaluate the reconstruction fidelity\n\nThis lesson explains the theory and practical considerations for quantum data compression techniques that could be valuable for quantum state preparation and quantum memory applications. Through detailed explanations and circuit diagrams, you'll gain a thorough understanding of how quantum autoencoders work and their potential applications in quantum information processing.",
+      type: "reading",
       duration: 35,
       points: 30
     },
