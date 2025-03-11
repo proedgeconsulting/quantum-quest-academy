@@ -12,13 +12,7 @@ export const module7: Module = {
       title: "Weather Pattern Heroes",
       description: "Become a weather hero and learn how quantum AI can recognize weather patterns faster than classical computers.",
       content: "In this lesson, you'll play as a 'Weather Pattern Hero' who uses quantum AI to spot weather patterns that normal computers might miss. Through a series of fun challenges, you'll learn how quantum computers can process multiple weather scenarios at the same time.\n\nYou'll also discover how scientists are already using these quantum techniques to better predict extreme weather events like hurricanes and floods, potentially saving lives in the real world!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/weather-pattern-heroes.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 25,
       points: 100
     },
@@ -42,13 +36,7 @@ export const module7: Module = {
       title: "Weather Alert: Quantum Response",
       description: "Play a game where you must respond to weather emergencies using quantum AI tools.",
       content: "Emergency! A big storm is approaching the city and you need to help coordinate the response. In this exciting game, you'll use quantum AI tools to analyze the storm's path, predict its intensity, and help emergency services prepare.\n\nYou'll need to make quick decisions: Where should you send rescue teams? Which areas should evacuate first? Your quantum computer can simulate thousands of possible storm scenarios at once, giving you better information than ever before. Save the day with the power of quantum AI!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/weather-alert-response.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 25,
       points: 110
     }

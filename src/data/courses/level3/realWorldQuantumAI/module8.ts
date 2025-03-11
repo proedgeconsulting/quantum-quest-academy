@@ -27,28 +27,16 @@ export const module8: Module = {
       title: "Quantum Medical Detective",
       description: "Solve medical mysteries by using quantum pattern recognition to identify unusual symptoms.",
       content: "Put on your detective hat and help solve medical mysteries! In this lesson, you'll use quantum AI to find patterns in patient symptoms that might be missed by regular computers.\n\nYou'll investigate several mysterious cases where patients have unusual combinations of symptoms. By using a quantum algorithm that can check many possibilities at once, you'll identify rare conditions faster than traditional methods. Can you diagnose all the patients correctly and become the hospital's top medical detective?",
-      type: "quiz",
+      type: "reading",
       duration: 30,
-      points: 120,
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-medical-detective.html",
-        height: 600,
-        width: "100%"
-      }
+      points: 120
     },
     {
       id: "3.2.8.3",
       title: "Design a Quantum Medicine",
       description: "Use quantum simulation to design a new medicine molecule that can fight disease.",
       content: "Scientists use quantum computers to design new medicines by simulating how molecules interact. Now it's your turn to be a quantum chemist! In this exciting activity, you'll use a quantum simulator to design a new medicine molecule.\n\nYour challenge is to create a molecule that can attach to a specific virus protein to stop it from making people sick. The quantum computer will help you test thousands of possible molecules at once to find the perfect match. Can you design an effective medicine and save the day?",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-medicine-designer.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 25,
       points: 110
     }

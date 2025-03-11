@@ -36,13 +36,7 @@ export const quantumAIEthicsModule: Module = {
       title: "Design Your Quantum AI Guidelines",
       description: "Create a set of ethical guidelines for a quantum AI application of your choice.",
       content: "Now it's your turn to become an ethics expert! In this creative challenge, you'll develop a set of ethical guidelines for a quantum AI application of your choice. Maybe you're creating guidelines for a quantum medical diagnosis system, a quantum criminal justice AI, or a quantum-powered social media platform.\n\nYou'll think about who might be affected by your quantum AI, what risks it might create, and how to make it fair and transparent. Then you'll create a simple 'code of ethics' that explains how your quantum AI should be designed and used. Your guidelines might help shape the future of responsible quantum AI!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-ethics-guidelines.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 120
     }

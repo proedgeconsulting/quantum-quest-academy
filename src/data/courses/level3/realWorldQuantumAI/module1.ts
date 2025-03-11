@@ -36,13 +36,7 @@ export const quantumAIApplicationsModule: Module = {
       title: "Design Your Quantum AI App",
       description: "Get creative and design your own quantum AI application to solve a problem you care about.",
       content: "Now it's your turn to be an inventor! In this creative challenge, you'll design your own quantum AI application to solve a problem that matters to you. Maybe you want to help protect endangered animals, create amazing music, or build the ultimate video game.\n\nYou'll learn about the special powers of quantum AI and how to apply them to your idea. Then you'll create a simple design for your application and explain how it would work. Who knows - your idea might be the next big quantum breakthrough!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-ai-designer.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 120
     }

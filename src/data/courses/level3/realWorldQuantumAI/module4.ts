@@ -36,13 +36,7 @@ export const quantumReinforcementLearningModule: Module = {
       title: "Quantum Resource Manager",
       description: "Use quantum reinforcement learning to manage resources in a virtual city.",
       content: "You're the manager of a growing virtual city, and you need to make smart decisions about resources like water, energy, and transportation. This is a perfect job for quantum reinforcement learning!\n\nIn this simulation game, you'll train a quantum AI to balance the needs of your city's residents while dealing with changing conditions like weather, population growth, and special events. Your quantum AI can consider many different resource allocation strategies simultaneously, helping you find optimal solutions. Can you create a thriving, sustainable city with the help of your quantum assistant?",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-resource-manager.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 120
     }

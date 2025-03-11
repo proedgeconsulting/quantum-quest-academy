@@ -36,13 +36,7 @@ export const quantumNeuralNetworksModule: Module = {
       title: "Quantum Image Detective",
       description: "Use a quantum neural network to find hidden details in images that classical networks miss.",
       content: "Become a quantum image detective and find details that regular computers might miss! In this fun activity, you'll use a quantum neural network to analyze images with hidden features or patterns.\n\nYour mission is to detect objects in blurry satellite photos, find camouflaged animals in nature scenes, or spot tiny details in medical images. The quantum neural network can consider many possibilities at once, helping you find things that might be invisible to classical AI. Put your detective skills to the test and see what you can discover!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-image-detective.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 120
     }

@@ -36,13 +36,7 @@ export const quantumGenerativeModelsModule: Module = {
       title: "Quantum Fashion Designer",
       description: "Use quantum generative models to create unique fashion designs.",
       content: "Step into the shoes of a quantum fashion designer! In this creative challenge, you'll use quantum generative models to create unique clothing designs that have never been seen before.\n\nYour quantum AI will analyze thousands of existing fashion designs and then use quantum computing to explore new combinations of colors, patterns, and styles. You can guide the creative process by selecting different design elements and seeing what your quantum AI comes up with. Who knows - your quantum-generated design might become the next fashion trend!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-fashion-designer.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 120
     }

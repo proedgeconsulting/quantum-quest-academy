@@ -36,13 +36,7 @@ export const quantumAIImplementationModule: Module = {
       title: "Quantum vs. Classical Challenge",
       description: "Compare quantum and classical AI approaches through a series of fun challenges.",
       content: "It's time for the ultimate showdown: Quantum AI vs. Classical AI! In this exciting challenge, you'll solve the same problems using both quantum and classical approaches to see which works better.\n\nYou'll race to find solutions to mazes, spot patterns in pictures, and solve optimization puzzles. For each challenge, you'll see how the quantum approach might solve problems differently - sometimes much faster! You'll also learn that quantum isn't always better and discover when classical AI might still be the right choice.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-vs-classical.html",
-        height: 600,
-        width: "100%"
-      },
+      type: "reading",
       duration: 30,
       points: 120
     }
