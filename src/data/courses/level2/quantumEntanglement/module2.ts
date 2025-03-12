@@ -14,7 +14,7 @@ export const module2: Module = {
       content: "Quantum teleportation is a process that transfers the quantum state of one particle to another distant particle without physically moving the particle itself. This remarkable protocol, first proposed in 1993, relies entirely on quantum entanglement and classical communication.\n\nIn this lesson, we'll walk through the quantum teleportation protocol step by step, explaining how it works and why it's important. We'll explore how the protocol uses entanglement as a resource to transmit quantum information, and discuss its applications in quantum communication networks and distributed quantum computing.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=pi9P2Zkutp8",
     },
     {

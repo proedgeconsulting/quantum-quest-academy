@@ -23,7 +23,7 @@ export const module1: Module = {
       content: "In this lesson, we'll dive deeper into the specific types of errors that affect quantum systems. Unlike classical computers that only experience bit flips (0→1 or 1→0), quantum computers can experience a wider variety of errors due to the continuous nature of quantum states.\n\nWe'll explore bit flip errors, phase flip errors, and combinations of both. We'll also discuss environmental decoherence - the process by which quantum superpositions decay into classical states through interaction with the environment - and how it poses a fundamental challenge for quantum computing.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=WJr7jqpjge0",
     },
     {

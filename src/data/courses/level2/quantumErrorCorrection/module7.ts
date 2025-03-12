@@ -29,7 +29,7 @@ export const module7: Module = {
       content: "Our quantum computer is acting strangely again! This time, the Noise Monster isn't flipping qubits completely, but instead changing their phases – making them rotate in weird ways. These sneaky phase errors are harder to spot, but you're now a more experienced Quantum Detective!\n\nIn this video lesson, we'll use special techniques to transform phase errors into bit flip errors (which we already know how to detect). You'll learn about the Hadamard gate, which acts like special detective glasses that let you see phase errors more clearly.\n\nWe'll also explore how the most dangerous quantum errors can be a combination of bit flips AND phase shifts. By the end of this lesson, you'll be able to identify the telltale signs of phase errors in quantum systems!",
       type: "video",
       duration: 15,
-      points: 10
+      points: 10,
       videoUrl: "https://www.youtube.com/watch?v=IvD9MOiHsx8",
     },
     {

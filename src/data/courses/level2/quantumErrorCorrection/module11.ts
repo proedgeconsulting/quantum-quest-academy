@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 11: Quantum Error Correction Time Travelers
@@ -14,7 +13,7 @@ export const module11: Module = {
       content: "Before we can look to the future, we need to understand where we've been. In this lesson, we'll explore the fascinating history of quantum error correction, from its theoretical beginnings to the current state of the art.\n\nYou'll learn about:\n\n- The early theoretical work that showed quantum error correction was possible\n- The development of the first quantum error-correcting codes\n- Major milestones in experimental demonstrations of quantum error correction\n- How approaches have evolved as quantum hardware has improved\n\nThrough historical anecdotes and expert interviews, you'll gain appreciation for the brilliant insights and persistent efforts that have brought quantum error correction to where it is today.",
       type: "reading",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=QiyY3ZjJJKg&t=222s",
     },
     {
@@ -24,8 +23,8 @@ export const module11: Module = {
       content: "What will quantum error correction look like in the next 5-10 years? In this video lesson, we'll explore the most promising near-term advances that researchers are currently developing.\n\nYou'll learn about:\n\n- How small surface codes will be implemented in NISQ-era devices\n- Tailored error correction approaches for specific hardware platforms\n- The role of machine learning in optimizing error correction strategies\n- The path to the first fault-tolerant logical qubit demonstrations\n\nThrough interviews with leading researchers and footage from cutting-edge labs, you'll get an insider's view of the quantum error correction advances that will power the next generation of quantum computers.",
       type: "video",
       duration: 25,
-      points: 20
-       videoUrl: "https://www.youtube.com/watch?v=SHqeCcx8mGg",
+      points: 20,
+      videoUrl: "https://www.youtube.com/watch?v=SHqeCcx8mGg",
     },
     {
       id: "2.3.11.3",
