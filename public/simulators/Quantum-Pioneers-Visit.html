@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Pioneers Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            line-height: 1.6;
+        }
+        .time-machine {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .era {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4ff;
+            border-radius: 5px;
+        }
+        .active {
+            display: block;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .task {
+            margin: 15px 0;
+            padding: 10px;
+            background: #fff;
+            border-radius: 5px;
+        }
+        input {
+            padding: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="time-machine">
+        <h1>Quantum Pioneers Time Machine</h1>
+        <p>Step into the history of quantum error correction. Select an era to begin your journey!</p>
+        
+        <div id="controls">
+            <button onclick="travelTo('shor')">1995 - Peter Shor</button>
+            <button onclick="travelTo('steane')">1996 - Andrew Steane</button>
+            <button onclick="travelTo('calderbank')">1996 - Calderbank & Shor</button>
+        </div>
+
+        <div id="shor" class="era">
+            <h2>1995 - Meeting Peter Shor</h2>
+            <p>Welcome to 1995! Peter Shor just developed the first quantum error correction code (9-qubit code). He needs your help to verify it can correct a single quantum error.</p>
+            <div class="task">
+                <p><strong>Task:</strong> Shor's code uses 9 qubits to protect 1 qubit. If 1 qubit flips (error), can it still work? Type "yes" or "no".</p>
+                <input type="text" id="shorAnswer">
+                <button onclick="checkAnswer('shor', 'yes')">Submit</button>
+                <p id="shorFeedback"></p>
+            </div>
+        </div>
+
+        <div id="steane" class="era">
+            <h2>1996 - Meeting Andrew Steane</h2>
+            <p>It’s 1996, and Andrew Steane has optimized quantum error correction with his 7-qubit code. Help him determine how many errors it can correct!</p>
+            <div class="task">
+                <p><strong>Task:</strong> The Steane code uses 7 qubits. How many single-qubit errors can it correct? (Enter a number)</p>
+                <input type="number" id="steaneAnswer">
+                <button onclick="checkAnswer('steane', '1')">Submit</button>
+                <p id="steaneFeedback"></p>
+            </div>
+        </div>
+
+        <div id="calderbank" class="era">
+            <h2>1996 - Calderbank & Shor</h2>
+            <p>Later in 1996, Calderbank and Shor team up to generalize quantum codes (CSS codes). Test your understanding of their breakthrough!</p>
+            <div class="task">
+                <p><strong>Task:</strong> CSS codes combine two classical codes. Are they named after Calderbank, Steane, and Shor? (yes/no)</p>
+                <input type="text" id="calderbankAnswer">
+                <button onclick="checkAnswer('calderbank', 'no')">Submit</button>
+                <p id="calderbankFeedback"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEra = null;
+
+        function travelTo(era) {
+            if (currentEra) {
+                document.getElementById(currentEra).classList.remove('active');
+            }
+            document.getElementById(era).classList.add('active');
+            currentEra = era;
+        }
+
+        function checkAnswer(era, correctAnswer) {
+            const input = document.getElementById(`${era}Answer`).value.trim().toLowerCase();
+            const feedback = document.getElementById(`${era}Feedback`);
+            
+            if (input === correctAnswer) {
+                if (era === 'shor') {
+                    feedback.innerHTML = "Correct! Shor's 9-qubit code can correct one error by encoding 1 qubit into 9.";
+                } else if (era === 'steane') {
+                    feedback.innerHTML = "Right! The 7-qubit Steane code corrects 1 error efficiently.";
+                } else if (era === 'calderbank') {
+                    feedback.innerHTML = "Yes! CSS stands for Calderbank-Shor-Steane, but it's named after Calderbank and Shor here.";
+                }
+                feedback.style.color = "green";
+            } else {
+                feedback.innerHTML = "Not quite. Try again or explore another era!";
+                feedback.style.color = "red";
+            }
+        }
+
+        // Start with all eras hidden
+        document.querySelectorAll('.era').forEach(era => era.classList.remove('active'));
+    </script>
+</body>
+</html>

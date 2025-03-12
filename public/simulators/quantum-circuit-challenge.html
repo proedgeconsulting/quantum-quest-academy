@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Circuit Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .circuit-board {
+            border: 2px solid #333;
+            height: 200px;
+            background: white;
+            padding: 10px;
+            position: relative;
+        }
+        .gates-panel {
+            margin: 20px 0;
+            padding: 10px;
+            background: #ddd;
+            border-radius: 5px;
+        }
+        .gate {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            background: #4CAF50;
+            color: white;
+            cursor: move;
+            border-radius: 3px;
+            user-select: none;
+        }
+        .task {
+            margin: 20px 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .dropzone {
+            border: 1px dashed #666;
+            height: 50px;
+            margin: 10px;
+            position: relative;
+        }
+        .placed-gate {
+            position: absolute;
+            padding: 5px 10px;
+            background: #2196F3;
+            color: white;
+            border-radius: 3px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Circuit Challenge</h1>
+        <p>Time Limit: 30 minutes | Points: 30</p>
+        
+        <div class="gates-panel">
+            <h3>Available Gates</h3>
+            <div class="gate" draggable="true" data-gate="H">Hadamard (H)</div>
+            <div class="gate" draggable="true" data-gate="X">Pauli-X (X)</div>
+            <div class="gate" draggable="true" data-gate="CNOT">CNOT</div>
+            <div class="gate" draggable="true" data-gate="Z">Pauli-Z (Z)</div>
+        </div>
+
+        <div class="task">
+            <h3>Task 1: Create a Bell State</h3>
+            <p>Create a circuit that produces a Bell state (entangled state) using 2 qubits.</p>
+            <div class="dropzone" data-task="1"></div>
+            <button onclick="verifyTask(1)">Verify Solution</button>
+        </div>
+
+        <div class="task">
+            <h3>Task 2: Swap Qubit States</h3>
+            <p>Build a circuit that swaps the states of two qubits.</p>
+            <div class="dropzone" data-task="2"></div>
+            <button onclick="verifyTask(2)">Verify Solution</button>
+        </div>
+
+        <div class="task">
+            <h3>Task 3: Create a GHZ State</h3>
+            <p>Create a circuit that produces a 3-qubit GHZ state.</p>
+            <div class="dropzone" data-task="3"></div>
+            <button onclick="verifyTask(3)">Verify Solution</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let points = 0;
+        const completedTasks = new Set();
+
+        // Drag and Drop functionality
+        document.querySelectorAll('.gate').forEach(gate => {
+            gate.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('gate', e.target.dataset.gate);
+            });
+        });
+
+        document.querySelectorAll('.dropzone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const gateType = e.dataTransfer.getData('gate');
+                const gateElement = document.createElement('div');
+                gateElement.className = 'placed-gate';
+                gateElement.textContent = gateType;
+                gateElement.style.left = `${e.offsetX}px`;
+                gateElement.dataset.gate = gateType;
+                zone.appendChild(gateElement);
+            });
+        });
+
+        // Verification logic
+        function verifyTask(taskNumber) {
+            const zone = document.querySelector(`.dropzone[data-task="${taskNumber}"]`);
+            const gates = Array.from(zone.querySelectorAll('.placed-gate')).map(g => g.dataset.gate);
+            let result = document.getElementById('result');
+            let isCorrect = false;
+
+            switch(taskNumber) {
+                case 1: // Bell State: H on q0, CNOT(q0,q1)
+                    isCorrect = gates.length === 2 && 
+                              gates[0] === 'H' && 
+                              gates[1] === 'CNOT';
+                    break;
+                case 2: // Swap: CNOT(q0,q1), CNOT(q1,q0), CNOT(q0,q1)
+                    isCorrect = gates.length === 3 && 
+                              gates[0] === 'CNOT' && 
+                              gates[1] === 'CNOT' && 
+                              gates[2] === 'CNOT';
+                    break;
+                case 3: // GHZ State: H on q0, CNOT(q0,q1), CNOT(q1,q2)
+                    isCorrect = gates.length === 3 && 
+                              gates[0] === 'H' && 
+                              gates[1] === 'CNOT' && 
+                              gates[2] === 'CNOT';
+                    break;
+            }
+
+            if (isCorrect && !completedTasks.has(taskNumber)) {
+                points += 10;
+                completedTasks.add(taskNumber);
+                result.innerHTML = `Task ${taskNumber} Correct! Total Points: ${points}/30`;
+                
+                if (points === 30) {
+                    result.innerHTML += '<br>Congratulations! You earned the Quantum Circuit Master badge!';
+                }
+            } else if (completedTasks.has(taskNumber)) {
+                result.innerHTML = 'Task already completed! Try another task.';
+            } else {
+                result.innerHTML = `Task ${taskNumber} Incorrect. Try again! Current Points: ${points}/30`;
+            }
+        }
+    </script>
+</body>
+</html>

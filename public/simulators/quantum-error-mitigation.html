@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Error Mitigation Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .controls {
+            margin: 15px 0;
+        }
+        select, button {
+            padding: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Error Mitigation Simulator</h1>
+    <p>Experiment with error mitigation techniques in a simulated noisy quantum environment.</p>
+    
+    <div class="controls">
+        <h3>Settings</h3>
+        <label>Mitigation Technique:
+            <select id="technique">
+                <option value="none">None (Raw Noisy Output)</option>
+                <option value="zne">Zero-Noise Extrapolation</option>
+                <option value="dd">Dynamical Decoupling</option>
+                <option value="readout">Readout Error Mitigation</option>
+            </select>
+        </label>
+        <br>
+        <label>Noise Level:
+            <select id="noise">
+                <option value="0.1">Low (0.1)</option>
+                <option value="0.3">Medium (0.3)</option>
+                <option value="0.5">High (0.5)</option>
+            </select>
+        </label>
+        <br>
+        <button onclick="runSimulation()">Run Simulation</button>
+    </div>
+
+    <canvas id="resultChart" width="800" height="300"></canvas>
+    <div id="results"></div>
+
+    <script>
+        // Simulator core
+        class QuantumSimulator {
+            constructor() {
+                this.idealResult = 0.75; // Ideal probability of measuring |0>
+            }
+
+            // Simulate basic noisy measurement
+            simulateNoisyMeasurement(noiseLevel) {
+                const error = (Math.random() - 0.5) * noiseLevel;
+                return Math.max(0, Math.min(1, this.idealResult + error));
+            }
+
+            // Zero-Noise Extrapolation
+            applyZNE(noiseLevel) {
+                const r1 = this.simulateNoisyMeasurement(noiseLevel);
+                const r2 = this.simulateNoisyMeasurement(noiseLevel * 2);
+                // Simple linear extrapolation: f(0) = 2f(1) - f(2)
+                return Math.max(0, Math.min(1, 2 * r1 - r2));
+            }
+
+            // Dynamical Decoupling
+            applyDD(noiseLevel) {
+                // Simulate reduced noise through pulse sequences
+                return this.simulateNoisyMeasurement(noiseLevel * 0.6);
+            }
+
+            // Readout Error Mitigation
+            applyReadoutMitigation(noiseLevel) {
+                const noisy = this.simulateNoisyMeasurement(noiseLevel);
+                // Simple correction based on assumed error rate
+                return Math.max(0, Math.min(1, noisy + (0.75 - noisy) * 0.4));
+            }
+        }
+
+        // Chart drawing
+        function drawChart(raw, mitigated) {
+            const canvas = document.getElementById('resultChart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw axes
+            ctx.beginPath();
+            ctx.moveTo(50, 250);
+            ctx.lineTo(750, 250);
+            ctx.moveTo(50, 250);
+            ctx.lineTo(50, 50);
+            ctx.stroke();
+
+            // Draw ideal line
+            ctx.beginPath();
+            ctx.strokeStyle = 'green';
+            ctx.moveTo(50, 175); // 0.75 * 200 scale
+            ctx.lineTo(750, 175);
+            ctx.stroke();
+
+            // Draw bars
+            const barWidth = 200;
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.fillRect(200, 250 - raw * 200, barWidth, raw * 200);
+            ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';
+            ctx.fillRect(450, 250 - mitigated * 200, barWidth, mitigated * 200);
+
+            // Labels
+            ctx.fillStyle = 'black';
+            ctx.fillText('Raw', 250, 270);
+            ctx.fillText('Mitigated', 500, 270);
+            ctx.fillText('Ideal (0.75)', 60, 170);
+            ctx.fillText('Probability', 10, 150);
+        }
+
+        // Main simulation function
+        function runSimulation() {
+            const simulator = new QuantumSimulator();
+            const technique = document.getElementById('technique').value;
+            const noiseLevel = parseFloat(document.getElementById('noise').value);
+
+            let rawResult, mitigatedResult;
+            rawResult = simulator.simulateNoisyMeasurement(noiseLevel);
+
+            switch(technique) {
+                case 'none':
+                    mitigatedResult = rawResult;
+                    break;
+                case 'zne':
+                    mitigatedResult = simulator.applyZNE(noiseLevel);
+                    break;
+                case 'dd':
+                    mitigatedResult = simulator.applyDD(noiseLevel);
+                    break;
+                case 'readout':
+                    mitigatedResult = simulator.applyReadoutMitigation(noiseLevel);
+                    break;
+            }
+
+            // Update display
+            drawChart(rawResult, mitigatedResult);
+            document.getElementById('results').innerHTML = `
+                <h3>Results:</h3>
+                <p>Raw Result: ${rawResult.toFixed(3)}</p>
+                <p>Mitigated Result: ${mitigatedResult.toFixed(3)}</p>
+                <p>Ideal Result: 0.750</p>
+                <p>Error Reduction: ${((rawResult - 0.75)**2 - (mitigatedResult - 0.75)**2).toFixed(3)}</p>
+            `;
+        }
+
+        // Initial run
+        runSimulation();
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Error City Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        #game-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            gap: 5px;
+            margin: 20px 0;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #fff;
+        }
+        .qubit { background: #90caf9; }
+        .detector { background: #a5d6a7; }
+        .corrector { background: #ffcc80; }
+        .fault-tolerant { background: #ce93d8; }
+        .noise { background: #ef5350; }
+        #controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        #stats {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Quantum Error City Builder</h1>
+        <p>Build a quantum metropolis! Protect qubits from noise using detectors, correctors, and fault-tolerant zones.</p>
+        
+        <div id="stats">
+            Resources: <span id="resources">100</span> |
+            Qubits: <span id="qubit-count">0</span> |
+            Noise Level: <span id="noise-level">0</span>%
+        </div>
+
+        <div id="grid"></div>
+
+        <div id="controls">
+            <button onclick="addBuilding('qubit')">Add Qubit (20)</button>
+            <button onclick="addBuilding('detector')">Detector (30)</button>
+            <button onclick="addBuilding('corrector')">Corrector (40)</button>
+            <button onclick="addBuilding('fault-tolerant')">Fault-Tolerant (50)</button>
+            <button onclick="simulateNoise()">Simulate Noise</button>
+        </div>
+    </div>
+
+    <script>
+        const gridSize = 5;
+        const grid = Array(gridSize * gridSize).fill(null);
+        let resources = 100;
+        let noiseLevel = 0;
+        let qubitCount = 0;
+
+        const costs = {
+            'qubit': 20,
+            'detector': 30,
+            'corrector': 40,
+            'fault-tolerant': 50
+        };
+
+        // Initialize grid
+        const gridElement = document.getElementById('grid');
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.index = i;
+            cell.onclick = () => selectCell(i);
+            gridElement.appendChild(cell);
+        }
+
+        function updateStats() {
+            document.getElementById('resources').textContent = resources;
+            document.getElementById('qubit-count').textContent = qubitCount;
+            document.getElementById('noise-level').textContent = noiseLevel.toFixed(1);
+        }
+
+        function selectCell(index) {
+            if (grid[index]) {
+                // Show info about existing building
+                alert(`Cell contains: ${grid[index]}`);
+            }
+        }
+
+        function addBuilding(type) {
+            if (resources < costs[type]) {
+                alert('Not enough resources!');
+                return;
+            }
+
+            const emptyCell = grid.findIndex(cell => !cell);
+            if (emptyCell === -1) {
+                alert('No empty space available!');
+                return;
+            }
+
+            grid[emptyCell] = type;
+            resources -= costs[type];
+            if (type === 'qubit') qubitCount++;
+
+            const cellElement = gridElement.children[emptyCell];
+            cellElement.className = `cell ${type}`;
+            cellElement.textContent = type.charAt(0).toUpperCase();
+
+            updateStats();
+            updateNoise();
+        }
+
+        function simulateNoise() {
+            if (qubitCount === 0) return;
+            
+            // Base noise increase from qubits
+            let newNoise = qubitCount * 5;
+            
+            // Reduce noise based on buildings
+            const detectors = grid.filter(cell => cell === 'detector').length;
+            const correctors = grid.filter(cell => cell === 'corrector').length;
+            const faultTolerants = grid.filter(cell => cell === 'fault-tolerant').length;
+            
+            newNoise -= detectors * 10;
+            newNoise -= correctors * 15;
+            newNoise -= faultTolerants * 20;
+            
+            noiseLevel = Math.max(0, Math.min(100, noiseLevel + newNoise));
+            
+            // Show noise on grid
+            const cells = gridElement.children;
+            for (let i = 0; i < cells.length; i++) {
+                if (grid[i] === 'qubit' && Math.random() < noiseLevel/100) {
+                    cells[i].classList.add('noise');
+                }
+            }
+            
+            updateStats();
+        }
+
+        function updateNoise() {
+            simulateNoise();
+            if (noiseLevel > 80) {
+                alert('Warning: High noise levels detected! Add more error correction!');
+            }
+        }
+
+        // Initial update
+        updateStats();
+    </script>
+</body>
+</html>
