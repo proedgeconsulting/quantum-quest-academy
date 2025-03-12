@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from "@/pages/Index";
@@ -18,8 +19,8 @@ import TeachersResources from "@/pages/TeachersResources";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Chatbot />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -36,8 +37,8 @@ function App() {
           <Route path="/social-learning" element={<SocialLearning />} />
           <Route path="/teachers" element={<TeachersResources />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
