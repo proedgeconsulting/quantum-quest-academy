@@ -57,7 +57,7 @@ export const quantumFutureCourse: Course = {
           type: "video",
           duration: 25,
           points: 20,
-          videoUrl: "https://www.youtube.com/watch?v=J3lsmO9Z00w"
+          videoUrl: "https://www.youtube.com/watch?v=J3lsmO9Z00w",
         }
       ]
     },
