@@ -98,7 +98,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
       console.log("Using YouTube embed URL:", embedUrl);
       
       return (
-        <div className="relative">
+        <div className="relative aspect-video">
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
               <div className="w-8 h-8 border-4 border-quantum-500 border-t-transparent rounded-full animate-spin"></div>
@@ -107,7 +107,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
           <iframe
             ref={iframeRef}
             src={embedUrl}
-            className="w-full aspect-video rounded-lg"
+            className="w-full h-full rounded-lg"
             title={lesson.title}
             frameBorder="0"
             allowFullScreen
@@ -121,7 +121,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
     
     // Fallback for other video types
     return (
-      <div className="relative">
+      <div className="relative aspect-video">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
             <div className="w-8 h-8 border-4 border-quantum-500 border-t-transparent rounded-full animate-spin"></div>
@@ -130,7 +130,7 @@ export const VideoLesson = ({ lesson }: VideoLessonProps) => {
         <iframe
           ref={iframeRef}
           src={lesson.videoUrl}
-          className="w-full aspect-video rounded-lg"
+          className="w-full h-full rounded-lg"
           title={lesson.title}
           frameBorder="0"
           allowFullScreen

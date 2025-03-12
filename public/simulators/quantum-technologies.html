@@ -1,175 +1,821 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Technologies Simulator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            margin: 0;
             padding: 20px;
-            background-color: #1a1a1a;
-            color: #fff;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
         }
         .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eef2f7;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+            border-bottom: none;
+        }
+        .tab-content {
             display: none;
             padding: 20px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            animation: fadeIn 0.5s;
         }
-        .active-tab {
+        .tab-content.active {
             display: block;
         }
-        button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .quantum-circuit {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
+        .visualization {
+            width: 100%;
+            height: 300px;
+            background-color: #eef2f7;
             margin: 20px 0;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
         }
-        .qubit-line {
-            height: 2px;
-            background-color: #666;
-            margin: 15px 0;
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
         }
-        .gate {
-            background-color: #2196F3;
-            padding: 5px;
-            border-radius: 3px;
-            text-align: center;
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .slider-container {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
         }
-        .sensor-output {
-            border: 1px solid #444;
+        button:hover {
+            background-color: #2980b9;
+        }
+        .qubit {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #3498db;
+            border-radius: 50%;
+            transition: transform 0.5s, background-color 0.5s;
+        }
+        .photon {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: yellow;
+            border-radius: 50%;
+            box-shadow: 0 0 10px yellow;
+        }
+        .sensor {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #e74c3c;
+            border-radius: 5px;
+        }
+        .info-panel {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
             padding: 15px;
-            margin: 10px 0;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Quantum Technologies Simulator</h1>
-    
-    <!-- Navigation Tabs -->
-    <div>
-        <button onclick="showTab('computing')">Quantum Computing</button>
-        <button onclick="showTab('qkd')">Quantum Cryptography</button>
-        <button onclick="showTab('sensors')">Quantum Sensors</button>
-    </div>
-
-    <!-- Quantum Computing Tab -->
-    <div id="computing" class="tab active-tab">
-        <h2>Quantum Circuit Builder</h2>
-        <div class="quantum-circuit" id="circuit"></div>
-        <button onclick="addGate('H')">Add Hadamard</button>
-        <button onclick="addGate('CNOT')">Add CNOT</button>
-        <button onclick="addGate('MEASURE')">Add Measurement</button>
-        <button onclick="simulate()">Simulate</button>
-        <div id="results"></div>
-    </div>
-
-    <!-- Quantum Cryptography Tab -->
-    <div id="qkd" class="tab">
-        <h2>Quantum Key Distribution (BB84)</h2>
-        <div id="qkd-steps">
-            <p>Alice's Photon Polarizations: <span id="alice-bits"></span></p>
-            <p>Bob's Measurement Basis: <span id="bob-basis"></span></p>
-            <button onclick="runBB84()">Run Protocol</button>
-            <div id="qkd-results"></div>
+    <div class="container">
+        <h1>Quantum Technologies Simulator</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'quantum-computing')">Quantum Computing</div>
+            <div class="tab" onclick="openTab(event, 'quantum-cryptography')">Quantum Cryptography</div>
+            <div class="tab" onclick="openTab(event, 'quantum-sensing')">Quantum Sensing</div>
         </div>
-    </div>
-
-    <!-- Quantum Sensors Tab -->
-    <div id="sensors" class="tab">
-        <h2>Quantum Sensor Array</h2>
-        <div>
-            <label>Magnetic Field Strength: </label>
-            <input type="range" id="magnetic-field" min="0" max="100" value="50">
-            <span id="field-value">50 nT</span>
+        
+        <!-- Quantum Computing Tab -->
+        <div id="quantum-computing" class="tab-content active">
+            <h2>Quantum Computing Simulator</h2>
+            <p>Experiment with a simple quantum circuit to see how quantum bits (qubits) behave differently from classical bits.</p>
+            
+            <div class="visualization" id="computing-vis">
+                <div class="loading">Loading simulation...</div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <div class="slider-container">
+                        <label for="num-qubits">Number of Qubits:</label>
+                        <input type="range" id="num-qubits" min="1" max="5" value="2" onchange="updateComputing()">
+                        <span id="num-qubits-value">2</span>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label for="superposition">Superposition Level:</label>
+                        <input type="range" id="superposition" min="0" max="100" value="50" onchange="updateComputing()">
+                        <span id="superposition-value">50%</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <button onclick="applyHadamard()">Apply Hadamard Gate</button>
+                    <button onclick="measure()">Measure Qubits</button>
+                    <button onclick="resetComputing()">Reset Circuit</button>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <h3>What's happening?</h3>
+                <p>This simulation shows how qubits can exist in superposition, allowing quantum computers to process multiple states simultaneously. The Hadamard gate creates a superposition, and measurement collapses the qubits to definite states.</p>
+                <p>Real quantum computers use these principles to solve certain problems much faster than classical computers can.</p>
+            </div>
         </div>
-        <div class="sensor-output" id="sensor-readings"></div>
+        
+        <!-- Quantum Cryptography Tab -->
+        <div id="quantum-cryptography" class="tab-content">
+            <h2>Quantum Key Distribution</h2>
+            <p>See how quantum physics can be used to create unbreakable encryption keys between two parties (Alice and Bob).</p>
+            
+            <div class="visualization" id="crypto-vis">
+                <div class="loading">Loading simulation...</div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <div class="slider-container">
+                        <label for="key-length">Key Length:</label>
+                        <input type="range" id="key-length" min="8" max="64" value="16" step="8" onchange="updateCrypto()">
+                        <span id="key-length-value">16 bits</span>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label for="eavesdropper">Eavesdropper Activity:</label>
+                        <input type="range" id="eavesdropper" min="0" max="100" value="0" onchange="updateCrypto()">
+                        <span id="eavesdropper-value">None</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <button onclick="sendPhotons()">Send Quantum Key</button>
+                    <button onclick="detectIntruder()">Check for Intruders</button>
+                    <button onclick="resetCrypto()">Reset</button>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <h3>What's happening?</h3>
+                <p>Quantum Key Distribution uses the principles of quantum physics to create encryption keys that are completely secure. If an eavesdropper tries to intercept the key, the quantum properties are disturbed, alerting the users to the breach.</p>
+                <p>This technology is already being used in some high-security environments today!</p>
+            </div>
+        </div>
+        
+        <!-- Quantum Sensing Tab -->
+        <div id="quantum-sensing" class="tab-content">
+            <h2>Quantum Sensors</h2>
+            <p>Explore how quantum sensors can detect tiny changes in gravity, magnetic fields, and more with incredible precision.</p>
+            
+            <div class="visualization" id="sensing-vis">
+                <div class="loading">Loading simulation...</div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <div class="slider-container">
+                        <label for="field-strength">Field Strength:</label>
+                        <input type="range" id="field-strength" min="0" max="100" value="20" onchange="updateSensing()">
+                        <span id="field-strength-value">Low</span>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label for="quantum-coherence">Quantum Coherence:</label>
+                        <input type="range" id="quantum-coherence" min="0" max="100" value="80" onchange="updateSensing()">
+                        <span id="quantum-coherence-value">High</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <button onclick="scanEnvironment()">Scan Environment</button>
+                    <button onclick="enhanceSensitivity()">Enhance Sensitivity</button>
+                    <button onclick="resetSensing()">Reset Sensors</button>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <h3>What's happening?</h3>
+                <p>Quantum sensors use properties like superposition and entanglement to detect extremely small changes in their environment. This makes them useful for applications like magnetic brain imaging, underground mapping, and navigation without GPS.</p>
+                <p>The sensitivity of these sensors can be far beyond what classical sensors can achieve.</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Tab navigation
-        function showTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active-tab');
-            });
-            document.getElementById(tabName).classList.add('active-tab');
-        }
-
-        // Quantum Computing Simulator
-        let circuitState = [];
-        function addGate(gate) {
-            const circuit = document.getElementById('circuit');
-            const newGate = document.createElement('div');
-            newGate.className = 'gate';
-            newGate.textContent = gate;
-            circuit.appendChild(newGate);
-        }
-
-        function simulate() {
-            const results = document.getElementById('results');
-            results.innerHTML = "<h3>Simulation Results:</h3>";
-            // Simple quantum state simulation
-            const probabilities = {
-                "|00⟩": Math.random().toFixed(2),
-                "|01⟩": Math.random().toFixed(2),
-                "|10⟩": Math.random().toFixed(2),
-                "|11⟩": Math.random().toFixed(2)
-            };
-            results.innerHTML += "Qubit Probabilities:<br>";
-            for(let state in probabilities) {
-                results.innerHTML += `${state}: ${probabilities[state]}<br>`;
+        // Variables to track simulation state
+        let qubits = [];
+        let photons = [];
+        let sensors = [];
+        let simulationRunning = false;
+        
+        // Initialize the page
+        window.onload = function() {
+            initializeComputing();
+            initializeTabs();
+            
+            // Set initial values for sliders
+            document.getElementById('num-qubits-value').textContent = document.getElementById('num-qubits').value;
+            document.getElementById('superposition-value').textContent = document.getElementById('superposition').value + '%';
+            document.getElementById('key-length-value').textContent = document.getElementById('key-length').value + ' bits';
+            
+            const eavesdropperValue = document.getElementById('eavesdropper').value;
+            document.getElementById('eavesdropper-value').textContent = getEavesdropperText(eavesdropperValue);
+            
+            const fieldStrength = document.getElementById('field-strength').value;
+            document.getElementById('field-strength-value').textContent = getFieldStrengthText(fieldStrength);
+            
+            const quantumCoherence = document.getElementById('quantum-coherence').value;
+            document.getElementById('quantum-coherence-value').textContent = getCoherenceText(quantumCoherence);
+        };
+        
+        // Tab handling
+        function initializeTabs() {
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].addEventListener('click', function(e) {
+                    openTab(e, this.textContent.toLowerCase().replace(' ', '-'));
+                });
             }
         }
-
-        // Quantum Key Distribution Simulator
-        function runBB84() {
-            const aliceBits = Array.from({length: 8}, () => Math.random() > 0.5 ? '1' : '0');
-            const aliceBasis = Array.from({length: 8}, () => Math.random() > 0.5 ? '+' : '×');
-            const bobBasis = Array.from({length: 8}, () => Math.random() > 0.5 ? '+' : '×');
+        
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
             
-            let sharedKey = [];
-            aliceBits.forEach((bit, index) => {
-                if(aliceBasis[index] === bobBasis[index]) {
-                    sharedKey.push(bit);
-                }
-            });
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
             
-            document.getElementById('qkd-results').innerHTML = `
-                Shared Key: ${sharedKey.join('')}<br>
-                Key Length: ${sharedKey.length} bits
-            `;
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            if (tabName === 'quantum-computing' && document.getElementById('computing-vis').innerHTML === '<div class="loading">Loading simulation...</div>') {
+                initializeComputing();
+            } else if (tabName === 'quantum-cryptography' && document.getElementById('crypto-vis').innerHTML === '<div class="loading">Loading simulation...</div>') {
+                initializeCrypto();
+            } else if (tabName === 'quantum-sensing' && document.getElementById('sensing-vis').innerHTML === '<div class="loading">Loading simulation...</div>') {
+                initializeSensing();
+            }
         }
-
-        // Quantum Sensor Simulator
-        document.getElementById('magnetic-field').addEventListener('input', (e) => {
-            document.getElementById('field-value').textContent = `${e.target.value} nT`;
-            const noiseLevel = (Math.random() * 0.1).toFixed(3);
-            document.getElementById('sensor-readings').innerHTML = `
-                Magnetic Field: ${e.target.value} nT ± ${noiseLevel} nT<br>
-                Temperature: ${(Math.random() * 0.05).toFixed(3)} K<br>
-                Vibration: ${(Math.random() * 0.01).toFixed(4)} µm/s²
-            `;
-        });
-
-        // Initial setup
-        document.getElementById('sensor-readings').innerHTML = "Adjust the slider to simulate sensor readings";
+        
+        // Quantum Computing simulation
+        function initializeComputing() {
+            const container = document.getElementById('computing-vis');
+            container.innerHTML = '';
+            
+            const numQubits = parseInt(document.getElementById('num-qubits').value);
+            qubits = [];
+            
+            for (let i = 0; i < numQubits; i++) {
+                const qubit = document.createElement('div');
+                qubit.className = 'qubit';
+                qubit.style.left = `${50 + (i - numQubits/2) * 40}px`;
+                qubit.style.top = '140px';
+                qubit.innerHTML = '|0⟩';
+                qubit.style.textAlign = 'center';
+                qubit.style.lineHeight = '20px';
+                qubit.style.color = 'white';
+                container.appendChild(qubit);
+                qubits.push({element: qubit, state: '0', superposition: false});
+            }
+        }
+        
+        function updateComputing() {
+            const numQubitsElement = document.getElementById('num-qubits');
+            const numQubits = parseInt(numQubitsElement.value);
+            document.getElementById('num-qubits-value').textContent = numQubits;
+            
+            const superpositionValue = document.getElementById('superposition').value;
+            document.getElementById('superposition-value').textContent = superpositionValue + '%';
+            
+            initializeComputing();
+        }
+        
+        function applyHadamard() {
+            for (let i = 0; i < qubits.length; i++) {
+                const qubit = qubits[i];
+                qubit.superposition = true;
+                qubit.element.innerHTML = '|+⟩';
+                qubit.element.style.backgroundColor = '#9b59b6'; // Purple for superposition
+                
+                // Visual effect for superposition
+                setTimeout(() => {
+                    qubit.element.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        qubit.element.style.transform = 'scale(1)';
+                    }, 300);
+                }, i * 100);
+            }
+        }
+        
+        function measure() {
+            const superpositionLevel = parseInt(document.getElementById('superposition').value);
+            
+            for (let i = 0; i < qubits.length; i++) {
+                const qubit = qubits[i];
+                if (qubit.superposition) {
+                    // Higher superposition level means more likely to collapse to |1⟩
+                    const collapseTo1 = Math.random() * 100 < superpositionLevel;
+                    qubit.state = collapseTo1 ? '1' : '0';
+                    qubit.superposition = false;
+                    qubit.element.innerHTML = collapseTo1 ? '|1⟩' : '|0⟩';
+                    qubit.element.style.backgroundColor = collapseTo1 ? '#e74c3c' : '#3498db';
+                    
+                    // Visual effect for measurement
+                    setTimeout(() => {
+                        qubit.element.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            qubit.element.style.transform = 'scale(1)';
+                        }, 300);
+                    }, i * 100);
+                }
+            }
+        }
+        
+        function resetComputing() {
+            initializeComputing();
+        }
+        
+        // Quantum Cryptography simulation
+        function initializeCrypto() {
+            const container = document.getElementById('crypto-vis');
+            container.innerHTML = '';
+            
+            // Create Alice (sender)
+            const alice = document.createElement('div');
+            alice.style.position = 'absolute';
+            alice.style.left = '50px';
+            alice.style.top = '140px';
+            alice.style.width = '60px';
+            alice.style.height = '60px';
+            alice.style.backgroundColor = '#3498db';
+            alice.style.borderRadius = '10px';
+            alice.style.textAlign = 'center';
+            alice.style.lineHeight = '60px';
+            alice.style.color = 'white';
+            alice.style.fontWeight = 'bold';
+            alice.innerHTML = 'Alice';
+            container.appendChild(alice);
+            
+            // Create Bob (receiver)
+            const bob = document.createElement('div');
+            bob.style.position = 'absolute';
+            bob.style.right = '50px';
+            bob.style.top = '140px';
+            bob.style.width = '60px';
+            bob.style.height = '60px';
+            bob.style.backgroundColor = '#2ecc71';
+            bob.style.borderRadius = '10px';
+            bob.style.textAlign = 'center';
+            bob.style.lineHeight = '60px';
+            bob.style.color = 'white';
+            bob.style.fontWeight = 'bold';
+            bob.innerHTML = 'Bob';
+            container.appendChild(bob);
+            
+            // Create channel
+            const channel = document.createElement('div');
+            channel.style.position = 'absolute';
+            channel.style.left = '120px';
+            channel.style.top = '160px';
+            channel.style.width = 'calc(100% - 240px)';
+            channel.style.height = '20px';
+            channel.style.backgroundColor = '#ecf0f1';
+            channel.style.borderRadius = '10px';
+            container.appendChild(channel);
+            
+            // Create Eve (optional eavesdropper)
+            const eaveValue = parseInt(document.getElementById('eavesdropper').value);
+            if (eaveValue > 0) {
+                const eve = document.createElement('div');
+                eve.style.position = 'absolute';
+                eve.style.left = '50%';
+                eve.style.top = '100px';
+                eve.style.width = '50px';
+                eve.style.height = '50px';
+                eve.style.backgroundColor = '#e74c3c';
+                eve.style.borderRadius = '10px';
+                eve.style.textAlign = 'center';
+                eve.style.lineHeight = '50px';
+                eve.style.color = 'white';
+                eve.style.fontWeight = 'bold';
+                eve.style.transform = 'translateX(-50%)';
+                eve.innerHTML = 'Eve';
+                container.appendChild(eve);
+            }
+        }
+        
+        function updateCrypto() {
+            const keyLength = document.getElementById('key-length').value;
+            document.getElementById('key-length-value').textContent = keyLength + ' bits';
+            
+            const eavesdropperValue = document.getElementById('eavesdropper').value;
+            document.getElementById('eavesdropper-value').textContent = getEavesdropperText(eavesdropperValue);
+            
+            initializeCrypto();
+        }
+        
+        function getEavesdropperText(value) {
+            const val = parseInt(value);
+            if (val === 0) return 'None';
+            if (val < 30) return 'Low';
+            if (val < 70) return 'Medium';
+            return 'High';
+        }
+        
+        function sendPhotons() {
+            if (simulationRunning) return;
+            simulationRunning = true;
+            
+            const container = document.getElementById('crypto-vis');
+            const keyLength = parseInt(document.getElementById('key-length').value);
+            const eaveValue = parseInt(document.getElementById('eavesdropper').value);
+            
+            photons = [];
+            
+            for (let i = 0; i < keyLength; i++) {
+                setTimeout(() => {
+                    const photon = document.createElement('div');
+                    photon.className = 'photon';
+                    photon.style.left = '110px';
+                    photon.style.top = '165px';
+                    container.appendChild(photon);
+                    
+                    photons.push({
+                        element: photon,
+                        intercepted: Math.random() * 100 < eaveValue
+                    });
+                    
+                    // Animate photon
+                    const endPos = container.clientWidth - 110;
+                    const duration = 1000;
+                    const startTime = Date.now();
+                    
+                    function animate() {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        
+                        photon.style.left = (110 + progress * (endPos - 0)) + 'px';
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(animate);
+                        } else {
+                            // Photon reached Bob
+                            photon.style.opacity = '0';
+                            setTimeout(() => {
+                                photon.remove();
+                                
+                                if (i === keyLength - 1) {
+                                    simulationRunning = false;
+                                    // Show success message
+                                    const message = document.createElement('div');
+                                    message.style.position = 'absolute';
+                                    message.style.top = '50px';
+                                    message.style.left = '50%';
+                                    message.style.transform = 'translateX(-50%)';
+                                    message.style.backgroundColor = '#2ecc71';
+                                    message.style.color = 'white';
+                                    message.style.padding = '10px 20px';
+                                    message.style.borderRadius = '5px';
+                                    message.innerHTML = 'Key exchange complete!';
+                                    container.appendChild(message);
+                                    
+                                    setTimeout(() => {
+                                        message.style.opacity = '0';
+                                        setTimeout(() => message.remove(), 500);
+                                    }, 2000);
+                                }
+                            }, 300);
+                        }
+                    }
+                    
+                    animate();
+                }, i * 200);
+            }
+        }
+        
+        function detectIntruder() {
+            const container = document.getElementById('crypto-vis');
+            const eaveValue = parseInt(document.getElementById('eavesdropper').value);
+            
+            // Calculate if intrusion is detected
+            const detectionChance = eaveValue * 0.8; // Higher eavesdropping level = higher detection chance
+            const detected = Math.random() * 100 < detectionChance;
+            
+            const message = document.createElement('div');
+            message.style.position = 'absolute';
+            message.style.top = '50px';
+            message.style.left = '50%';
+            message.style.transform = 'translateX(-50%)';
+            message.style.padding = '10px 20px';
+            message.style.borderRadius = '5px';
+            message.style.transition = 'opacity 0.5s';
+            
+            if (detected) {
+                message.style.backgroundColor = '#e74c3c';
+                message.style.color = 'white';
+                message.innerHTML = 'Intruder detected! Key compromised.';
+            } else {
+                message.style.backgroundColor = '#2ecc71';
+                message.style.color = 'white';
+                message.innerHTML = 'No intrusion detected. Key secure!';
+            }
+            
+            container.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 500);
+            }, 2000);
+        }
+        
+        function resetCrypto() {
+            simulationRunning = false;
+            initializeCrypto();
+        }
+        
+        // Quantum Sensing simulation
+        function initializeSensing() {
+            const container = document.getElementById('sensing-vis');
+            container.innerHTML = '';
+            
+            sensors = [];
+            
+            // Create quantum sensors
+            for (let i = 0; i < 3; i++) {
+                const sensor = document.createElement('div');
+                sensor.className = 'sensor';
+                sensor.style.left = `${(i + 1) * 25}%`;
+                sensor.style.top = '140px';
+                sensor.style.backgroundColor = '#9b59b6';
+                sensor.style.display = 'flex';
+                sensor.style.alignItems = 'center';
+                sensor.style.justifyContent = 'center';
+                sensor.style.color = 'white';
+                sensor.style.fontWeight = 'bold';
+                sensor.style.fontSize = '16px';
+                sensor.innerHTML = 'Q';
+                container.appendChild(sensor);
+                sensors.push({element: sensor, active: false});
+            }
+            
+            // Create field visualization
+            const fieldStrength = parseInt(document.getElementById('field-strength').value);
+            const field = document.createElement('div');
+            field.style.position = 'absolute';
+            field.style.left = '10%';
+            field.style.top = '220px';
+            field.style.width = '80%';
+            field.style.height = '20px';
+            field.style.background = `linear-gradient(to right, 
+                rgba(46, 204, 113, ${fieldStrength/200}), 
+                rgba(46, 204, 113, ${fieldStrength/100}), 
+                rgba(46, 204, 113, ${fieldStrength/200}))`;
+            field.style.borderRadius = '10px';
+            container.appendChild(field);
+        }
+        
+        function updateSensing() {
+            const fieldStrength = document.getElementById('field-strength').value;
+            document.getElementById('field-strength-value').textContent = getFieldStrengthText(fieldStrength);
+            
+            const quantumCoherence = document.getElementById('quantum-coherence').value;
+            document.getElementById('quantum-coherence-value').textContent = getCoherenceText(quantumCoherence);
+            
+            initializeSensing();
+        }
+        
+        function getFieldStrengthText(value) {
+            const val = parseInt(value);
+            if (val < 20) return 'Very Low';
+            if (val < 40) return 'Low';
+            if (val < 60) return 'Medium';
+            if (val < 80) return 'High';
+            return 'Very High';
+        }
+        
+        function getCoherenceText(value) {
+            const val = parseInt(value);
+            if (val < 20) return 'Very Low';
+            if (val < 40) return 'Low';
+            if (val < 60) return 'Medium';
+            if (val < 80) return 'High';
+            return 'Very High';
+        }
+        
+        function scanEnvironment() {
+            if (simulationRunning) return;
+            simulationRunning = true;
+            
+            const container = document.getElementById('sensing-vis');
+            const fieldStrength = parseInt(document.getElementById('field-strength').value);
+            const coherence = parseInt(document.getElementById('quantum-coherence').value);
+            
+            // Activate sensors
+            for (let i = 0; i < sensors.length; i++) {
+                const sensor = sensors[i];
+                sensor.active = true;
+                
+                setTimeout(() => {
+                    sensor.element.style.backgroundColor = '#e74c3c';
+                    sensor.element.style.transform = 'scale(1.2)';
+                    
+                    // Create detection wave
+                    const wave = document.createElement('div');
+                    wave.style.position = 'absolute';
+                    wave.style.left = sensor.element.style.left;
+                    wave.style.top = '140px';
+                    wave.style.width = '30px';
+                    wave.style.height = '30px';
+                    wave.style.borderRadius = '50%';
+                    wave.style.backgroundColor = 'transparent';
+                    wave.style.border = '2px solid #9b59b6';
+                    wave.style.transform = 'translate(-50%, -50%)';
+                    container.appendChild(wave);
+                    
+                    // Animate wave
+                    let waveSize = 0;
+                    const waveInterval = setInterval(() => {
+                        waveSize += 5;
+                        wave.style.width = `${30 + waveSize}px`;
+                        wave.style.height = `${30 + waveSize}px`;
+                        wave.style.opacity = `${1 - waveSize/100}`;
+                        
+                        if (waveSize > 100) {
+                            clearInterval(waveInterval);
+                            wave.remove();
+                        }
+                    }, 50);
+                    
+                    setTimeout(() => {
+                        sensor.element.style.transform = 'scale(1)';
+                        
+                        // Show reading
+                        const reading = document.createElement('div');
+                        reading.style.position = 'absolute';
+                        reading.style.left = sensor.element.style.left;
+                        reading.style.top = '180px';
+                        reading.style.transform = 'translateX(-50%)';
+                        reading.style.backgroundColor = 'white';
+                        reading.style.border = '1px solid #ddd';
+                        reading.style.padding = '5px 10px';
+                        reading.style.borderRadius = '5px';
+                        
+                        // Calculate reading based on field strength and coherence
+                        const accuracy = coherence / 100; // Higher coherence = more accurate reading
+                        const noiseFactor = 1 - accuracy;
+                        const actualValue = fieldStrength;
+                        const noise = (Math.random() - 0.5) * 20 * noiseFactor;
+                        const measuredValue = Math.max(0, Math.min(100, actualValue + noise));
+                        
+                        reading.innerHTML = `${measuredValue.toFixed(1)}μT`;
+                        container.appendChild(reading);
+                        
+                        if (i === sensors.length - 1) {
+                            setTimeout(() => {
+                                // Show result
+                                const result = document.createElement('div');
+                                result.style.position = 'absolute';
+                                result.style.top = '50px';
+                                result.style.left = '50%';
+                                result.style.transform = 'translateX(-50%)';
+                                result.style.backgroundColor = '#3498db';
+                                result.style.color = 'white';
+                                result.style.padding = '10px 20px';
+                                result.style.borderRadius = '5px';
+                                
+                                const fieldType = getFieldStrengthText(fieldStrength);
+                                result.innerHTML = `Detected ${fieldType} magnetic field (${fieldStrength}μT ±${(5 * noiseFactor).toFixed(1)}μT)`;
+                                container.appendChild(result);
+                                
+                                setTimeout(() => {
+                                    result.style.opacity = '0';
+                                    setTimeout(() => {
+                                        result.remove();
+                                        simulationRunning = false;
+                                    }, 500);
+                                }, 3000);
+                            }, 1000);
+                        }
+                    }, 1000);
+                }, i * 500);
+            }
+        }
+        
+        function enhanceSensitivity() {
+            const coherenceSlider = document.getElementById('quantum-coherence');
+            const currentValue = parseInt(coherenceSlider.value);
+            const newValue = Math.min(100, currentValue + 10);
+            coherenceSlider.value = newValue;
+            document.getElementById('quantum-coherence-value').textContent = getCoherenceText(newValue);
+            
+            // Visual feedback
+            const container = document.getElementById('sensing-vis');
+            const enhancement = document.createElement('div');
+            enhancement.style.position = 'absolute';
+            enhancement.style.top = '50px';
+            enhancement.style.left = '50%';
+            enhancement.style.transform = 'translateX(-50%)';
+            enhancement.style.backgroundColor = '#9b59b6';
+            enhancement.style.color = 'white';
+            enhancement.style.padding = '10px 20px';
+            enhancement.style.borderRadius = '5px';
+            enhancement.innerHTML = 'Sensitivity Enhanced!';
+            container.appendChild(enhancement);
+            
+            setTimeout(() => {
+                enhancement.style.opacity = '0';
+                setTimeout(() => enhancement.remove(), 500);
+            }, 2000);
+            
+            // Update sensors
+            for (let i = 0; i < sensors.length; i++) {
+                const sensor = sensors[i];
+                sensor.element.style.transform = 'scale(1.1)';
+                sensor.element.style.boxShadow = '0 0 10px #9b59b6';
+                
+                setTimeout(() => {
+                    sensor.element.style.transform = 'scale(1)';
+                    setTimeout(() => {
+                        sensor.element.style.boxShadow = 'none';
+                    }, 500);
+                }, 500);
+            }
+        }
+        
+        function resetSensing() {
+            simulationRunning = false;
+            initializeSensing();
+        }
     </script>
 </body>
 </html>
