@@ -5,61 +5,49 @@ import { Module } from "@/data/types/courseTypes";
 export const module11: Module = {
   id: "2.3.11",
   title: "Quantum Error Correction Time Travelers",
-  description: "Travel through time to discover the past and future of quantum error correction!",
+  description: "Explore how quantum error correction techniques will evolve in the future.",
   lessons: [
     {
       id: "2.3.11.1",
-      title: "Visiting the Quantum Pioneers",
-      description: "Travel back in time to meet the scientists who invented quantum error correction.",
-      content: "Your time machine is calibrated and ready! In this imaginative lesson, you'll travel back to the 1990s to meet the brilliant scientists who first discovered quantum error correction.\n\nYou'll visit Peter Shor's laboratory when he first realized that quantum information could be protected, despite the no-cloning theorem. You'll watch as he designs the first 9-qubit code on his chalkboard, working through the mathematics that would revolutionize quantum computing.\n\nNext, you'll visit Andrew Steane as he develops more efficient codes, and then meet the other pioneers who built upon these early discoveries. Through these virtual encounters, you'll gain a deeper appreciation for the key insights that made quantum error correction possible and the historical context in which these breakthroughs occurred.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/Quantum-Pioneers-Visit.html",
-        height: 600,
-        width: "100%"
-      },
+      title: "Quantum Error Correction: Past to Present",
+      description: "Trace the history and evolution of quantum error correction techniques.",
+      content: "Before we can look to the future, we need to understand where we've been. In this lesson, we'll explore the fascinating history of quantum error correction, from its theoretical beginnings to the current state of the art.\n\nYou'll learn about:\n\n- The early theoretical work that showed quantum error correction was possible\n- The development of the first quantum error-correcting codes\n- Major milestones in experimental demonstrations of quantum error correction\n- How approaches have evolved as quantum hardware has improved\n\nThrough historical anecdotes and expert interviews, you'll gain appreciation for the brilliant insights and persistent efforts that have brought quantum error correction to where it is today.",
+      type: "reading",
       duration: 25,
       points: 20
     },
     {
       id: "2.3.11.2",
-      title: "Error Correction Through the Ages",
-      description: "Explore how error correction has evolved from ancient times to quantum computing.",
-      content: "Error correction isn't just a quantum phenomenon - humans have been developing ways to detect and correct errors throughout history! In this journey through time, we'll explore the fascinating evolution of error correction techniques.\n\nWe'll start in ancient times with simple error detection methods like checksums used by scribes copying texts. We'll visit the development of error-correcting codes during World War II for reliable communications, and the space race where error correction ensured messages from spacecraft arrived intact.\n\nFinally, we'll connect these classical techniques to modern quantum error correction, seeing how similar principles apply despite the quantum challenges. This historical perspective will help you understand the common principles behind all error correction methods while appreciating the unique aspects of the quantum approach.",
+      title: "Near-Future Error Correction",
+      description: "Preview the quantum error correction techniques that are just around the corner.",
+      content: "What will quantum error correction look like in the next 5-10 years? In this video lesson, we'll explore the most promising near-term advances that researchers are currently developing.\n\nYou'll learn about:\n\n- How small surface codes will be implemented in NISQ-era devices\n- Tailored error correction approaches for specific hardware platforms\n- The role of machine learning in optimizing error correction strategies\n- The path to the first fault-tolerant logical qubit demonstrations\n\nThrough interviews with leading researchers and footage from cutting-edge labs, you'll get an insider's view of the quantum error correction advances that will power the next generation of quantum computers.",
       type: "video",
-      duration: 20,
-      points: 15
+      duration: 25,
+      points: 20
     },
     {
       id: "2.3.11.3",
-      title: "Future Quantum Computers Simulation",
-      description: "Travel to the future to see advanced quantum computers with perfect error correction.",
-      content: "Set your time machine for the year 2050! In this futuristic simulation, you'll explore advanced quantum computers that use sophisticated error correction techniques unknown in our time.\n\nYou'll interact with a large-scale fault-tolerant quantum computer that can maintain quantum coherence indefinitely through its advanced error correction systems. You'll see how thousands of physical qubits work together to create logical qubits with error rates millions of times lower than today's systems.\n\nYou'll get to run quantum algorithms that are impossible on today's computers, witnessing firsthand the capabilities that perfect error correction enables. Through this glimpse of the future, you'll understand the ultimate goal of quantum error correction research and the incredible computing power it aims to unlock.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/Future-Quantum-Computers.html",
-        height: 600,
-        width: "100%"
-      },
+      title: "The Quantum Future: Long-Term Predictions",
+      description: "Explore speculative but scientifically-grounded visions of future quantum error correction.",
+      content: "Let's journey decades into the future! In this reading lesson (previously interactive), we'll explore how quantum error correction might evolve over the long term as quantum computing matures.\n\nWe'll examine far-future scenarios such as:\n\n- Self-healing quantum systems that automatically detect and adapt to changing error patterns\n- Biological inspiration in quantum error correction, with systems that mimic cellular repair mechanisms\n- Hybrid approaches that combine traditional codes with new physical techniques like topological protection\n- Quantum error correction for distributed quantum computing across global networks\n\nThrough detailed explanations and scientific speculation grounded in current research trajectories, you'll gain perspective on the long-term evolution of quantum error correction. You'll understand how current limitations might be overcome through radical new approaches and how quantum error correction might eventually become so seamless that it disappears into the background of quantum computing.\n\nThe lesson discusses cutting-edge research directions like error correction for non-standard quantum computing models, adaptive codes that evolve through quantum machine learning, and the theoretical limits of how efficient quantum error correction can ultimately become.\n\nBy the end of this lesson, you'll have a broader vision of quantum error correction's future and the exciting possibilities that lie ahead as the field continues to develop.",
+      type: "reading",
       duration: 30,
       points: 25
     },
     {
       id: "2.3.11.4",
-      title: "Creating Your Future Quantum Technology",
-      description: "Design a futuristic quantum device that uses advanced error correction.",
-      content: "After seeing the future of quantum computing, it's your turn to invent! In this creative lesson, you'll design your own futuristic quantum technology that relies on advanced error correction techniques.\n\nWill you create a quantum internet that enables perfectly secure communication? A quantum sensor that can detect minute changes in gravitational fields? A quantum biomedical scanner that can analyze molecules with unprecedented precision? Or something entirely different?\n\nYou'll sketch your device, describe how it works, explain what error correction techniques it uses, and present its benefits to society. The most creative and scientifically sound designs will be featured in a virtual museum of future quantum technologies that all students can visit. This forward-looking exercise will help you appreciate the practical applications that motivate quantum error correction research.",
+      title: "Decoherence Destroyers",
+      description: "Join the Decoherence Destroyers team and battle quantum errors across time and space!",
+      content: "The year is 2150, and quantum computers run everything from transportation systems to food production. But a mysterious new form of quantum noise is appearing across the global quantum network, threatening to disrupt society. You're a member of the elite Decoherence Destroyers team, and it's your job to find the source of this noise and stop it!\n\nIn this interactive adventure, you'll travel through time and space, using advanced quantum error correction techniques to battle increasingly sophisticated forms of quantum noise. You'll need to adapt your strategies as you encounter new error types and limited resources in different scenarios.",
       type: "interactive",
       externalSimulator: {
         type: "iframe",
-        url: "/simulators/Future-Quantum-Technology.html",
+        url: "/simulators/Decoherence-Destroyers.html",
         height: 600,
         width: "100%"
       },
-      duration: 35,
-      points: 30
+      duration: 40,
+      points: 35
     }
   ]
 };

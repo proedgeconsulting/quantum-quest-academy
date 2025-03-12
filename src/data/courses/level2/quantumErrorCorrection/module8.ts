@@ -35,14 +35,8 @@ export const module8: Module = {
       id: "2.3.8.3",
       title: "Building the Perfect Code",
       description: "Design your own quantum error correction code with special properties.",
-      content: "In this creative lesson, you'll design your own quantum error correction code with specific properties to protect against different types of errors.\n\nYou'll start with a set of requirements - like protecting against certain error patterns or using the minimum number of qubits. Then you'll use our code design tools to construct a quantum error correction code that meets these requirements.\n\nYou can test your code against different error models, measure its performance, and compete with friends to create the most efficient code. This hands-on design experience will help you understand the trade-offs involved in quantum error correction and why certain code structures work better than others for specific types of errors.",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/Perfect-Code-Builder.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "In this reading lesson (previously interactive), you'll learn how quantum scientists design custom error correction codes for specific applications.\n\nWe'll explore the process of creating quantum error correction codes with special properties, including:\n\n- Identifying the most common error types in your quantum system\n- Choosing an appropriate code structure based on these error patterns\n- Optimizing the code for efficiency (using the minimum number of physical qubits)\n- Testing the code's performance against realistic noise models\n\nThrough detailed explanations and illustrated examples, you'll understand the principles behind code design and the tradeoffs involved. You'll learn about different code families (CSS codes, topological codes, etc.) and when each is most appropriate.\n\nWe'll walk through case studies of specialized codes designed for specific quantum hardware platforms, showing how the unique error characteristics of each platform influence code design decisions. You'll see examples of codes optimized for superconducting qubits, trapped ions, and other quantum technologies.\n\nBy the end of this lesson, you'll understand the methodology of quantum code design and the creative process behind developing new quantum error correction techniques.",
+      type: "reading",
       duration: 30,
       points: 25
     },

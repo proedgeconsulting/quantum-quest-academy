@@ -50,14 +50,8 @@ export const module7: Module = {
       id: "2.3.7.4",
       title: "The Error Detection Challenge",
       description: "Compete against the clock to detect as many errors as possible.",
-      content: "Welcome to the Error Detection Challenge! In this lesson, you'll race against time to detect as many quantum errors as possible in a series of increasingly complex quantum circuits.\n\nYou'll start with simple circuits where you need to find a single error, and progress to more challenging scenarios with multiple errors of different types. Each round gets a bit harder, with less time and more qubits to check.\n\nYou'll earn points for correctly identifying errors and lose points for false alarms. The game will track your high score, and you can compare your performance with friends. This fast-paced challenge will help you develop quick instincts for recognizing patterns of quantum errors!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/Error-Detection-Challenge.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Welcome to the Error Detection Challenge! In this reading lesson (previously interactive), you'll learn about racing against time to detect quantum errors in increasingly complex quantum circuits.\n\nWe'll explore a scenario where quantum error detectives must:\n\n- Quickly identify bit flip and phase flip errors in quantum circuits\n- Analyze error patterns to determine their source\n- Prioritize which errors to address first based on their impact\n- Develop strategies for efficient error detection\n\nThrough detailed explanations and illustrated examples, you'll understand the methodology behind rapid error detection in quantum systems. You'll learn about the telltale signatures of different error types and how to distinguish them from normal quantum behavior.\n\nThe lesson covers advanced techniques like error correlation analysis, which helps identify patterns that might indicate systematic hardware issues rather than random noise. We'll also discuss how real quantum computing teams develop automated error detection systems that can continuously monitor quantum systems for signs of trouble.\n\nBy the end of this lesson, you'll have a comprehensive understanding of quantum error detection strategies and how they're applied in time-sensitive real-world scenarios.",
+      type: "reading",
       duration: 25,
       points: 20
     }
