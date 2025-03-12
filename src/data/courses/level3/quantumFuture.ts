@@ -58,6 +58,7 @@ export const quantumFutureCourse: Course = {
           type: "video",
           duration: 25,
           points: 20
+          videoUrl: "https://www.youtube.com/watch?v=J3lsmO9Z00w"
         }
       ]
     },
@@ -98,6 +99,7 @@ export const quantumFutureCourse: Course = {
           type: "video",
           duration: 30,
           points: 25
+          videoUrl: "https://www.youtube.com/watch?v=g_wgYtGvZTo"
         }
       ]
     },
