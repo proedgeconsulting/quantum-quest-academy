@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Circuit Designer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        #circuit-board {
+            width: 800px;
+            height: 400px;
+            border: 2px solid #333;
+            background: white;
+            position: relative;
+            overflow: auto;
+        }
+        .gate {
+            width: 50px;
+            height: 50px;
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 5px;
+            cursor: move;
+            position: absolute;
+            user-select: none;
+        }
+        .gate:hover {
+            background: #45a049;
+        }
+        #gates-panel {
+            margin: 20px 0;
+            padding: 10px;
+            background: #ddd;
+            border-radius: 5px;
+        }
+        .gate-option {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            background: #2196F3;
+            color: white;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .gate-option:hover {
+            background: #1976D2;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            min-height: 100px;
+        }
+        .qubit-line {
+            position: absolute;
+            height: 2px;
+            background: #666;
+            width: 100%;
+            z-index: -1;
+        }
+        #controls {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Circuit Designer</h1>
+    <p>Drag gates from the panel below onto the circuit board to create quantum circuits. Click "Simulate" to see the results.</p>
+    
+    <div id="gates-panel">
+        <div class="gate-option" data-gate="H">Hadamard (H)</div>
+        <div class="gate-option" data-gate="X">Pauli-X (X)</div>
+        <div class="gate-option" data-gate="CNOT">CNOT</div>
+    </div>
+
+    <div id="circuit-board">
+        <div class="qubit-line" style="top: 75px;"></div>
+        <div class="qubit-line" style="top: 175px;"></div>
+    </div>
+
+    <div id="controls">
+        <button onclick="simulateCircuit()">Simulate</button>
+        <button onclick="clearCircuit()">Clear</button>
+    </div>
+
+    <div id="output">
+        <h3>Simulation Results</h3>
+        <p>Build a circuit and click "Simulate" to see the quantum state transformations.</p>
+    </div>
+
+    <script>
+        let gateCount = 0;
+
+        // Make gates draggable from panel
+        document.querySelectorAll('.gate-option').forEach(option => {
+            option.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', option.dataset.gate);
+            });
+        });
+
+        // Circuit board drop zone
+        const circuitBoard = document.getElementById('circuit-board');
+        circuitBoard.addEventListener('dragover', (e) => e.preventDefault());
+        circuitBoard.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const gateType = e.dataTransfer.getData('text/plain');
+            const gate = document.createElement('div');
+            gate.className = 'gate';
+            gate.id = `gate-${gateCount++}`;
+            gate.textContent = gateType;
+            gate.style.left = `${e.offsetX - 25}px`;
+            gate.style.top = `${Math.floor(e.offsetY / 100) * 100 + 25}px`; // Snap to qubit lines
+            circuitBoard.appendChild(gate);
+            makeGateDraggable(gate);
+        });
+
+        // Make placed gates draggable
+        function makeGateDraggable(gate) {
+            gate.addEventListener('mousedown', (e) => {
+                let offsetX = e.clientX - parseInt(gate.style.left);
+                let offsetY = e.clientY - parseInt(gate.style.top);
+                
+                function moveGate(e) {
+                    gate.style.left = `${e.clientX - offsetX}px`;
+                    gate.style.top = `${Math.floor((e.clientY - offsetY - 25) / 100) * 100 + 25}px`;
+                }
+
+                document.addEventListener('mousemove', moveGate);
+                document.addEventListener('mouseup', () => {
+                    document.removeEventListener('mousemove', moveGate);
+                }, { once: true });
+            });
+        }
+
+        // Simulate circuit (simple demo)
+        function simulateCircuit() {
+            const gates = Array.from(circuitBoard.getElementsByClassName('gate'));
+            let state = '|00>'; // Initial state
+            let outputText = `Initial state: ${state}\n`;
+
+            gates.sort((a, b) => parseInt(a.style.left) - parseInt(b.style.left));
+            
+            gates.forEach(gate => {
+                const qubit = Math.floor(parseInt(gate.style.top) / 100);
+                if (gate.textContent === 'H') {
+                    state = qubit === 0 ? '(|00> + |10>)/√2' : '(|00> + |01>)/√2';
+                    outputText += `Applied H to qubit ${qubit}: ${state}\n`;
+                } else if (gate.textContent === 'X') {
+                    state = qubit === 0 ? '|10>' : '|01>';
+                    outputText += `Applied X to qubit ${qubit}: ${state}\n`;
+                } else if (gate.textContent === 'CNOT' && gates.some(g => g !== gate && Math.abs(parseInt(g.style.left) - parseInt(gate.style.left)) < 10)) {
+                    state = '|11>';
+                    outputText += `Applied CNOT: ${state}\n`;
+                }
+            });
+
+            document.getElementById('output').innerHTML = `<h3>Simulation Results</h3><pre>${outputText}</pre>`;
+        }
+
+        // Clear circuit
+        function clearCircuit() {
+            circuitBoard.innerHTML = `
+                <div class="qubit-line" style="top: 75px;"></div>
+                <div class="qubit-line" style="top: 175px;"></div>
+            `;
+            document.getElementById('output').innerHTML = `
+                <h3>Simulation Results</h3>
+                <p>Build a circuit and click "Simulate" to see the quantum state transformations.</p>
+            `;
+            gateCount = 0;
+        }
+    </script>
+</body>
+</html>
