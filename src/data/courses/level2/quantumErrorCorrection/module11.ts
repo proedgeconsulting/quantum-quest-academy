@@ -15,6 +15,7 @@ export const module11: Module = {
       type: "reading",
       duration: 25,
       points: 20
+      videoUrl: "https://www.youtube.com/watch?v=QiyY3ZjJJKg&t=222s",
     },
     {
       id: "2.3.11.2",
@@ -24,6 +25,7 @@ export const module11: Module = {
       type: "video",
       duration: 25,
       points: 20
+       videoUrl: "https://www.youtube.com/watch?v=SHqeCcx8mGg",
     },
     {
       id: "2.3.11.3",
@@ -33,7 +35,7 @@ export const module11: Module = {
       type: "reading",
       duration: 30,
       points: 25,
-      videoUrl: "https://www.youtube.com/watch?v=qQviI1d_hFA"
+      videoUrl: "https://www.youtube.com/watch?v=qQviI1d_hFA",
     },
     {
       id: "2.3.11.4",
