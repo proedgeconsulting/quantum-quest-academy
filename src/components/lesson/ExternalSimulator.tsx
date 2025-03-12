@@ -1,12 +1,12 @@
 
-import { Lesson } from "@/types/lesson";
+import { Lesson } from "@/data/types/courseTypes";
 
 export interface ExternalSimulatorProps {
   lesson?: Lesson;
   simulatorPath: string;
 }
 
-const ExternalSimulator = ({ simulatorPath }: ExternalSimulatorProps) => {
+const ExternalSimulator = ({ lesson, simulatorPath }: ExternalSimulatorProps) => {
   return (
     <div className="w-full h-[600px] border border-border rounded-md overflow-hidden">
       <iframe 
