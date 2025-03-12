@@ -23,7 +23,7 @@ export const module6: Module = {
       content: "What does quantum error correction look like in a real laboratory setting? In this video lesson, we'll take you behind the scenes of cutting-edge quantum computing labs to see error correction in action.\n\nYou'll see footage and explanations of:\n\n- Actual experimental setups for implementing error correction codes\n- The equipment and techniques used to control and measure qubits\n- How researchers diagnose and troubleshoot error correction systems\n- Recent experimental milestones in demonstrating quantum error correction\n\nThrough interviews with researchers and footage of experiments, you'll gain appreciation for both the progress that has been made and the challenges that remain in practical quantum error correction.",
       type: "video",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=kjqgUfDBVbA"
     },
     {

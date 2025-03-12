@@ -32,7 +32,7 @@ export const module11: Module = {
       content: "Let's journey decades into the future! In this reading lesson (previously interactive), we'll explore how quantum error correction might evolve over the long term as quantum computing matures.\n\nWe'll examine far-future scenarios such as:\n\n- Self-healing quantum systems that automatically detect and adapt to changing error patterns\n- Biological inspiration in quantum error correction, with systems that mimic cellular repair mechanisms\n- Hybrid approaches that combine traditional codes with new physical techniques like topological protection\n- Quantum error correction for distributed quantum computing across global networks\n\nThrough detailed explanations and scientific speculation grounded in current research trajectories, you'll gain perspective on the long-term evolution of quantum error correction. You'll understand how current limitations might be overcome through radical new approaches and how quantum error correction might eventually become so seamless that it disappears into the background of quantum computing.\n\nThe lesson discusses cutting-edge research directions like error correction for non-standard quantum computing models, adaptive codes that evolve through quantum machine learning, and the theoretical limits of how efficient quantum error correction can ultimately become.\n\nBy the end of this lesson, you'll have a broader vision of quantum error correction's future and the exciting possibilities that lie ahead as the field continues to develop.",
       type: "reading",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=qQviI1d_hFA"
     },
     {

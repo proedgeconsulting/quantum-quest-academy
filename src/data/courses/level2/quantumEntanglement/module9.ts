@@ -23,7 +23,7 @@ export const module9: Module = {
       content: "Quantum phase transitions occur at absolute zero temperature when the ground state of a quantum system changes abruptly as a parameter in the Hamiltonian is varied. Unlike classical phase transitions, which are driven by thermal fluctuations, quantum phase transitions are driven by quantum fluctuations and often involve dramatic changes in entanglement structure.\n\nIn this lesson, we'll explore how entanglement behaves across quantum phase transitions. We'll discuss the concept of universality in quantum critical points and how entanglement entropy can reveal the central charge of the underlying conformal field theory. We'll examine specific examples, such as the transverse-field Ising model and the Bose-Hubbard model, to illustrate these concepts.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=SJYSBfPKidg"
     },
     {

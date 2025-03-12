@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 4: Quantum Reinforcement Learning
@@ -22,9 +21,8 @@ export const module4: Module = {
       description: "Explore quantum algorithms for finding optimal policies in reinforcement learning.",
       content: "Policy optimization is at the heart of many modern reinforcement learning algorithms. This video lesson examines how quantum computing might enhance policy search and optimization.\n\nWe'll cover:\n\n- Quantum policy gradient methods and their implementation using parameterized quantum circuits\n- Quantum versions of popular algorithms like PPO and TRPO\n- How quantum parallelism might help explore the policy space more efficiently\n- Quantum exploration strategies that leverage superposition\n\nThe lesson includes demonstrations of simple quantum policy optimization on toy problems, comparing performance with classical approaches and identifying the regimes where quantum advantages might emerge.",
       type: "video",
-      videoUrl: "https://www.youtube.com/watch?v=mRwc1niBN_s",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=VvbYR5hCFVo"
     },
     {

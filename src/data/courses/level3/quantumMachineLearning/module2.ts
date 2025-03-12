@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 2: Quantum Neural Networks
@@ -22,9 +21,8 @@ export const module2: Module = {
       description: "Learn how to structure quantum circuits that can learn complex patterns.",
       content: "Quantum Neural Networks (QNNs) are parameterized quantum circuits designed to mimic the functionality of classical neural networks. In this lesson, we'll examine how to design effective QNN architectures for different types of learning tasks.\n\nWe'll explore:\n\n- **Layer structures** and the concept of expressivity in quantum circuits\n- **Entanglement strategies** and their importance for quantum advantage\n- **Measurement approaches** and how they affect what the network can learn\n- **Parameter initialization** techniques to avoid training difficulties\n\nWe'll also discuss the concept of quantum transfer learning, where pre-trained classical neural networks are combined with quantum circuits to potentially enhance performance on specific tasks.",
       type: "video",
-      videoUrl: "https://www.youtube.com/watch?v=v8kE4px4VUA",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=xL383DseSpE"
     },
     {

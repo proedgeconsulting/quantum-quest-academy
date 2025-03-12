@@ -32,7 +32,7 @@ export const module3: Module = {
       content: "Stabilizer measurements are the heart of quantum error detection. In this video lesson, we'll demonstrate how these measurements work in practice and why they're so important for quantum error correction.\n\nYou'll learn:\n\n- How to translate abstract stabilizer operators into actual quantum circuits\n- The role of ancilla qubits in stabilizer measurements\n- How measurement outcomes provide syndrome information\n- Techniques for interpreting syndrome patterns to identify errors\n\nThrough animated examples, we'll visualize the process of measuring stabilizers and show how different error patterns lead to different syndrome outcomes.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=4ekRn7JaqFo"
     },
     {

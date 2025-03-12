@@ -23,7 +23,7 @@ export const module8: Module = {
       content: "Shor's algorithm is one of the most famous quantum algorithms, capable of factoring large numbers exponentially faster than the best known classical algorithms. This has significant implications for modern cryptography, which often relies on the difficulty of factoring large numbers. Entanglement plays a crucial role in giving Shor's algorithm its computational advantage.\n\nIn this lesson, we'll walk through Shor's algorithm, highlighting where and how entanglement is created and utilized. We'll examine the quantum Fourier transform, a key component of the algorithm, and explain how entanglement enables this transform to be performed efficiently. You'll gain insight into how entanglement contributes to the algorithm's exponential speedup.",
       type: "video",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=cCx0sw2LDto"
     },
     {

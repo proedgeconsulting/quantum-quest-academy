@@ -23,7 +23,7 @@ export const module6: Module = {
       content: "Clustering algorithms help discover natural groupings in unlabeled data. This video lesson explores how quantum computing can potentially enhance clustering performance and efficiency.\n\nWe'll cover:\n\n- Quantum versions of k-means and spectral clustering algorithms\n- Using quantum annealing for clustering optimization problems\n- Quantum approaches to similarity and distance calculations\n- Applications in customer segmentation, image analysis, and genomics\n\nThe lesson includes visualizations of quantum clustering in action, demonstrating how quantum algorithms might find more optimal clusters or converge faster than classical approaches for certain types of data structures.",
       type: "video",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=tLAbODRml6E"
     },
     {

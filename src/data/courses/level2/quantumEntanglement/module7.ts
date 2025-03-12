@@ -23,7 +23,7 @@ export const module7: Module = {
       content: "Quantum conference key agreement (CKA) extends quantum key distribution to multiple parties, allowing them to establish a shared secret key for secure group communication. This is particularly useful for secure teleconferencing, distributed computing, and blockchain applications.\n\nIn this lesson, we'll examine protocols for quantum CKA based on multipartite entanglement, particularly GHZ states. We'll discuss the security advantages of quantum CKA over classical approaches and explore potential applications in secure multi-party computation.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=gctqXPlu-54"
     },
     {

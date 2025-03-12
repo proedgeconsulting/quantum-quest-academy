@@ -23,7 +23,7 @@ export const module1: Module = {
       content: "One of the fundamental challenges in quantum machine learning is how to efficiently encode classical data into quantum states that a quantum computer can process. This lesson explores various encoding strategies and their implications for algorithm performance.\n\nWe'll discuss:\n\n- **Amplitude encoding**: Representing data in the amplitudes of a quantum state\n- **Basis encoding**: Representing data in the computational basis states\n- **Angle encoding**: Encoding features as rotation angles of qubits\n- **Hybrid approaches**: Combining multiple encoding strategies\n\nWe'll examine the tradeoffs between these approaches in terms of qubit requirements, circuit depth, and how well they preserve the structure of the original data. We'll also discuss the critical challenge of the input problem in quantum machine learning - the potential bottleneck of loading large classical datasets into quantum systems.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=nk9va-BUaM8"
     },
     {

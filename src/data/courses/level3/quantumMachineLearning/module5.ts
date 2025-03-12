@@ -23,7 +23,7 @@ export const module5: Module = {
       content: "Transfer learning has revolutionized classical deep learning by allowing knowledge transfer between tasks. This video lesson explores how similar approaches can be developed for quantum machine learning.\n\nWe'll examine:\n\n- Methods for pre-training quantum circuits on foundational tasks\n- Techniques for freezing and fine-tuning quantum layers\n- Approaches for adapting pre-trained quantum encoders to new domains\n- Evaluation methodologies for quantum transfer learning performance\n\nThe lesson features demonstrations of how pre-trained quantum components can be integrated into larger models and fine-tuned for specific applications, potentially reducing the quantum resources needed for new tasks.",
       type: "video",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=lz8BOz5KPZg"
     },
     {

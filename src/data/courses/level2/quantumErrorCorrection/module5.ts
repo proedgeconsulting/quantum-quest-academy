@@ -23,7 +23,7 @@ export const module5: Module = {
       content: "Implementing quantum gates fault-tolerantly is a major challenge in quantum computing. In this video lesson, we'll explore techniques for performing reliable quantum operations even when components are noisy.\n\nYou'll learn about:\n\n- Transversal gates and why they're naturally fault-tolerant\n- Gate teleportation and how it enables universal computation\n- Magic state distillation and injection\n- The trade-offs between different approaches to fault-tolerant gates\n\nThrough animations and circuit diagrams, we'll demystify these advanced techniques and show how they contribute to reliable quantum computation.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=hd0DhwcmIaE"
     },
     {

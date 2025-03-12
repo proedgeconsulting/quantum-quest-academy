@@ -23,7 +23,7 @@ export const module6: Module = {
       content: "Quantum networks leverage multipartite entanglement to connect multiple quantum processors, enabling distributed quantum computing and secure multi-party quantum communication. In this lesson, we'll explore the principles, architecture, and potential applications of quantum networks.\n\nWe'll discuss quantum repeaters, which allow quantum information to be relayed over long distances, and entanglement swapping, which enables entanglement between particles that have never interacted. We'll also cover quantum routers, quantum memories, and other components essential for building quantum networks. You'll learn about current experimental implementations and the challenges that must be overcome to build large-scale quantum networks.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=m6SIOLL_Cio"
     },
     {

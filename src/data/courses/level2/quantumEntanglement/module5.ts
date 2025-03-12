@@ -38,7 +38,7 @@ export const module5: Module = {
       content: "How do we know when particles are truly entangled? In this lesson, we'll explore the experimental techniques used to verify and measure quantum entanglement.\n\nWe'll cover Bell state measurements, which are crucial for protocols like quantum teleportation and dense coding. You'll learn about entanglement witnesses, mathematical operators that can detect the presence of entanglement without full state tomography.\n\nWe'll also discuss quantum state tomography, a process that allows experimentalists to fully reconstruct a quantum state, and concurrence, a measure of how entangled a two-qubit state is.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=fkAAbXPEAtU&t=314s"
     }
   ]

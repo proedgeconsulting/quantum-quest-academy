@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 3: Quantum Generative Models
@@ -22,9 +21,8 @@ export const module3: Module = {
       description: "Learn about quantum versions of energy-based generative models.",
       content: "Quantum Boltzmann Machines (QBMs) extend classical Boltzmann machines by replacing the binary units with quantum bits, allowing them to potentially model more complex probability distributions than their classical counterparts.\n\nIn this video lesson, we'll cover:\n\n- The theoretical foundations of QBMs and how they differ from classical Boltzmann machines\n- The role of quantum tunneling in potentially helping QBMs escape local minima during training\n- Implementation strategies on near-term quantum hardware\n- Applications in generative modeling and reinforcement learning\n\nWe'll also discuss the challenges of training QBMs and recent advances in quantum annealing that have made them more practical for certain applications.",
       type: "video",
-      videoUrl: "https://www.youtube.com/watch?v=9TYP7QvBmhE",
       duration: 30,
-      points: 25
+      points: 25,
       videoUrl: "https://www.youtube.com/watch?v=52Ylq3aDU8o"
     },
     {
