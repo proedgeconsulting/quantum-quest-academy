@@ -11,14 +11,8 @@ export const module9: Module = {
       id: "3.2.9.1",
       title: "Animal Tracking with Quantum AI",
       description: "Learn how quantum AI can process wildlife camera images to identify and track endangered animals.",
-      content: "Join the Wildlife Rescue Team and help save endangered animals using quantum AI! In this lesson, you'll learn how scientists use quantum computing to process thousands of wildlife camera images much faster than traditional computers.\n\nYour mission is to set up a virtual quantum animal tracking system in a rainforest preserve. You'll need to identify different species, track their movements, and count their populations. With quantum AI, you can analyze patterns that might indicate if an animal is in trouble or if their habitat is changing. Get ready to become a quantum wildlife protector!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-animal-tracking.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Join the Wildlife Rescue Team and help save endangered animals using quantum AI! In this lesson, you'll learn how scientists use quantum computing to process thousands of wildlife camera images much faster than traditional computers.\n\nYour mission would be to set up a virtual quantum animal tracking system in a rainforest preserve. You would need to identify different species, track their movements, and count their populations. With quantum AI, you can analyze patterns that might indicate if an animal is in trouble or if their habitat is changing.\n\nThe lesson explores how quantum image processing algorithms can scan through vast amounts of camera trap footage, identifying rare species that might only appear briefly. Unlike classical systems that process images sequentially, quantum systems could theoretically analyze multiple features simultaneously, making wildlife monitoring more efficient.\n\nGet ready to become a quantum wildlife protector and discover how this emerging technology might transform conservation efforts worldwide!",
+      type: "reading",
       duration: 25,
       points: 100
     },

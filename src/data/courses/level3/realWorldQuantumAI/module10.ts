@@ -11,14 +11,8 @@ export const module10: Module = {
       id: "3.2.10.1",
       title: "Quantum Exoplanet Hunter",
       description: "Learn how quantum AI helps astronomers discover planets around distant stars.",
-      content: "Become a space explorer and hunt for exoplanets—planets outside our solar system! In this exciting lesson, you'll learn how astronomers use quantum AI to detect tiny changes in starlight that indicate planets orbiting around distant stars.\n\nYour mission is to use a quantum telescope simulator to analyze light data from different stars. The quantum computer can process many light patterns simultaneously, helping you spot planets that might be missed by classical computers. Will you discover an Earth-like planet that could potentially support life? The universe is waiting for you to explore it!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/quantum-exoplanet-hunter.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Become a space explorer and hunt for exoplanets—planets outside our solar system! In this exciting lesson, you'll learn how astronomers use quantum AI to detect tiny changes in starlight that indicate planets orbiting around distant stars.\n\nImagine using a quantum telescope simulator to analyze light data from different stars. The quantum computer would process many light patterns simultaneously, helping you spot planets that might be missed by classical computers. \n\nYou would search for the telltale dips in starlight that occur when a planet passes in front of its star, or the subtle wobbles in a star's position caused by the gravitational pull of orbiting planets. Quantum algorithms could potentially detect these minute changes more efficiently by examining many possible signal patterns in parallel.\n\nWill you discover an Earth-like planet that could potentially support life? The universe is waiting for you to explore it with the power of quantum computing!",
+      type: "reading",
       duration: 25,
       points: 100
     },

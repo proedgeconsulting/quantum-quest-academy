@@ -20,14 +20,8 @@ export const module7: Module = {
       id: "3.2.7.2",
       title: "Build Your Weather Prediction Machine",
       description: "Create a virtual quantum weather prediction machine and test it against different scenarios.",
-      content: "Time to build your own quantum weather prediction machine! In this hands-on activity, you'll assemble virtual quantum bits (qubits) that can process weather data super fast.\n\nYour mission is to program your machine to predict tomorrow's weather by analyzing cloud patterns, temperature readings, and wind directions all at once. Will your quantum AI outperform the traditional weather forecast? Test your creation against historical weather data and see how accurate your predictions can be!",
-      type: "interactive",
-      externalSimulator: {
-        type: "iframe",
-        url: "/simulators/weather-prediction-machine.html",
-        height: 600,
-        width: "100%"
-      },
+      content: "Time to build your own quantum weather prediction machine! In this hands-on reading, you'll learn about assembling virtual quantum bits (qubits) that can process weather data super fast.\n\nImagine your mission is to program a machine to predict tomorrow's weather by analyzing cloud patterns, temperature readings, and wind directions all at once. You would use quantum algorithms that can process multiple possibilities simultaneously, giving you an advantage over traditional forecasting methods.\n\nYou'd test your theoretical quantum machine against historical weather data to see how accurate your predictions could be. We'll explore what makes quantum weather prediction so powerful and how it might revolutionize meteorology in the future!",
+      type: "reading",
       duration: 30,
       points: 120
     },
