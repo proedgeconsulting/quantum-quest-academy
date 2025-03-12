@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 2: Basic Error Types
@@ -23,7 +22,7 @@ export const module2: Module = {
       content: "Bit flip errors are one of the most common types of quantum errors. They occur when a qubit's state flips from |0⟩ to |1⟩ or vice versa. This can happen due to various environmental factors, such as electromagnetic interference or thermal fluctuations.\n\nIn this lesson, we'll explore the causes of bit flip errors and how they can be represented mathematically. We'll also discuss how bit flip errors can be detected and corrected using quantum error correction codes.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=QrK8D54iAdA"
     },
     {

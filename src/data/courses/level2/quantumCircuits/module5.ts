@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 5: Quantum Error Mitigation
@@ -20,11 +19,11 @@ export const module5: Module = {
       id: "2.1.5.2",
       title: "Error Mitigation Techniques",
       description: "Explore strategies to reduce the impact of errors without full error correction.",
-      content: "While quantum error correction promises to solve the error problem completely, it requires significant qubit overhead that's beyond current hardware capabilities. Error mitigation techniques offer a more practical alternative for near-term quantum devices.\n\nIn this video, we'll explore various error mitigation strategies including:\n\n- Zero-noise extrapolation: Running circuits at different noise levels and extrapolating to zero noise\n\n- Probabilistic error cancellation: Deliberately introducing errors that cancel out existing ones\n\n- Dynamical decoupling: Using pulse sequences to reduce the impact of environmental noise\n\n- Readout error mitigation: Correcting for measurement errors\n\n- Circuit cutting: Breaking large circuits into smaller, more manageable pieces\n\nThese techniques can significantly improve the accuracy of quantum computations on noisy devices, making it possible to run useful algorithms before full error correction is available.",
+      content: "While quantum error correction promises to solve the error problem completely, it requires significant qubit overhead that's beyond current hardware capabilities. Error mitigation techniques offer a more practical alternative for near-term quantum devices.",
       type: "video",
       duration: 25,
-      points: 20
-      videoUrl:"https://www.youtube.com/watch?v=JCrvxWZEtSY"
+      points: 20,
+      videoUrl: "https://www.youtube.com/watch?v=JCrvxWZEtSY"
     },
     {
       id: "2.1.5.3",

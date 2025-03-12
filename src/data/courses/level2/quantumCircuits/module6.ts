@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 6: Quantum Circuit Optimization
@@ -20,11 +19,11 @@ export const module6: Module = {
       id: "2.1.6.2",
       title: "Circuit Transformation Techniques",
       description: "Learn methods to transform circuits into equivalent but more efficient forms.",
-      content: "Quantum circuits can often be transformed into equivalent circuits that perform the same computation but with lower depth, fewer gates, or reduced error sensitivity. In this video, we'll explore various transformation techniques used by quantum compiler engineers.\n\nYou'll learn about:\n\n- Gate cancellation: Identifying and removing cancelling operations\n\n- Gate commutation rules: Reordering gates to enable optimizations\n\n- Circuit identities: Replacing sequences of gates with equivalent shorter sequences\n\n- Qubit mapping and routing: Optimizing for specific hardware connectivity\n\n- Approximate transformations: Trading small accuracy losses for significant performance gains\n\nThese techniques are essential for bridging the gap between theoretical quantum algorithms and practical implementations on real quantum hardware.",
+      content: "Quantum circuits can often be transformed into equivalent circuits that perform the same computation but with lower depth, fewer gates, or reduced error sensitivity. In this video, we'll explore various transformation techniques used by quantum compiler engineers.",
       type: "video",
       duration: 25,
-      points: 20
-      videoUrl:"https://www.youtube.com/watch?v=G5V0lMos_vM"
+      points: 20,
+      videoUrl: "https://www.youtube.com/watch?v=G5V0lMos_vM"
     },
     {
       id: "2.1.6.3",

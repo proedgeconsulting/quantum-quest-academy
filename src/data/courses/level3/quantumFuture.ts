@@ -1,4 +1,3 @@
-
 import { Course } from "@/data/types/courseTypes";
 
 // Level 3 Course: Quantum Future
@@ -57,7 +56,7 @@ export const quantumFutureCourse: Course = {
           content: "The global race for quantum advantage has significant geopolitical implications. This lesson examines how different countries and international bodies are approaching quantum technology governance.\n\nWe'll explore:\n\n1. National Quantum Initiatives: Comparing investment strategies and policy frameworks across the US, China, EU, UK, Canada, Australia, and other countries\n\n2. International Collaboration vs. Competition: The tension between open scientific exchange and national security concerns\n\n3. Standards Development: Efforts to create technical standards for quantum technologies and their implications\n\n4. Regulatory Approaches: Emerging regulations around quantum encryption, quantum communications, and quantum sensing\n\nThe lesson includes case studies of specific policy interventions, interviews with policymakers, and discussion of potential frameworks for international governance of quantum technologies as they mature.",
           type: "video",
           duration: 25,
-          points: 20
+          points: 20,
           videoUrl: "https://www.youtube.com/watch?v=J3lsmO9Z00w"
         }
       ]
@@ -98,7 +97,7 @@ export const quantumFutureCourse: Course = {
           content: "Intellectual property strategy is particularly complex in quantum computing, where fundamental research, hardware innovations, and algorithm developments all present different IP challenges. This lesson explores effective IP strategies for quantum ventures.\n\nWe'll cover:\n\n1. Patent Landscape: Current trends in quantum computing patents across hardware, software, and applications\n\n2. Patent vs. Trade Secret: Strategic considerations for protecting quantum innovations\n\n3. Open Source Approaches: The growing role of open-source in quantum software and their business implications\n\n4. Licensing Models: Creating sustainable revenue from quantum IP\n\n5. Defensive Patenting: Protecting your freedom to operate in the quantum space\n\nThe lesson incorporates expert perspectives from patent attorneys specializing in quantum technology, with practical guidance on building an IP portfolio that supports business goals while navigating the rapidly evolving quantum technology landscape.",
           type: "video",
           duration: 30,
-          points: 25
+          points: 25,
           videoUrl: "https://www.youtube.com/watch?v=g_wgYtGvZTo"
         }
       ]

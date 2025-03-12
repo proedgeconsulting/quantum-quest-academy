@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 3: Quantum Logic Gates
@@ -20,10 +19,10 @@ export const module3: Module = {
       id: "2.1.3.2",
       title: "Multi-Qubit Gates",
       description: "Learn about gates that operate on multiple qubits to create entanglement.",
-      content: "Multi-qubit gates are essential for quantum computation as they create entanglement between qubits and enable complex quantum operations that classical computers cannot efficiently simulate.\n\nIn this video lesson, we'll explore important multi-qubit gates such as:\n\n- CNOT (Controlled-NOT): Flips a target qubit if the control qubit is |1⟩, crucial for creating entanglement\n\n- SWAP: Exchanges the states of two qubits\n\n- Toffoli (CCNOT): A three-qubit gate that enables universal classical computation\n\n- Fredkin (Controlled-SWAP): Swaps two qubits conditionally based on a control qubit\n\n- Controlled phase gates: Apply phase shifts conditionally\n\nWe'll demonstrate how these gates create quantum entanglement, a phenomenon with no classical analog, and show examples of quantum circuits that use multiple qubit gates to perform useful operations.",
+      content: "Multi-qubit gates are essential for quantum computation as they create entanglement between qubits and enable complex quantum operations that classical computers cannot efficiently simulate.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=iMjpZwISIlA"
     },
     {
