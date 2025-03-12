@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
@@ -79,7 +78,6 @@ const ApiSimulator: React.FC<ApiSimulatorProps> = ({
     );
   }
   
-  // Render simulator with data
   return (
     <div style={{ height: typeof height === 'number' ? `${height}px` : height, width }}>
       <div className="p-6 text-center">

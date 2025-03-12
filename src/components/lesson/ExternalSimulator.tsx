@@ -1,83 +1,82 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Lesson } from "@/data/types/courseTypes";
-import IframeSimulator from "./simulators/IframeSimulator";
-import LocalFileSimulator from "./simulators/LocalFileSimulator";
-import ComponentSimulator from "./simulators/ComponentSimulator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApiSimulator from "./simulators/ApiSimulator";
 
-interface ExternalSimulatorProps {
-  lesson: Lesson;
+interface IframeSimulatorProps {
+  url: string;
+  height?: number | string;
+  width?: number | string;
+  title?: string;
 }
 
-const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ lesson }) => {
-  useEffect(() => {
-    // Log for debugging
-    console.log("Rendering external simulator for lesson:", lesson.id);
-  }, [lesson.id]);
+interface ApiSimulatorProps {
+  apiEndpoint: string;
+  height?: number | string;
+  width?: number | string;
+  params?: Record<string, string>;
+}
 
-  if (!lesson.externalSimulator) {
-    return (
-      <Card className="bg-gray-50 dark:bg-gray-900">
-        <CardContent className="p-6 text-center text-gray-500">
-          No external simulator configuration found for this lesson.
-        </CardContent>
-      </Card>
-    );
-  }
+interface ExternalSimulatorProps {
+  simulator: {
+    type: "iframe" | "api";
+    url?: string;
+    apiEndpoint?: string;
+    height?: number | string;
+    width?: number | string;
+    title?: string;
+    params?: Record<string, string>;
+  };
+}
 
-  // Case 1: Handle local file protocol (file:///)
-  if (lesson.externalSimulator.type === "iframe" && 
-      lesson.externalSimulator.url && 
-      lesson.externalSimulator.url.startsWith('file:///')) {
-    return (
-      <Card className="bg-gray-50 dark:bg-gray-900">
-        <CardContent className="p-6">
-          <LocalFileSimulator url={lesson.externalSimulator.url} />
-        </CardContent>
-      </Card>
-    );
-  }
-  
-  // Case 2: Handle iframe-based simulators
-  if (lesson.externalSimulator.type === "iframe" && lesson.externalSimulator.url) {
-    return (
-      <Card className="bg-gray-50 dark:bg-gray-900 overflow-hidden">
-        <CardContent className="p-2 relative">
-          <IframeSimulator lesson={lesson} />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Case 3: Handle component-based simulators
-  if (lesson.externalSimulator.type === "component" && lesson.externalSimulator.componentName) {
-    return (
-      <Card className="bg-gray-50 dark:bg-gray-900">
-        <CardContent className="p-2">
-          <ComponentSimulator lesson={lesson} />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Case 4: Handle API-based simulators
-  if (lesson.externalSimulator.type === "api") {
-    return (
-      <Card className="bg-gray-50 dark:bg-gray-900">
-        <CardContent className="p-6">
-          <ApiSimulator />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // Default case: Unsupported simulator type
+const IframeSimulator: React.FC<IframeSimulatorProps> = ({ url, height = 500, width = "100%", title = "Simulator" }) => {
   return (
-    <Card className="bg-gray-50 dark:bg-gray-900">
-      <CardContent className="p-6 text-center text-gray-500">
-        Unsupported external simulator type.
+    <iframe
+      src={url}
+      height={height}
+      width={width}
+      style={{ border: "none", borderRadius: "8px", overflow: "hidden" }}
+      title={title}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      loading="lazy"
+    />
+  );
+};
+
+const ExternalSimulator: React.FC<ExternalSimulatorProps> = ({ simulator }) => {
+  if (simulator.type === "iframe" && simulator.url) {
+    return (
+      <Card>
+        <CardContent className="p-1 sm:p-2 overflow-hidden">
+          <IframeSimulator 
+            url={simulator.url} 
+            height={simulator.height} 
+            width={simulator.width} 
+            title={simulator.title}
+          />
+        </CardContent>
+      </Card>
+    );
+  } else if (simulator.type === "api" && simulator.apiEndpoint) {
+    return (
+      <Card>
+        <CardContent className="p-1 sm:p-2 overflow-hidden">
+          <ApiSimulator 
+            apiEndpoint={simulator.apiEndpoint}
+            height={simulator.height}
+            width={simulator.width}
+            params={simulator.params}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <p className="text-center text-muted-foreground">Simulator type not supported or configuration incomplete.</p>
       </CardContent>
     </Card>
   );
