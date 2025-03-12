@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Error Correction Olympics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .event {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .score {
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Error Correction Olympics</h1>
+    <p>Welcome to the Quantum Error Correction Olympics! Test your skills in quantum error correction through four exciting events.</p>
+    <div id="totalScore">Total Score: <span class="score">0</span></div>
+
+    <div class="event">
+        <h2>1. Error Detection Sprint</h2>
+        <p>Click the button containing the error bit (1) as fast as possible!</p>
+        <div id="sprintBits"></div>
+        <div id="sprintResult"></div>
+        <button onclick="startSprint()">Start Sprint</button>
+    </div>
+
+    <div class="event">
+        <h2>2. Syndrome Decoding Relay</h2>
+        <p>Select the correct correction for the syndrome: <span id="syndrome"></span></p>
+        <div id="syndromeOptions"></div>
+        <div id="syndromeResult"></div>
+        <button onclick="startSyndrome()">New Syndrome</button>
+    </div>
+
+    <div class="event">
+        <h2>3. Quantum Code Construction Challenge</h2>
+        <p>Create a code with distance ≥ 2 by selecting bits (need at least 3 different bits)</p>
+        <div id="codeBits">
+            <input type="checkbox" id="bit1"> Bit 1
+            <input type="checkbox" id="bit2"> Bit 2
+            <input type="checkbox" id="bit3"> Bit 3
+            <input type="checkbox" id="bit4"> Bit 4
+        </div>
+        <button onclick="checkCode()">Submit Code</button>
+        <div id="codeResult"></div>
+    </div>
+
+    <div class="event">
+        <h2>4. Fault-Tolerance Marathon</h2>
+        <p>Keep the quantum state alive by correcting errors! Score: <span id="marathonScore">0</span></p>
+        <div id="marathonState"></div>
+        <button onclick="correctError()">Correct Error</button>
+        <button onclick="startMarathon()">Start Marathon</button>
+        <button onclick="stopMarathon()">Stop Marathon</button>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let marathonInterval;
+        let marathonScore = 0;
+
+        function updateTotalScore(points) {
+            totalScore += points;
+            document.getElementById('totalScore').querySelector('.score').textContent = totalScore;
+        }
+
+        // Error Detection Sprint
+        function startSprint() {
+            const bits = [0, 0, 0, 0];
+            const errorPos = Math.floor(Math.random() * 4);
+            bits[errorPos] = 1;
+            
+            const sprintDiv = document.getElementById('sprintBits');
+            sprintDiv.innerHTML = '';
+            bits.forEach((bit, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = bit;
+                btn.onclick = () => checkSprint(index, errorPos);
+                sprintDiv.appendChild(btn);
+            });
+            document.getElementById('sprintResult').textContent = '';
+        }
+
+        function checkSprint(selected, correct) {
+            const result = document.getElementById('sprintResult');
+            if (selected === correct) {
+                result.textContent = 'Correct! +5 points';
+                updateTotalScore(5);
+            } else {
+                result.textContent = 'Wrong! Try again.';
+            }
+        }
+
+        // Syndrome Decoding Relay
+        function startSyndrome() {
+            const syndrome = Math.floor(Math.random() * 4);
+            document.getElementById('syndrome').textContent = syndrome;
+            
+            const optionsDiv = document.getElementById('syndromeOptions');
+            optionsDiv.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = `Correct Bit ${i}`;
+                btn.onclick = () => checkSyndrome(i, syndrome);
+                optionsDiv.appendChild(btn);
+            }
+            document.getElementById('syndromeResult').textContent = '';
+        }
+
+        function checkSyndrome(selected, correct) {
+            const result = document.getElementById('syndromeResult');
+            if (selected === correct) {
+                result.textContent = 'Correct correction! +5 points';
+                updateTotalScore(5);
+            } else {
+                result.textContent = 'Incorrect correction.';
+            }
+        }
+
+        // Quantum Code Construction Challenge
+        function checkCode() {
+            const bits = [
+                document.getElementById('bit1').checked,
+                document.getElementById('bit2').checked,
+                document.getElementById('bit3').checked,
+                document.getElementById('bit4').checked
+            ];
+            const selected = bits.filter(b => b).length;
+            const result = document.getElementById('codeResult');
+            
+            if (selected >= 3) {
+                result.textContent = 'Valid code! Distance ≥ 2. +10 points';
+                updateTotalScore(10);
+            } else {
+                result.textContent = 'Invalid code. Need at least 3 bits.';
+            }
+        }
+
+        // Fault-Tolerance Marathon
+        function startMarathon() {
+            marathonScore = 0;
+            document.getElementById('marathonScore').textContent = marathonScore;
+            document.getElementById('marathonState').textContent = 'Errors: 0';
+            clearInterval(marathonInterval);
+            marathonInterval = setInterval(() => {
+                const state = document.getElementById('marathonState');
+                let errors = parseInt(state.textContent.split(': ')[1]) + 1;
+                state.textContent = `Errors: ${errors}`;
+                if (errors > 5) {
+                    stopMarathon();
+                    alert('Quantum state collapsed! Final marathon score: ' + marathonScore);
+                }
+            }, 2000);
+        }
+
+        function correctError() {
+            const state = document.getElementById('marathonState');
+            let errors = parseInt(state.textContent.split(': ')[1]);
+            if (errors > 0) {
+                errors--;
+                marathonScore += 2;
+                state.textContent = `Errors: ${errors}`;
+                document.getElementById('marathonScore').textContent = marathonScore;
+            }
+        }
+
+        function stopMarathon() {
+            clearInterval(marathonInterval);
+            updateTotalScore(marathonScore);
+            document.getElementById('marathonState').textContent = 'Marathon stopped';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Guardians: Error Correction Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            gap: 5px;
+            margin: 20px 0;
+        }
+        .qubit {
+            width: 100px;
+            height: 80px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            cursor: pointer;
+        }
+        .error {
+            background-color: #ffcccc;
+        }
+        .corrected {
+            background-color: #ccffcc;
+        }
+        #roles, #controls {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 0 5px;
+        }
+        #score {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Quantum Guardians</h1>
+        <p>Work together to protect quantum information from errors!</p>
+        <div id="score">Score: <span id="score-value">0</span>/25</div>
+        
+        <div id="roles">
+            <h3>Your Role: <span id="current-role">Encoder</span></div>
+            <button onclick="changeRole()">Switch Role</button>
+        </div>
+
+        <div id="game-board"></div>
+
+        <div id="controls">
+            <button onclick="encodeQubit()">Encode</button>
+            <button onclick="measureSyndrome()">Measure Syndrome</button>
+            <button onclick="correctError()">Correct Error</button>
+            <button onclick="decodeQubit()">Decode</button>
+            <button onclick="introduceError()">Simulate Error</button>
+        </div>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const roles = ['Encoder', 'Syndrome Extractor', 'Error Corrector', 'Decoder'];
+        let currentRoleIndex = 0;
+        let score = 0;
+        let qubits = Array(5).fill({ state: 'OK', encoded: false, syndrome: false, corrected: false });
+
+        // Initialize game board
+        function initBoard() {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            qubits.forEach((qubit, index) => {
+                const div = document.createElement('div');
+                div.className = 'qubit';
+                div.id = `qubit-${index}`;
+                div.innerText = `Qubit ${index + 1}\n${qubit.state}`;
+                if (qubit.state === 'ERROR') div.classList.add('error');
+                if (qubit.corrected) div.classList.add('corrected');
+                board.appendChild(div);
+            });
+        }
+
+        // Update status message
+        function updateStatus(message) {
+            document.getElementById('status').innerText = message;
+        }
+
+        // Change player role
+        function changeRole() {
+            currentRoleIndex = (currentRoleIndex + 1) % roles.length;
+            document.getElementById('current-role').innerText = roles[currentRoleIndex];
+            updateStatus(`Switched to ${roles[currentRoleIndex]} role`);
+        }
+
+        // Game mechanics
+        function encodeQubit() {
+            if (roles[currentRoleIndex] !== 'Encoder') {
+                updateStatus('Only Encoder can perform this action!');
+                return;
+            }
+            qubits.forEach(q => q.encoded = true);
+            updateStatus('Qubits encoded successfully');
+            initBoard();
+        }
+
+        function measureSyndrome() {
+            if (roles[currentRoleIndex] !== 'Syndrome Extractor') {
+                updateStatus('Only Syndrome Extractor can perform this action!');
+                return;
+            }
+            qubits.forEach(q => q.syndrome = true);
+            updateStatus('Syndrome measured - check for errors');
+            initBoard();
+        }
+
+        function correctError() {
+            if (roles[currentRoleIndex] !== 'Error Corrector') {
+                updateStatus('Only Error Corrector can perform this action!');
+                return;
+            }
+            let corrected = false;
+            qubits.forEach((q, i) => {
+                if (q.state === 'ERROR') {
+                    q.state = 'OK';
+                    q.corrected = true;
+                    corrected = true;
+                    score += 5;
+                }
+            });
+            document.getElementById('score-value').innerText = score;
+            updateStatus(corrected ? 'Errors corrected!' : 'No errors to correct');
+            initBoard();
+            checkWin();
+        }
+
+        function decodeQubit() {
+            if (roles[currentRoleIndex] !== 'Decoder') {
+                updateStatus('Only Decoder can perform this action!');
+                return;
+            }
+            updateStatus('Qubits decoded successfully');
+            score += 5;
+            document.getElementById('score-value').innerText = score;
+            checkWin();
+        }
+
+        function introduceError() {
+            const randomIndex = Math.floor(Math.random() * qubits.length);
+            qubits[randomIndex].state = 'ERROR';
+            updateStatus(`Error introduced in Qubit ${randomIndex + 1}!`);
+            initBoard();
+        }
+
+        function checkWin() {
+            if (score >= 25) {
+                updateStatus('Congratulations! Perfect score achieved!');
+                document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            }
+        }
+
+        // Start the game
+        initBoard();
+        updateStatus('Welcome to Quantum Guardians! Start by encoding the qubits.');
+    </script>
+</body>
+</html>

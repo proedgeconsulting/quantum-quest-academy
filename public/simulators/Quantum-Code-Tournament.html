@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Code Tournament Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .controls, .results {
+            margin: 20px 0;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        .metric {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Code Tournament Simulator</h1>
+        <p>Design your quantum error correction code and compete in the tournament!</p>
+
+        <div class="controls">
+            <h3>Your Code Parameters</h3>
+            <label>Qubits (3-15): <input type="number" id="qubits" min="3" max="15" value="5"></label><br>
+            <label>Error Types (1-5): <input type="number" id="errorTypes" min="1" max="5" value="2"></label><br>
+            <label>Decoding Steps (1-10): <input type="number" id="decodeSteps" min="1" max="10" value="3"></label><br>
+            <button onclick="startTournament()">Start Tournament</button>
+            <button onclick="resetSimulator()">Reset</button>
+        </div>
+
+        <div class="results" id="results">
+            <h3>Tournament Results</h3>
+            <div id="roundResults"></div>
+            <canvas id="scoreChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        class QuantumCode {
+            constructor(qubits, errorTypes, decodeSteps) {
+                this.qubits = qubits;
+                this.errorTypes = errorTypes;
+                this.decodeSteps = decodeSteps;
+                this.scores = { efficiency: 0, power: 0, speed: 0, adaptability: 0 };
+            }
+
+            simulateRound(round) {
+                // Simulate different aspects based on round
+                this.scores.efficiency = Math.min(100, (15 - this.qubits) * 10);
+                this.scores.power = Math.min(100, this.errorTypes * 20);
+                this.scores.speed = Math.min(100, (10 - this.decodeSteps) * 12);
+                this.scores.adaptability = Math.min(100, (this.errorTypes * 15) + (Math.random() * 20));
+                
+                // Add some randomness to make it interesting
+                Object.keys(this.scores).forEach(metric => {
+                    this.scores[metric] = Math.max(0, this.scores[metric] + (Math.random() * 20 - 10));
+                });
+            }
+
+            getTotalScore() {
+                return Object.values(this.scores).reduce((sum, score) => sum + score, 0) / 4;
+            }
+        }
+
+        let currentCode = null;
+        let round = 0;
+
+        function startTournament() {
+            const qubits = parseInt(document.getElementById('qubits').value);
+            const errorTypes = parseInt(document.getElementById('errorTypes').value);
+            const decodeSteps = parseInt(document.getElementById('decodeSteps').value);
+
+            if (round === 0) {
+                currentCode = new QuantumCode(qubits, errorTypes, decodeSteps);
+            }
+
+            round++;
+            if (round > 4) {
+                alert('Tournament Complete! Start a new one by clicking Reset.');
+                return;
+            }
+
+            currentCode.simulateRound(round);
+            displayResults();
+            drawChart();
+        }
+
+        function displayResults() {
+            const resultsDiv = document.getElementById('roundResults');
+            let html = `<h4>Round ${round} Results</h4>`;
+            
+            html += `<div class="metric">Efficiency: ${currentCode.scores.efficiency.toFixed(1)}%</div>`;
+            html += `<div class="metric">Power: ${currentCode.scores.power.toFixed(1)}%</div>`;
+            html += `<div class="metric">Speed: ${currentCode.scores.speed.toFixed(1)}%</div>`;
+            html += `<div class="metric">Adaptability: ${currentCode.scores.adaptability.toFixed(1)}%</div>`;
+            html += `<div class="metric">Total Score: ${currentCode.getTotalScore().toFixed(1)}%</div>`;
+
+            if (round === 4) {
+                html += '<p><strong>Final Challenge Complete!</strong> Your code faced realistic quantum noise!</p>';
+            }
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('scoreChart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const metrics = Object.keys(currentCode.scores);
+            const values = Object.values(currentCode.scores);
+            const barWidth = 80;
+            const maxHeight = 150;
+
+            metrics.forEach((metric, i) => {
+                const height = (values[i] / 100) * maxHeight;
+                ctx.fillStyle = `hsl(${i * 90}, 70%, 50%)`;
+                ctx.fillRect(i * (barWidth + 10) + 20, maxHeight - height + 25, barWidth, height);
+                
+                // Labels
+                ctx.fillStyle = 'black';
+                ctx.font = '12px Arial';
+                ctx.fillText(metric.slice(0, 3), i * (barWidth + 10) + 40, maxHeight + 40);
+                ctx.fillText(values[i].toFixed(0), i * (barWidth + 10) + 40, maxHeight - height + 20);
+            });
+        }
+
+        function resetSimulator() {
+            round = 0;
+            currentCode = null;
+            document.getElementById('roundResults').innerHTML = '';
+            const canvas = document.getElementById('scoreChart');
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>

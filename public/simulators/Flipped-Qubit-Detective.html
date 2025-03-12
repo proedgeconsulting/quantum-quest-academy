@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Case of the Flipped Qubit</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            background: #1a1a1a; 
+            color: #fff; 
+            padding: 20px;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .qubits { 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            margin: 40px 0;
+        }
+        .qubit { 
+            width: 80px; 
+            height: 80px; 
+            border: 2px solid #fff; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+        .qubit.suspected { 
+            border-color: #ff4444; 
+            box-shadow: 0 0 15px #ff4444;
+        }
+        .qubit.revealed { 
+            background: #333; 
+        }
+        .controls { 
+            text-align: center; 
+            margin: 20px 0; 
+        }
+        button { 
+            background: #444; 
+            color: #fff; 
+            border: 1px solid #666; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer;
+        }
+        button:hover { 
+            background: #555; 
+        }
+        .clue-log { 
+            background: #222; 
+            padding: 20px; 
+            min-height: 100px; 
+            margin-top: 30px;
+            border: 1px solid #333;
+        }
+        .parity-check { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 The Case of the Flipped Qubit</h1>
+        <p>Noise Monster has flipped one of these qubits! Use parity checks to find the culprit:</p>
+        
+        <div class="qubits">
+            <div class="qubit" data-qubit="1">Q1</div>
+            <div class="qubit" data-qubit="2">Q2</div>
+            <div class="qubit" data-qubit="3">Q3</div>
+        </div>
+
+        <div class="parity-check">
+            <button onclick="performParityCheck(1,2)">Check Q1 & Q2</button>
+            <button onclick="performParityCheck(1,3)">Check Q1 & Q3</button>
+            <button onclick="performParityCheck(2,3)">Check Q2 & Q3</button>
+        </div>
+
+        <div class="controls">
+            <button onclick="makeAccusation()">Make Accusation</button>
+            <button onclick="resetCase()">New Case</button>
+        </div>
+
+        <div class="clue-log" id="clueLog">
+            <p>🔦 Initial Report: One qubit has been flipped! Start investigating...</p>
+        </div>
+    </div>
+
+    <script>
+        let flippedQubit = Math.floor(Math.random() * 3) + 1;
+        let checksPerformed = 0;
+        const maxChecks = 3;
+
+        function performParityCheck(q1, q2) {
+            if(checksPerformed >= maxChecks) {
+                addClue("⚠️ No more checks allowed! Make your accusation!");
+                return;
+            }
+
+            const result = (q1 === flippedQubit || q2 === flippedQubit) && 
+                         !(q1 === flippedQubit && q2 === flippedQubit);
+            
+            const parity = result ? "ODD 🔴" : "EVEN 🟢";
+            addClue(`🔎 Parity check Q${q1}-Q${q2}: ${parity}`);
+            checksPerformed++;
+        }
+
+        function addClue(message) {
+            const log = document.getElementById('clueLog');
+            log.innerHTML += `<p>${message}</p>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function makeAccusation() {
+            const accusation = prompt("Which qubit is flipped? (1, 2, or 3):");
+            
+            if(accusation == flippedQubit) {
+                document.querySelector(`[data-qubit="${flippedQubit}"]`).classList.add('revealed');
+                addClue("🎉 Case Solved! You caught the Noise Monster!");
+            } else {
+                addClue("❌ Wrong answer! Keep investigating...");
+            }
+        }
+
+        function resetCase() {
+            flippedQubit = Math.floor(Math.random() * 3) + 1;
+            checksPerformed = 0;
+            document.getElementById('clueLog').innerHTML = 
+                '<p>🔦 New Case: Another qubit has been flipped!</p>';
+            document.querySelectorAll('.qubit').forEach(q => {
+                q.classList.remove('revealed', 'suspected');
+            });
+        }
+
+        // Event listeners for qubit inspection
+        document.querySelectorAll('.qubit').forEach(qubit => {
+            qubit.addEventListener('click', function() {
+                this.classList.toggle('suspected');
+                const qNum = this.dataset.qubit;
+                addClue(this.classList.contains('suspected') 
+                    ? `🔍 Marked Q${qNum} as suspicious`
+                    : `🔍 Removed suspicion from Q${qNum}`);
+            });
+        });
+    </script>
+</body>
+</html>

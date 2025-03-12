@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Message Rescue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #0a0a23;
+            color: #fff;
+        }
+        .console {
+            background: #1a1a3d;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            background: #4a4ae6;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        button:hover {
+            background: #5a5af6;
+        }
+        #messageDisplay {
+            font-family: monospace;
+            color: #0f0;
+        }
+        .status {
+            color: #ff6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Message Rescue</h1>
+    <div class="console">
+        <p>Mission: Protect a quantum message through cosmic radiation!</p>
+        <p class="status" id="status">Status: Mission Ready</p>
+    </div>
+
+    <div class="console">
+        <h3>Message Control</h3>
+        <p>Original Message: <span id="originalMessage">Hello Galaxy</span></p>
+        <p>Received Message: <span id="messageDisplay">---</span></p>
+        
+        <h4>Choose Error Correction Code:</h4>
+        <button onclick="startMission('bitflip')">Bit-Flip Code</button>
+        <button onclick="startMission('phaseflip')">Phase-Flip Code</button>
+        <button onclick="startMission('shor')">Shor's Code</button>
+        
+        <p id="missionLog"></p>
+    </div>
+
+    <script>
+        const originalMessage = "Hello Galaxy";
+        let currentMessage = originalMessage;
+        
+        function updateDisplay(message) {
+            document.getElementById('messageDisplay').textContent = message;
+        }
+
+        function updateStatus(status) {
+            document.getElementById('status').textContent = `Status: ${status}`;
+        }
+
+        function log(message) {
+            document.getElementById('missionLog').textContent += message + '\n';
+        }
+
+        function introduceErrors(type) {
+            let corrupted = currentMessage.split('');
+            
+            // Randomly corrupt 1-2 characters based on error type
+            for (let i = 0; i < 2; i++) {
+                let pos = Math.floor(Math.random() * corrupted.length);
+                if (type === 'bitflip') {
+                    corrupted[pos] = String.fromCharCode(corrupted[pos].charCodeAt(0) + 1);
+                } else if (type === 'phaseflip') {
+                    corrupted[pos] = corrupted[pos].toUpperCase();
+                } else {
+                    corrupted[pos] = Math.random() > 0.5 ? '*' : corrupted[pos];
+                }
+            }
+            return corrupted.join('');
+        }
+
+        function correctErrors(message, code) {
+            // Simplified error correction simulation
+            let successChance = {
+                'bitflip': 0.8,
+                'phaseflip': 0.7,
+                'shor': 0.95
+            };
+            
+            if (Math.random() < successChance[code]) {
+                return originalMessage;
+            }
+            return message;
+        }
+
+        function startMission(code) {
+            document.getElementById('missionLog').textContent = '';
+            updateStatus('Transmitting through cosmic radiation...');
+            
+            setTimeout(() => {
+                // Stage 1: Encoding
+                log('Encoding message with ' + code + '...')
+                updateDisplay('ENCODING...');
+                
+                setTimeout(() => {
+                    // Stage 2: Transmission with errors
+                    log('Transmitting through dangerous space region...');
+                    let corruptedMessage = introduceErrors(code);
+                    updateDisplay(corruptedMessage);
+                    
+                    setTimeout(() => {
+                        // Stage 3: Decoding and correction
+                        log('Attempting error correction...');
+                        let finalMessage = correctErrors(corruptedMessage, code);
+                        updateDisplay(finalMessage);
+                        
+                        if (finalMessage === originalMessage) {
+                            updateStatus('Mission Success!');
+                            log('Quantum message successfully delivered!');
+                        } else {
+                            updateStatus('Mission Failed');
+                            log('Message corruption detected - try a different code!');
+                        }
+                    }, 1500);
+                }, 1500);
+            }, 1000);
+        }
+
+        // Initial setup
+        updateDisplay('---');
+    </script>
+</body>
+</html>
