@@ -1,3 +1,4 @@
+
 import { Course } from "@/data/types/courseTypes";
 
 // Level 3 Course: Quantum Future
@@ -80,14 +81,14 @@ export const quantumFutureCourse: Course = {
           description: "Interactive simulation of launching and growing a quantum computing venture.",
           content: "In this interactive lesson, you'll step into the role of a quantum entrepreneur making strategic decisions to launch and grow a successful quantum computing startup. The simulator presents you with realistic scenarios and choices that impact your company's trajectory.\n\nThe simulation covers:\n\n1. Market Positioning: Deciding between hardware, software, or application focus\n\n2. Funding Strategy: Choosing between venture capital, grants, strategic partnerships, or bootstrapping\n\n3. Talent Acquisition: Building your technical and business teams\n\n4. Technology Roadmap: Setting realistic development milestones\n\n5. Go-to-Market Strategy: Selecting target industries and clients\n\nAs you navigate through the simulation, you'll receive feedback on your decisions and see how they affect your company's development, funding status, and market position over a simulated five-year period.",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-music-composer.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 35,
-          points: 30,
-          interactiveOptions: {
-            simulatorType: "quantumVenture",
-            timelineRange: [1, 5],
-            distributionTypes: ["hardware", "software", "applications", "consulting"]
-          }
+          points: 30
         },
         {
           id: "3.3.3.3",
@@ -120,14 +121,14 @@ export const quantumFutureCourse: Course = {
           description: "Interactive exploration of quantum readiness across different countries.",
           content: "Nations around the world are investing in quantum technologies at different rates and with varying strategies. This interactive tool allows you to explore and compare quantum development indicators across countries and regions.\n\nThe Quantum Development Index incorporates metrics including:\n\n1. Research Output: Published papers and citations in quantum science\n\n2. Patent Activity: Quantum technology patent filings by country\n\n3. Investment Levels: Government and private funding for quantum research and development\n\n4. Talent Pipeline: Education programs and workforce development in quantum technologies\n\n5. Infrastructure Development: Quantum computing centers and facilities\n\n6. Commercial Activity: Quantum startups and corporate initiatives\n\nExplore current standings, historical trends, and use the simulation features to model how policy changes might affect a country's quantum technology position in the future.",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-pattern-detector.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 30,
-          points: 25,
-          interactiveOptions: {
-            simulatorType: "quantumDevelopment",
-            impactCategories: ["research", "patents", "investment", "talent", "infrastructure", "commercial"],
-            policyOptions: ["education", "funding", "privatization", "international collaboration"]
-          }
+          points: 25
         },
         {
           id: "3.3.4.3",
@@ -135,14 +136,14 @@ export const quantumFutureCourse: Course = {
           description: "Exploring alternative futures for quantum technology development and impact.",
           content: "The future of quantum technology is not predetermined—it will be shaped by technical breakthroughs, policy decisions, market forces, and social responses. This interactive lesson applies scenario planning techniques to explore alternative quantum futures.\n\nYou'll engage with four detailed scenarios for how quantum technologies might develop and impact society over the next 20 years:\n\n1. Quantum Revolution: Rapid breakthroughs lead to widespread disruption across industries\n\n2. Quantum Evolution: Steady, incremental progress with focused applications in specific domains\n\n3. Quantum Divide: Asymmetric access to quantum capabilities creates new forms of inequality\n\n4. Quantum Delay: Technical obstacles prove more challenging than anticipated, delaying widespread impact\n\nFor each scenario, you'll explore the implications for different stakeholders—governments, businesses, research institutions, and individuals—and discuss potential preparation strategies. The lesson emphasizes developing robust approaches that can succeed across multiple possible futures.",
           type: "interactive",
-          interactiveComponent: "QuantumSimulator",
+          externalSimulator: {
+            type: "iframe",
+            url: "/simulators/quantum-neural-network-trainer.html",
+            height: 600,
+            width: "100%"
+          },
           duration: 35,
-          points: 30,
-          interactiveOptions: {
-            simulatorType: "quantumScenarios",
-            timelineRange: [5, 20],
-            distributionTypes: ["revolution", "evolution", "divide", "delay"]
-          }
+          points: 30
         }
       ]
     }
