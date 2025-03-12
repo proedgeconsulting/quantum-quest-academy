@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Maze Runner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 1px solid #000;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Maze Runner</h1>
+        <p>Train your quantum AI to navigate the maze!<br>
+           Watch it explore paths and learn using quantum properties.</p>
+
+        <!-- Maze Canvas -->
+        <canvas id="mazeCanvas" width="400" height="400"></canvas>
+        <br>
+        <button onclick="resetMaze()">Reset Maze</button>
+        <button onclick="trainAgent()">Train Agent</button>
+        <button onclick="runAgent()">Run Agent</button>
+
+        <!-- Output -->
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('mazeCanvas');
+        const ctx = canvas.getContext('2d');
+        const output = document.getElementById('output');
+        const gridSize = 10;
+        const cellSize = 400 / gridSize;
+
+        // Maze (1 = wall, 0 = path, 2 = start, 3 = goal)
+        let maze = [];
+        let agentPos = { x: 0, y: 0 };
+        let qTable = {}; // Quantum Q-table for reinforcement learning
+        let trainingSteps = 0;
+
+        // Initialize maze
+        function initMaze() {
+            maze = [
+                [2, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                [1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+                [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+                [1, 1, 1, 1, 0, 1, 0, 0, 0, 1],
+                [1, 0, 0, 1, 0, 1, 1, 1, 0, 1],
+                [1, 0, 1, 1, 0, 0, 0, 0, 0, 3],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ];
+            agentPos = { x: 0, y: 0 };
+            qTable = {};
+            trainingSteps = 0;
+            drawMaze();
+        }
+
+        // Draw the maze
+        function drawMaze() {
+            ctx.clearRect(0, 0, 400, 400);
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    if (maze[y][x] === 1) ctx.fillStyle = "#333"; // Wall
+                    else if (maze[y][x] === 2) ctx.fillStyle = "#00F"; // Start
+                    else if (maze[y][x] === 3) ctx.fillStyle = "#F00"; // Goal
+                    else ctx.fillStyle = "#FFF"; // Path
+                    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                }
+            }
+            // Draw agent
+            ctx.fillStyle = "rgba(0, 255, 0, 0.7)";
+            ctx.fillRect(agentPos.x * cellSize, agentPos.y * cellSize, cellSize, cellSize);
+        }
+
+        // Quantum exploration effect
+        function quantumExplore() {
+            return Math.random() + (Math.random() - 0.5) * 0.5; // Simulate superposition
+        }
+
+        // Get possible moves
+        function getMoves(x, y) {
+            const moves = [];
+            if (x > 0 && maze[y][x - 1] !== 1) moves.push('left');
+            if (x < gridSize - 1 && maze[y][x + 1] !== 1) moves.push('right');
+            if (y > 0 && maze[y - 1][x] !== 1) moves.push('up');
+            if (y < gridSize - 1 && maze[y + 1][x] !== 1) moves.push('down');
+            return moves;
+        }
+
+        // Train the agent
+        function trainAgent() {
+            trainingSteps++;
+            const state = `${agentPos.x},${agentPos.y}`;
+            if (!qTable[state]) qTable[state] = { left: 0, right: 0, up: 0, down: 0 };
+
+            const moves = getMoves(agentPos.x, agentPos.y);
+            const move = moves[Math.floor(quantumExplore() * moves.length)];
+            let reward = -0.1; // Small penalty for each step
+
+            // Move agent
+            const newPos = { x: agentPos.x, y: agentPos.y };
+            if (move === 'left') newPos.x--;
+            if (move === 'right') newPos.x++;
+            if (move === 'up') newPos.y--;
+            if (move === 'down') newPos.y++;
+
+            // Check for goal
+            if (maze[newPos.y][newPos.x] === 3) {
+                reward = 10;
+                agentPos = { x: 0, y: 0 }; // Reset to start
+            } else {
+                agentPos = newPos;
+            }
+
+            // Update Q-table with quantum effect
+            qTable[state][move] += 0.1 * (reward + quantumExplore() * 0.9 * Math.max(...Object.values(qTable[state])));
+            drawMaze();
+            output.innerHTML = `Training... Steps: ${trainingSteps}<br>Quantum efficiency: ${Math.min(95, trainingSteps * 2)}%`;
+        }
+
+        // Run the trained agent
+        function runAgent() {
+            let steps = 0;
+            agentPos = { x: 0, y: 0 };
+            function step() {
+                if (maze[agentPos.y][agentPos.x] === 3) {
+                    output.innerHTML = `Goal reached in ${steps} steps!<br>Training steps: ${trainingSteps}`;
+                    return;
+                }
+                const state = `${agentPos.x},${agentPos.y}`;
+                if (!qTable[state]) qTable[state] = { left: 0, right: 0, up: 0, down: 0 };
+                const moves = getMoves(agentPos.x, agentPos.y);
+                const move = moves.reduce((best, m) => qTable[state][m] > qTable[state][best] ? m : best, moves[0]);
+                
+                if (move === 'left') agentPos.x--;
+                if (move === 'right') agentPos.x++;
+                if (move === 'up') agentPos.y--;
+                if (move === 'down') agentPos.y++;
+                steps++;
+                drawMaze();
+                if (steps < 100) setTimeout(step, 100); // Animate
+                else output.innerHTML = "Agent got stuck! Try training more.";
+            }
+            step();
+        }
+
+        // Reset maze
+        function resetMaze() {
+            initMaze();
+            output.innerHTML = "Maze reset! Start training your quantum AI.";
+        }
+
+        // Initial setup
+        initMaze();
+        output.innerHTML = "Start by training your quantum AI!";
+    </script>
+</body>
+</html>

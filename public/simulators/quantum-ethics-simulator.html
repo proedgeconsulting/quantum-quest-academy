@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Ethics Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        #scenario, #results {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .choice {
+            background: #ecf0f1;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        #progress {
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Ethics Simulator</h1>
+    <div id="scenario">
+        <h3>Scenario <span id="scenarioNum">1</span></h3>
+        <p id="scenarioText">Loading scenario...</p>
+        <div id="choices"></div>
+    </div>
+    <div id="results" style="display: none;">
+        <h3>Simulation Results</h3>
+        <p id="resultText"></p>
+        <button onclick="restart()">Play Again</button>
+    </div>
+    <div id="progress">Progress: <span id="currentStep">0</span>/<span id="totalSteps">3</span></div>
+
+    <script>
+        const scenarios = [
+            {
+                text: "A quantum AI can predict diseases with 95% accuracy and recommend treatments. Should it be allowed to make medical decisions without human oversight?",
+                choices: [
+                    { text: "Yes, trust the AI", impact: { publicTrust: -10, efficiency: 20, ethics: -15 } },
+                    { text: "No, require human oversight", impact: { publicTrust: 10, efficiency: -10, ethics: 15 } }
+                ]
+            },
+            {
+                text: "A quantum AI service offers personalized recommendations but requires access to all your personal data. How much privacy should people give up?",
+                choices: [
+                    { text: "Full access for best results", impact: { privacy: -20, efficiency: 15, ethics: -10 } },
+                    { text: "Limited access, less accuracy", impact: { privacy: 15, efficiency: -10, ethics: 10 } }
+                ]
+            },
+            {
+                text: "A quantum AI could revolutionize military strategy. Should it be used in military applications?",
+                choices: [
+                    { text: "Yes, for national security", impact: { safety: 20, ethics: -20, publicTrust: -15 } },
+                    { text: "No, too dangerous", impact: { safety: -10, ethics: 20, publicTrust: 10 } }
+                ]
+            }
+        ];
+
+        let currentScenario = 0;
+        let scores = { publicTrust: 50, efficiency: 50, ethics: 50, privacy: 50, safety: 50 };
+
+        function loadScenario() {
+            const scenario = scenarios[currentScenario];
+            document.getElementById('scenarioNum').textContent = currentScenario + 1;
+            document.getElementById('scenarioText').textContent = scenario.text;
+            document.getElementById('currentStep').textContent = currentScenario + 1;
+
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            scenario.choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.textContent = choice.text;
+                button.onclick = () => makeChoice(index);
+                choicesDiv.appendChild(button);
+            });
+        }
+
+        function makeChoice(choiceIndex) {
+            const impact = scenarios[currentScenario].choices[choiceIndex].impact;
+            for (let key in impact) {
+                scores[key] = Math.max(0, Math.min(100, scores[key] + impact[key]));
+            }
+
+            currentScenario++;
+            if (currentScenario < scenarios.length) {
+                loadScenario();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('scenario').style.display = 'none';
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+
+            let resultText = "Your decisions shaped the world:\n";
+            resultText += `- Public Trust: ${scores.publicTrust}%\n`;
+            resultText += `- Efficiency: ${scores.efficiency}%\n`;
+            resultText += `- Ethics: ${scores.ethics}%\n`;
+            resultText += `- Privacy: ${scores.privacy}%\n`;
+            resultText += `- Safety: ${scores.safety}%\n\n`;
+
+            if (scores.ethics > 70) {
+                resultText += "Your ethical stance earned widespread respect, though some efficiency was sacrificed.";
+            } else if (scores.efficiency > 70) {
+                resultText += "Your focus on efficiency led to breakthroughs, but at what cost to ethics?";
+            } else if (scores.privacy < 30) {
+                resultText += "Privacy eroded significantly under your choices.";
+            } else {
+                resultText += "You maintained a balanced approach, with no extreme outcomes.";
+            }
+
+            document.getElementById('resultText').textContent = resultText;
+        }
+
+        function restart() {
+            currentScenario = 0;
+            scores = { publicTrust: 50, efficiency: 50, ethics: 50, privacy: 50, safety: 50 };
+            document.getElementById('scenario').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            loadScenario();
+        }
+
+        // Initialize
+        document.getElementById('totalSteps').textContent = scenarios.length;
+        loadScenario();
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Pattern Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .toolbox {
+            width: 200px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .quantum-circuit {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+        .component {
+            padding: 10px;
+            margin: 5px 0;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: move;
+            user-select: none;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            min-height: 300px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .dropped-component {
+            background: #2196F3;
+            margin: 5px;
+            padding: 10px;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Pattern Detector</h1>
+    <div class="container">
+        <div class="toolbox">
+            <h3>Quantum Components</h3>
+            <div class="component" draggable="true" data-type="hadamard">Hadamard Gate</div>
+            <div class="component" draggable="true" data-type="cnot">CNOT Gate</div>
+            <div class="component" draggable="true" data-type="measure">Measurement</div>
+            <div class="component" draggable="true" data-type="xgate">X Gate</div>
+        </div>
+        <div class="quantum-circuit">
+            <h3>Quantum Circuit</h3>
+            <div class="drop-zone" id="circuitArea"></div>
+            <div class="controls">
+                <button onclick="runSimulation()">Run Pattern Detection</button>
+                <button onclick="resetCircuit()">Reset</button>
+            </div>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const circuitArea = document.getElementById('circuitArea');
+        const resultDiv = document.getElementById('result');
+        let circuitComponents = [];
+
+        // Drag and drop functionality
+        document.querySelectorAll('.component').forEach(component => {
+            component.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.dataset.type);
+            });
+        });
+
+        circuitArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        circuitArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const type = e.dataTransfer.getData('text/plain');
+            const element = document.createElement('div');
+            element.className = 'dropped-component';
+            element.textContent = type.replace(/([A-Z])/g, ' $1').trim();
+            element.dataset.type = type;
+            circuitArea.appendChild(element);
+            circuitComponents.push(type);
+        });
+
+        // Simulation logic
+        function runSimulation() {
+            if (circuitComponents.length === 0) {
+                showResult('Please add some quantum components first!', 'red');
+                return;
+            }
+
+            // Simulate quantum pattern detection
+            const patternScore = simulateQuantumPatternDetection();
+            let message = '';
+
+            if (patternScore > 0.8) {
+                message = '✓ Strong pattern detected! (Confidence: ' + (patternScore * 100).toFixed(1) + '%)';
+                showResult(message, 'green');
+            } else if (patternScore > 0.5) {
+                message = '≈ Partial pattern detected (Confidence: ' + (patternScore * 100).toFixed(1) + '%)';
+                showResult(message, 'orange');
+            } else {
+                message = '✗ No clear pattern detected (Confidence: ' + (patternScore * 100).toFixed(1) + '%)';
+                showResult(message, 'red');
+            }
+        }
+
+        function simulateQuantumPatternDetection() {
+            // Simple simulation based on components used
+            let baseScore = 0;
+            if (circuitComponents.includes('hadamard')) baseScore += 0.3;
+            if (circuitComponents.includes('cnot')) baseScore += 0.3;
+            if (circuitComponents.includes('measure')) baseScore += 0.2;
+            if (circuitComponents.includes('xgate')) baseScore += 0.2;
+            
+            // Add some randomness to simulate quantum effects
+            return Math.min(1, baseScore + (Math.random() * 0.2 - 0.1));
+        }
+
+        function showResult(message, color) {
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = message;
+            resultDiv.style.color = color;
+            resultDiv.style.border = `1px solid ${color}`;
+        }
+
+        function resetCircuit() {
+            circuitArea.innerHTML = '';
+            circuitComponents = [];
+            resultDiv.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Neural Network Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 1px solid #000;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Train Your Quantum Neural Network</h1>
+        <p>Train a quantum neural network to recognize handwritten numbers (0-9)!<br>
+           Feed it examples, then test its quantum-powered recognition.</p>
+
+        <!-- Training Canvas -->
+        <h3>Training Canvas</h3>
+        <canvas id="trainingCanvas" width="200" height="200"></canvas>
+        <br>
+        <button onclick="generateTrainingData()">Generate Training Sample</button>
+        <button onclick="trainNetwork()">Train Network</button>
+
+        <!-- Testing Canvas -->
+        <h3>Test Your Network</h3>
+        <canvas id="testingCanvas" width="200" height="200"></canvas>
+        <br>
+        <button onclick="generateTestData()">Generate Test Sample</button>
+        <button onclick="testNetwork()">Test Recognition</button>
+
+        <!-- Output -->
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const trainingCanvas = document.getElementById('trainingCanvas');
+        const testingCanvas = document.getElementById('testingCanvas');
+        const trainCtx = trainingCanvas.getContext('2d');
+        const testCtx = testingCanvas.getContext('2d');
+        const output = document.getElementById('output');
+
+        // Simplified quantum neural network simulation
+        let networkWeights = Array(10).fill(0); // Weights for 0-9 recognition
+        let trainingCount = 0;
+
+        // Simulated quantum properties
+        function applyQuantumEffect(value) {
+            // Simulate superposition and entanglement with random variation
+            return value + (Math.random() - 0.5) * 0.2;
+        }
+
+        // Draw a simple number representation
+        function drawNumber(ctx, number) {
+            ctx.clearRect(0, 0, 200, 200);
+            ctx.font = "100px Arial";
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "center";
+            ctx.fillText(number, 100, 140);
+            // Add some "quantum noise" visualization
+            for (let i = 0; i < 10; i++) {
+                ctx.fillStyle = `rgba(0, 100, 255, ${Math.random() * 0.3})`;
+                ctx.fillRect(Math.random() * 200, Math.random() * 200, 5, 5);
+            }
+        }
+
+        // Generate training data
+        function generateTrainingData() {
+            const number = Math.floor(Math.random() * 10);
+            drawNumber(trainCtx, number);
+            output.innerHTML = `Training sample generated: Number ${number}`;
+            return number;
+        }
+
+        // Train the network
+        function trainNetwork() {
+            const number = generateTrainingData();
+            trainingCount++;
+            // Simulate quantum training
+            networkWeights[number] += applyQuantumEffect(1);
+            output.innerHTML = `Training... Recognized ${number}.<br>
+                               Training iterations: ${trainingCount}<br>
+                               Quantum efficiency: ${(trainingCount * 10).toFixed(1)}%`;
+        }
+
+        // Generate test data
+        function generateTestData() {
+            const number = Math.floor(Math.random() * 10);
+            drawNumber(testCtx, number);
+            output.innerHTML = `Test sample generated: Number ${number}`;
+            return number;
+        }
+
+        // Test the network
+        function testNetwork() {
+            const number = generateTestData();
+            // Simulate recognition with trained weights
+            let maxWeight = -Infinity;
+            let recognized = 0;
+            for (let i = 0; i < 10; i++) {
+                let weightedValue = applyQuantumEffect(networkWeights[i]);
+                if (weightedValue > maxWeight) {
+                    maxWeight = weightedValue;
+                    recognized = i;
+                }
+            }
+            const confidence = trainingCount > 0 ? Math.min(95, trainingCount * 10) : 10;
+            output.innerHTML = `Test Result:<br>
+                               Actual: ${number}<br>
+                               Recognized: ${recognized}<br>
+                               Confidence: ${confidence.toFixed(1)}%<br>
+                               ${number === recognized ? "Correct!" : "Incorrect"}`;
+        }
+
+        // Initial message
+        output.innerHTML = "Start by generating a training sample!";
+    </script>
+</body>
+</html>

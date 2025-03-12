@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quantum Hospital Adventure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        #intro, #game, #result {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .department {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .department:hover {
+            background-color: #2980b9;
+        }
+        #task-area {
+            margin-top: 20px;
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #219653;
+        }
+        #score {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #e74c3c;
+        }
+        #timer {
+            font-size: 1.1em;
+            color: #8e44ad;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>Welcome to The Quantum Hospital Adventure!</h1>
+        <p>
+            In this adventure, you'll explore different hospital departments to see how quantum AI is helping doctors save lives. 
+            From the emergency room to the research lab, quantum computers are making healthcare better in many ways.
+        </p>
+        <p>
+            You'll play the role of a doctor's assistant, using quantum AI tools to analyze patient data, identify patterns 
+            in medical images, and help design new medicines. Get ready to discover how quantum computing is changing medicine forever!
+        </p>
+        <button onclick="startGame()">Start Adventure</button>
+    </div>
+
+    <div id="game" style="display: none;">
+        <h1>Quantum General Hospital</h1>
+        <p id="timer">Time Left: 25:00</p>
+        <p id="score">Score: 0 / 100</p>
+        <div id="departments">
+            <div class="department" onclick="showTask('Emergency Room')">Emergency Room</div>
+            <div class="department" onclick="showTask('Radiology')">Radiology</div>
+            <div class="department" onclick="showTask('Research Lab')">Research Lab</div>
+        </div>
+        <div id="task-area">
+            <h2 id="task-title"></h2>
+            <p id="task-desc"></p>
+            <button id="complete-task" onclick="completeTask()">Complete Task</button>
+        </div>
+    </div>
+
+    <div id="result" style="display: none;">
+        <h1>Adventure Complete!</h1>
+        <p id="final-score"></p>
+        <button onclick="resetGame()">Play Again</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        let timerInterval;
+        const maxScore = 100;
+
+        const tasks = {
+            'Emergency Room': {
+                desc: 'Use quantum AI to analyze patient vitals and prioritize treatment. Correctly identify the critical patient.',
+                points: 30
+            },
+            'Radiology': {
+                desc: 'Assist quantum AI in detecting patterns in X-ray images to diagnose a rare condition.',
+                points: 40
+            },
+            'Research Lab': {
+                desc: 'Help design a new medicine by simulating molecular interactions with quantum computing.',
+                points: 30
+            }
+        };
+
+        function startGame() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('game').style.display = 'block';
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function showTask(department) {
+            document.getElementById('task-area').style.display = 'block';
+            document.getElementById('task-title').textContent = department;
+            document.getElementById('task-desc').textContent = tasks[department].desc;
+            document.getElementById('complete-task').dataset.points = tasks[department].points;
+            document.getElementById('complete-task').dataset.dept = department;
+        }
+
+        function completeTask() {
+            let points = parseInt(document.getElementById('complete-task').dataset.points);
+            score += points;
+            if (score > maxScore) score = maxScore;
+            document.getElementById('score').textContent = `Score: ${score} / ${maxScore}`;
+            document.getElementById('task-area').style.display = 'none';
+            let deptElement = Array.from(document.getElementsByClassName('department')).find(
+                el => el.textContent === document.getElementById('complete-task').dataset.dept
+            );
+            deptElement.style.display = 'none'; // Hide completed department
+            if (score >= maxScore || document.querySelectorAll('.department[style="display: none;"]').length === 3) {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('final-score').textContent = `Your Final Score: ${score} / ${maxScore}`;
+        }
+
+        function resetGame() {
+            score = 0;
+            timeLeft = 25 * 60;
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('intro').style.display = 'block';
+            document.getElementById('score').textContent = `Score: ${score} / ${maxScore}`;
+            document.getElementById('timer').textContent = `Time Left: 25:00`;
+            document.getElementById('task-area').style.display = 'none';
+            Array.from(document.getElementsByClassName('department')).forEach(el => el.style.display = 'inline-block');
+        }
+    </script>
+</body>
+</html>
