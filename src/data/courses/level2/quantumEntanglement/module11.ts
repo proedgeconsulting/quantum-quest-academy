@@ -23,7 +23,7 @@ export const module11: Module = {
       content: "Photosynthesis achieves near-perfect efficiency in converting sunlight into chemical energy. Recent studies suggest that quantum coherence and possibly entanglement may play a role in the remarkable efficiency of photosynthetic light harvesting complexes.\n\nIn this lesson, we'll examine the evidence for quantum coherent energy transfer in photosynthetic antenna complexes from experiments such as 2D electronic spectroscopy. We'll discuss the concept of environment-assisted quantum transport and how it might enhance the efficiency of energy transfer. We'll also explore theoretical models that attempt to explain these observations and the potential role of entanglement in these processes.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=cNeSlLY1TDY"
     },
     {

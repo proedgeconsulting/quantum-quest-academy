@@ -23,7 +23,7 @@ export const module10: Module = {
       content: "Quantum nonlocal games are scenarios where separated players can achieve better coordination than would be possible classically by sharing entangled states. These games provide an intuitive demonstration of Bell's theorem and the nonlocal nature of quantum mechanics.\n\nIn this lesson, we'll examine well-known nonlocal games, such as the CHSH game, the Magic Square game, and the Mermin-Peres Magic Square. We'll walk through the optimal quantum strategies for these games and explain how they surpass classical bounds. We'll also discuss the connection between nonlocal games and device-independent quantum cryptography.",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=-y9UfpR6-TY"
     },
     {

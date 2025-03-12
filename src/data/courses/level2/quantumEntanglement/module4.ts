@@ -23,7 +23,7 @@ export const module4: Module = {
       content: "Superdense coding is a quantum communication protocol that allows two classical bits of information to be transmitted using only one qubit, provided that the sender and receiver share a pre-existing entangled state. This protocol demonstrates the power of entanglement to enhance communication efficiency.\n\nIn this lesson, we'll walk through the superdense coding protocol step by step, explaining how it works and why it's important. We'll explore how the protocol uses entanglement to encode two classical bits into a single qubit, and discuss its applications in quantum communication networks.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=dAXdJpgiMDQ"
     },
     {

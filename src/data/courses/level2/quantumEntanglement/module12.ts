@@ -23,7 +23,7 @@ export const module12: Module = {
       content: "Quantum entanglement remains an active area of research with many open questions and exciting new directions. In this lesson, we'll survey some of the cutting-edge research topics in quantum entanglement, including:\n\n- Entanglement in gravity and spacetime, including the ER=EPR conjecture and holographic entanglement entropy\n\n- Resource theories of entanglement and their applications\n\n- Entanglement in quantum many-body systems and its connections to quantum field theory\n\n- Novel experimental platforms for generating and manipulating entanglement\n\n- Device-independent protocols based on quantum nonlocality\n\nThis lesson will give you a glimpse of the forefront of research in quantum entanglement and potential future developments in the field.",
       type: "video",
       duration: 25,
-      points: 20
+      points: 20,
       videoUrl: "https://www.youtube.com/watch?v=qa2yPE0QlZY"
     },
     {

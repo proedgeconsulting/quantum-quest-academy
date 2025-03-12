@@ -1,3 +1,4 @@
+
 import { Module } from "@/data/types/courseTypes";
 
 // Module 3: Quantum Photon Entanglement
@@ -22,7 +23,7 @@ export const module3: Module = {
       content: "Trapped ion quantum computers represent one of the most promising platforms for quantum computing and precise studies of quantum entanglement. In these systems, individual ions (charged atoms) are trapped using electromagnetic fields and cooled to near absolute zero temperatures.\n\nResearchers can manipulate these ions with precise laser pulses to control their quantum states and create entanglement between them. The ions' repulsive electrical interaction causes them to form an ordered structure, making it possible to address and entangle specific pairs or groups.\n\nUnlike photonic systems, trapped ions can maintain their quantum states for relatively long periods, making them ideal for studying entanglement dynamics over time. This has allowed scientists to create entangled states with record-breaking fidelity and to observe quantum effects that would be difficult to see in other systems.\n\nIn this lesson, we'll examine the apparatus and techniques used in trapped ion experiments, how entanglement is generated and measured, and recent breakthroughs in trapped ion quantum computing that rely on entanglement as a resource.",
       type: "reading",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl:"https://www.youtube.com/watch?v=JjB3co7ZRdU"
     },
     {
