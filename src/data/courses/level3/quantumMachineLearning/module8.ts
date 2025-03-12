@@ -37,9 +37,8 @@ export const module8: Module = {
       description: "Compose music using quantum algorithms and hear what quantum sounds like!",
       content: "Can quantum computers make music? You bet they can! But quantum music might sound very different from what you're used to hearing.\n\nIn this lesson, you'll learn about a quantum music composer that uses quantum algorithms to create melodies, rhythms, and harmonies. You'll discover:\n\n- How quantum randomness can create unpredictable but interesting musical patterns\n- Ways to use quantum entanglement to create connected musical phrases\n- How to translate quantum measurements into musical notes and beats\n- The difference between classical computer music and quantum computer music\n\nThrough audio examples and visualizations, you'll experience what quantum-generated music might sound like - perhaps ethereal compositions that seem to come from another dimension! We'll discuss whether quantum music could become the next big thing in musical composition and performance.",
       type: "video",
-      videoUrl: "https://www.youtube.com/watch?v=7B7TV1rMAKo",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=_4WTBW4O5DI"
     },
     {

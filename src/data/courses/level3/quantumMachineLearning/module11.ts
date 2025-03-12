@@ -31,9 +31,8 @@ export const module11: Module = {
       description: "Help wildlife scientists track and protect animals using quantum pattern recognition.",
       content: "Wildlife scientists need your help! They're using new quantum technology to track and monitor endangered animals, and they need quantum computing experts like you to help analyze the data.\n\nIn this video lesson, you'll learn about the Quantum Animal Tracking System, which:\n- Collects data from cameras, microphones, and sensors in wildlife habitats\n- Uses quantum pattern recognition to identify different animal species\n- Tracks movement patterns to understand animal behavior\n- Helps predict how animals might respond to changes in their environment\n\nYou'll see how quantum machine learning algorithms can be trained to identify animals from images, sounds, and other data more efficiently than classical algorithms. The lesson includes examples of how this technology is being developed to help conservation efforts around the world.\n\nBy the end, you'll understand how quantum computing could become an important tool for scientists working to protect endangered species and maintain biodiversity.",
       type: "video",
-      videoUrl: "https://www.youtube.com/watch?v=LGx_6lBWFCI",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=kD370qyxTyw"
     },
     {

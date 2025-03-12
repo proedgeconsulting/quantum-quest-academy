@@ -37,9 +37,8 @@ export const module10: Module = {
       description: "Teach your robot new skills using quantum reinforcement learning.",
       content: "Robots that can learn are super cool, but quantum learning robots might be even cooler! In this video lesson, you'll discover how quantum reinforcement learning helps robots master new skills.\n\nWe'll explore:\n- How robots learn through trial and error (reinforcement learning)\n- Why quantum computing might help robots learn certain tasks faster\n- How quantum superposition lets robots explore multiple strategies at once\n- The concept of 'quantum reward amplification' for robot learning\n\nYou'll see examples of simulated robots learning tasks like balancing objects, navigating obstacle courses, and playing simple games. We'll compare how classical learning robots and quantum learning robots approach these challenges differently.\n\nBy the end of this lesson, you'll understand the basic principles of quantum reinforcement learning and how it might create smarter, more adaptive robots in the future!",
       type: "video",
-      videoUrl: "https://www.youtube.com/watch?v=PkY9tUJqc3E",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=t1KxM9IrSz4"
     },
     {

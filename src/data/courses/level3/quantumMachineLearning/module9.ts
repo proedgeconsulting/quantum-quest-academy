@@ -38,7 +38,7 @@ export const module9: Module = {
       content: "It's time for Quantum Battle! In this video lesson, you'll learn about a new type of battle game where quantum strategies decide who wins.\n\nUnlike regular battle games where players pick a single attack move, in Quantum Battle:\n- Players create attack and defense moves using quantum circuits\n- Moves can exist in superposition (multiple attacks at once)\n- Entanglement can create powerful combo attacks\n- Quantum interference can strengthen or weaken attacks\n\nWe'll show you how a quantum battle simulator works and how to create basic quantum battle strategies. You'll see examples of winning strategies that use quantum properties in clever ways.\n\nBy understanding how quantum computing principles can be used in games, you'll get a fun glimpse into how quantum algorithms work to solve real problems too!",
       type: "video",
       duration: 20,
-      points: 15
+      points: 15,
       videoUrl: "https://www.youtube.com/watch?v=7Bh3bZYEHGQ"
     },
     {
