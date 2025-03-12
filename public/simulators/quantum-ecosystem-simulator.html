@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Ecosystem Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .controls {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .control-group {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 200px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        #simulate-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #simulate-btn:hover {
+            background-color: #218838;
+        }
+        #ecosystem-output {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+        }
+        #status {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Ecosystem Simulator</h1>
+    <div class="controls">
+        <div class="control-group">
+            <label>Plant Growth Rate (0-100):</label>
+            <input type="range" id="plantGrowth" min="0" max="100" value="50">
+            <span id="plantGrowthValue">50</span>
+        </div>
+        <div class="control-group">
+            <label>Herbivore Population (0-100):</label>
+            <input type="range" id="herbivorePop" min="0" max="100" value="30">
+            <span id="herbivorePopValue">30</span>
+        </div>
+        <div class="control-group">
+            <label>Predator Population (0-50):</label>
+            <input type="range" id="predatorPop" min="0" max="50" value="10">
+            <span id="predatorPopValue">10</span>
+        </div>
+        <div class="control-group">
+            <label>Climate Stability (0-100):</label>
+            <input type="range" id="climateStability" min="0" max="100" value="75">
+            <span id="climateStabilityValue">75</span>
+        </div>
+        <button id="simulate-btn">Run Simulation</button>
+    </div>
+    <div id="ecosystem-output">
+        <canvas id="ecosystemCanvas" width="600" height="300"></canvas>
+        <div id="status">Adjust parameters and click "Run Simulation" to see the ecosystem balance.</div>
+    </div>
+
+    <script>
+        // Update slider values in real-time
+        const sliders = ['plantGrowth', 'herbivorePop', 'predatorPop', 'climateStability'];
+        sliders.forEach(id => {
+            const slider = document.getElementById(id);
+            const output = document.getElementById(id + 'Value');
+            slider.oninput = () => output.textContent = slider.value;
+        });
+
+        // Simulation logic
+        document.getElementById('simulate-btn').addEventListener('click', runSimulation);
+
+        function runSimulation() {
+            const plantGrowth = parseInt(document.getElementById('plantGrowth').value);
+            const herbivorePop = parseInt(document.getElementById('herbivorePop').value);
+            const predatorPop = parseInt(document.getElementById('predatorPop').value);
+            const climateStability = parseInt(document.getElementById('climateStability').value);
+
+            // Simple quantum-inspired simulation: multiple states evaluated
+            const ecosystemStates = simulateEcosystem(plantGrowth, herbivorePop, predatorPop, climateStability);
+            renderEcosystem(ecosystemStates);
+        }
+
+        function simulateEcosystem(plantGrowth, herbivorePop, predatorPop, climateStability) {
+            // Simulate ecosystem dynamics (simplified for demo)
+            let plants = plantGrowth;
+            let herbivores = herbivorePop;
+            let predators = predatorPop;
+
+            const steps = 10;
+            const states = [];
+
+            for (let i = 0; i < steps; i++) {
+                // Ecosystem rules
+                plants += (plants * 0.1 * (climateStability / 100)) - (herbivores * 0.2);
+                herbivores += (herbivores * 0.05 * (plants / 100)) - (predators * 0.3);
+                predators += (predators * 0.1 * (herbivores / 100));
+
+                // Constraints
+                plants = Math.max(0, Math.min(plants, 200));
+                herbivores = Math.max(0, Math.min(herbivores, 150));
+                predators = Math.max(0, Math.min(predators, 100));
+
+                states.push({ plants, herbivores, predators });
+
+                // Check stability
+                if (plants <= 0 || herbivores <= 0 || predators > herbivores * 2) break;
+            }
+
+            return states;
+        }
+
+        function renderEcosystem(states) {
+            const canvas = document.getElementById('ecosystemCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const width = canvas.width;
+            const height = canvas.height;
+            const stepWidth = width / states.length;
+
+            // Draw grid
+            ctx.strokeStyle = '#ddd';
+            for (let x = 0; x < width; x += stepWidth) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+
+            // Draw lines for each component
+            drawLine(ctx, states, 'plants', 'green', height);
+            drawLine(ctx, states, 'herbivores', 'blue', height);
+            drawLine(ctx, states, 'predators', 'red', height);
+
+            // Update status
+            const status = document.getElementById('status');
+            const finalState = states[states.length - 1];
+            if (finalState.plants <= 0) {
+                status.textContent = 'Ecosystem collapsed: Plants died out!';
+                status.style.color = 'red';
+            } else if (finalState.herbivores <= 0) {
+                status.textContent = 'Ecosystem collapsed: Herbivores died out!';
+                status.style.color = 'red';
+            } else if (finalState.predators > finalState.herbivores * 2) {
+                status.textContent = 'Ecosystem unstable: Too many predators!';
+                status.style.color = 'orange';
+            } else {
+                status.textContent = 'Ecosystem stable! Balance achieved.';
+                status.style.color = 'green';
+            }
+        }
+
+        function drawLine(ctx, states, key, color, height) {
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            states.forEach((state, i) => {
+                const x = i * (600 / states.length);
+                const y = height - (state[key] / 200) * height;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+        }
+    </script>
+</body>
+</html>

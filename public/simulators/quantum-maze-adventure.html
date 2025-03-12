@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Maze Adventure</title>
+    <style>
+        canvas { border: 2px solid #333; }
+        #controls { margin: 20px; font-family: Arial, sans-serif; }
+        button { padding: 5px 10px; margin: 0 5px; }
+        .container { text-align: center; }
+        #instructions { max-width: 600px; margin: 20px auto; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Maze Adventure</h1>
+        <div id="instructions">
+            <p>Welcome to the Quantum Maze! Rules:</p>
+            <ul>
+                <li>Paths in gray are in superposition (might/might not exist)</li>
+                <li>Click to observe a path - it will collapse to solid or vanish</li>
+                <li>Blue paths are entangled - observing one affects its pair</li>
+                <li>Reach the green goal using quantum teleportation (T)</li>
+            </ul>
+        </div>
+        <canvas id="mazeCanvas" width="400" height="400"></canvas>
+        <div id="controls">
+            <button onclick="resetMaze()">Reset Maze</button>
+            <button onclick="toggleEditor()">Show Editor</button>
+            <span id="status">Player at: (1,1)</span>
+        </div>
+        <div id="editor" style="display: none;">
+            <h3>Quantum Circuit Editor</h3>
+            <textarea id="circuitConfig" rows="4" cols="50">
+{
+    "superposition": [[2,2], [3,3]],
+    "entangled": [[2,4, 4,2]],
+    "teleport": [5,5]
+}
+            </textarea>
+            <br>
+            <button onclick="applyCircuit()">Apply Circuit</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mazeCanvas');
+        const ctx = canvas.getContext('2d');
+        const gridSize = 40;
+        const gridWidth = 10;
+        const gridHeight = 10;
+
+        let player = { x: 1, y: 1 };
+        let goal = { x: 8, y: 8 };
+        let maze = Array(gridHeight).fill().map(() => Array(gridWidth).fill(0));
+        let quantumState = {
+            superposition: [[2,2], [3,3]],
+            entangled: [[2,4, 4,2]],
+            teleport: [5,5]
+        };
+
+        function drawMaze() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            for (let y = 0; y < gridHeight; y++) {
+                for (let x = 0; x < gridWidth; x++) {
+                    if (maze[y][x] === 1) {
+                        ctx.fillStyle = 'black';
+                        ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+                    } else if (isSuperposition(x, y)) {
+                        ctx.fillStyle = 'gray';
+                        ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+                    } else if (isEntangled(x, y)) {
+                        ctx.fillStyle = 'blue';
+                        ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
+                    }
+                    ctx.strokeRect(x * gridSize, y * gridSize, gridSize, gridSize);
+                }
+            }
+
+            // Draw teleport point
+            if (quantumState.teleport) {
+                ctx.fillStyle = 'purple';
+                ctx.fillText('T', quantumState.teleport[0] * gridSize + 15, 
+                           quantumState.teleport[1] * gridSize + 25);
+            }
+
+            // Draw player and goal
+            ctx.fillStyle = 'red';
+            ctx.fillRect(player.x * gridSize + 5, player.y * gridSize + 5, gridSize - 10, gridSize - 10);
+            ctx.fillStyle = 'green';
+            ctx.fillRect(goal.x * gridSize + 5, goal.y * gridSize + 5, gridSize - 10, gridSize - 10);
+
+            document.getElementById('status').textContent = `Player at: (${player.x},${player.y})`;
+        }
+
+        function isSuperposition(x, y) {
+            return quantumState.superposition.some(([sx, sy]) => sx === x && sy === y);
+        }
+
+        function isEntangled(x, y) {
+            return quantumState.entangled.some(([ex1, ey1, ex2, ey2]) => 
+                (ex1 === x && ey1 === y) || (ex2 === x && ey2 === y));
+        }
+
+        function observePath(x, y) {
+            if (isSuperposition(x, y)) {
+                // Collapse superposition
+                maze[y][x] = Math.random() > 0.5 ? 1 : 0;
+                quantumState.superposition = quantumState.superposition.filter(
+                    ([sx, sy]) => !(sx === x && sy === y)
+                );
+            } else if (isEntangled(x, y)) {
+                // Collapse entangled pair
+                const pair = quantumState.entangled.find(([ex1, ey1, ex2, ey2]) => 
+                    (ex1 === x && ey1 === y) || (ex2 === x && ey2 === y));
+                if (pair) {
+                    const state = Math.random() > 0.5 ? 1 : 0;
+                    maze[pair[1]][pair[0]] = state;
+                    maze[pair[3]][pair[2]] = state;
+                    quantumState.entangled = quantumState.entangled.filter(p => p !== pair);
+                }
+            }
+            drawMaze();
+        }
+
+        function movePlayer(dx, dy) {
+            const newX = player.x + dx;
+            const newY = player.y + dy;
+            if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight && maze[newY][newX] !== 1) {
+                player.x = newX;
+                player.y = newY;
+                if (player.x === quantumState.teleport[0] && player.y === quantumState.teleport[1]) {
+                    player.x = goal.x;
+                    player.y = goal.y;
+                    alert('Quantum Teleportation! You reached the goal!');
+                }
+                if (player.x === goal.x && player.y === goal.y) {
+                    alert('Congratulations! You solved the maze!');
+                }
+                drawMaze();
+            }
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((e.clientX - rect.left) / gridSize);
+            const y = Math.floor((e.clientY - rect.top) / gridSize);
+            observePath(x, y);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp': movePlayer(0, -1); break;
+                case 'ArrowDown': movePlayer(0, 1); break;
+                case 'ArrowLeft': movePlayer(-1, 0); break;
+                case 'ArrowRight': movePlayer(1, 0); break;
+            }
+        });
+
+        function resetMaze() {
+            maze = Array(gridHeight).fill().map(() => Array(gridWidth).fill(0));
+            player = { x: 1, y: 1 };
+            applyCircuit();
+        }
+
+        function toggleEditor() {
+            const editor = document.getElementById('editor');
+            editor.style.display = editor.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applyCircuit() {
+            try {
+                const config = JSON.parse(document.getElementById('circuitConfig').value);
+                quantumState = {
+                    superposition: config.superposition || [],
+                    entangled: config.entangled || [],
+                    teleport: config.teleport || [5,5]
+                };
+                drawMaze();
+            } catch (e) {
+                alert('Invalid circuit configuration!');
+            }
+        }
+
+        // Initial draw
+        drawMaze();
+    </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Classifier Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #e94560;
+        }
+        canvas {
+            border: 1px solid #0f3460;
+            background: #16213e;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            background: #e94560;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff6b6b;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #0f3460;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Classifier Challenge</h1>
+    <p>Welcome, Space Explorer! Train your quantum classifier to identify space objects.</p>
+    
+    <canvas id="spaceCanvas" width="400" height="400"></canvas>
+    
+    <div>
+        <h3>Controls</h3>
+        <button onclick="addSample('Planet')">Observe Planet</button>
+        <button onclick="addSample('Star')">Observe Star</button>
+        <button onclick="addSample('Asteroid')">Observe Asteroid</button>
+        <button onclick="addSample('Mystery')">Observe Mystery Object</button>
+        <br>
+        <button onclick="trainClassifier()">Train Quantum Classifier</button>
+        <button onclick="testClassifier()">Test on Unknown Object</button>
+        <button onclick="resetSimulation()">Reset</button>
+    </div>
+    
+    <div id="output">
+        <p>Training Samples: <span id="sampleCount">0</span></p>
+        <p>Classifier Accuracy: <span id="accuracy">0%</span></p>
+        <p>Last Prediction: <span id="prediction">-</span></p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Simulated quantum classifier data
+        let trainingData = [];
+        let accuracy = 0;
+        
+        // Space object properties
+        const objectTypes = {
+            'Planet': { color: '#4ecca3', sizeRange: [20, 40], brightness: [0.6, 0.8] },
+            'Star': { color: '#ffd700', sizeRange: [5, 15], brightness: [0.9, 1.0] },
+            'Asteroid': { color: '#808080', sizeRange: [10, 25], brightness: [0.3, 0.5] },
+            'Mystery': { color: '#ff00ff', sizeRange: [15, 35], brightness: [0.7, 0.9] }
+        };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function drawObject(x, y, type) {
+            const props = objectTypes[type];
+            const size = randomInRange(props.sizeRange[0], props.sizeRange[1]);
+            const brightness = randomInRange(props.brightness[0], props.brightness[1]);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fillStyle = props.color;
+            ctx.globalAlpha = brightness;
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+            return { size, brightness };
+        }
+
+        function addSample(type) {
+            const x = randomInRange(50, 350);
+            const y = randomInRange(50, 350);
+            const features = drawObject(x, y, type);
+            trainingData.push({ type, features });
+            document.getElementById('sampleCount').textContent = trainingData.length;
+        }
+
+        function trainClassifier() {
+            // Simple quantum-inspired training simulation
+            if (trainingData.length < 4) {
+                alert('Please collect at least 4 samples first!');
+                return;
+            }
+            accuracy = Math.min(90, 50 + trainingData.length * 5);
+            document.getElementById('accuracy').textContent = `${Math.round(accuracy)}%`;
+            document.getElementById('output').textContent = 
+                `Quantum Classifier trained! Accuracy: ${Math.round(accuracy)}%`;
+        }
+
+        function testClassifier() {
+            if (accuracy === 0) {
+                alert('Please train the classifier first!');
+                return;
+            }
+            
+            // Generate random test object
+            const types = Object.keys(objectTypes);
+            const realType = types[Math.floor(Math.random() * types.length)];
+            const x = randomInRange(50, 350);
+            const y = randomInRange(50, 350);
+            const features = drawObject(x, y, realType);
+            
+            // Simple classification based on features and accuracy
+            const successChance = accuracy / 100;
+            let predictedType = realType;
+            if (Math.random() > successChance) {
+                // Misclassification
+                predictedType = types[Math.floor(Math.random() * types.length)];
+                while (predictedType === realType) {
+                    predictedType = types[Math.floor(Math.random() * types.length)];
+                }
+            }
+            
+            document.getElementById('prediction').textContent = 
+                `${predictedType} (Actual: ${realType})`;
+        }
+
+        function resetSimulation() {
+            trainingData = [];
+            accuracy = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('sampleCount').textContent = '0';
+            document.getElementById('accuracy').textContent = '0%';
+            document.getElementById('prediction').textContent = '-';
+        }
+
+        // Initial instructions
+        document.getElementById('output').textContent = 
+            'Start by observing different space objects to collect training data!';
+    </script>
+</body>
+</html>

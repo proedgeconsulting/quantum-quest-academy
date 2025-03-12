@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Ethics Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .scenario {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .progress {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Ethics Challenge</h1>
+    <p><em>With great quantum power comes great responsibility!</em></p>
+    <div class="progress" id="progress">Scenario 1 of 4</div>
+    
+    <div id="scenario-container">
+        <div class="scenario" id="scenario1">
+            <h2>Scenario 1: Privacy Dilemma</h2>
+            <p>A quantum AI system can decrypt personal data instantly, revealing private information about millions of people. What should be done?</p>
+            <button onclick="showResult(1, 'a')">A) Make the technology public for transparency</button>
+            <button onclick="showResult(1, 'b')">B) Restrict access to law enforcement only</button>
+            <button onclick="showResult(1, 'c')">C) Ban the technology entirely</button>
+        </div>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        let currentScenario = 1;
+        const maxScenarios = 4;
+        const results = {
+            1: {
+                a: "Consequence: Public release leads to innovation but also widespread privacy violations. Data breaches increase by 300%.",
+                b: "Consequence: Law enforcement gains powerful tools, but concerns arise about government overreach and surveillance.",
+                c: "Consequence: Privacy is protected, but potentially life-saving applications (like medical research) are delayed."
+            },
+            2: {
+                a: "Consequence: Universal access promotes equality but leads to misuse by malicious actors.",
+                b: "Consequence: Limited access maintains control but creates a power imbalance between corporations and individuals.",
+                c: "Consequence: Strict regulations slow innovation but provide more time to assess risks."
+            },
+            3: {
+                a: "Consequence: Full autonomy increases efficiency but removes human oversight, risking unintended harm.",
+                b: "Consequence: Human control maintains accountability but slows decision-making in critical situations.",
+                c: "Consequence: Hybrid approach balances speed and oversight but requires constant monitoring."
+            },
+            4: {
+                a: "Consequence: Proactive measures prevent some risks but cost billions and might stifle development.",
+                b: "Consequence: Reactive approach allows faster progress but leaves society vulnerable to sudden disruptions.",
+                c: "Consequence: Collaboration fosters shared responsibility but slows decision-making through bureaucracy."
+            }
+        };
+
+        function showResult(scenario, choice) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<strong>Your Choice:</strong> ${results[scenario][choice]}`;
+            
+            document.getElementById(`scenario${scenario}`).style.display = 'none';
+            
+            if (currentScenario < maxScenarios) {
+                currentScenario++;
+                addNextScenario();
+            } else {
+                resultDiv.innerHTML += '<p><strong>Challenge Complete!</strong> Your choices shape the quantum future. What kind of world do you want to create?</p>';
+            }
+            
+            document.getElementById('progress').textContent = `Scenario ${currentScenario} of ${maxScenarios}`;
+        }
+
+        function addNextScenario() {
+            const container = document.getElementById('scenario-container');
+            if (currentScenario === 2) {
+                container.innerHTML += `
+                    <div class="scenario" id="scenario2">
+                        <h2>Scenario 2: Access Question</h2>
+                        <p>A breakthrough quantum AI tool could solve global problems, but it’s expensive. Who gets access?</p>
+                        <button onclick="showResult(2, 'a')">A) Everyone, through open-source release</button>
+                        <button onclick="showResult(2, 'b')">B) Only vetted corporations and governments</button>
+                        <button onclick="showResult(2, 'c')">C) Regulated access with strict oversight</button>
+                    </div>`;
+            } else if (currentScenario === 3) {
+                container.innerHTML += `
+                    <div class="scenario" id="scenario3">
+                        <h2>Scenario 3: Decision-Making</h2>
+                        <p>Quantum AI can make faster, more accurate decisions than humans in emergencies. How much control should it have?</p>
+                        <button onclick="showResult(3, 'a')">A) Full autonomy for the AI</button>
+                        <button onclick="showResult(3, 'b')">B) Humans make all final decisions</button>
+                        <button onclick="showResult(3, 'c')">C) Hybrid: AI suggests, humans decide</button>
+                    </div>`;
+            } else if (currentScenario === 4) {
+                container.innerHTML += `
+                    <div class="scenario" id="scenario4">
+                        <h2>Scenario 4: Unexpected Consequences</h2>
+                        <p>Quantum AI’s societal impact is unpredictable. How do we prepare?</p>
+                        <button onclick="showResult(4, 'a')">A) Invest heavily in prevention now</button>
+                        <button onclick="showResult(4, 'b')">B) Deal with issues as they arise</button>
+                        <button onclick="showResult(4, 'c')">C) Form global ethics committees</button>
+                    </div>`;
+            }
+        }
+    </script>
+</body>
+</html>

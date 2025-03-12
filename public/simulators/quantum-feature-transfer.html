@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Feature Transfer Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+        .controls {
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .section {
+            margin: 20px 0;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Feature Transfer Simulator</h1>
+    <div class="section">
+        <h2>Concept Overview</h2>
+        <p>This simulator demonstrates a hybrid quantum-classical model where:</p>
+        <ul>
+            <li>Classical CNN extracts features from images</li>
+            <li>Quantum circuit processes these features for classification</li>
+            <li>Classical weights remain frozen while quantum circuit trains</li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div>
+            <h3>Classical Feature Extraction</h3>
+            <canvas id="classicalCanvas" width="400" height="300"></canvas>
+            <div class="controls">
+                <button onclick="updateFeatureCount(-1)">- Features</button>
+                <span id="featureCount">16</span>
+                <button onclick="updateFeatureCount(1)">+ Features</button>
+            </div>
+        </div>
+        
+        <div>
+            <h3>Quantum Circuit Processing</h3>
+            <canvas id="quantumCanvas" width="400" height="300"></canvas>
+            <div class="controls">
+                <button onclick="updateQubits(-1)">- Qubits</button>
+                <span id="qubitCount">4</span>
+                <button onclick="updateQubits(1)">+ Qubits</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Performance Metrics</h3>
+        <canvas id="performanceCanvas" width="800" height="200"></canvas>
+        <div class="controls">
+            <button onclick="runSimulation()">Run Simulation</button>
+            <span>Accuracy: <span id="accuracy">0%</span></span>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const classicalCtx = document.getElementById('classicalCanvas').getContext('2d');
+        const quantumCtx = document.getElementById('quantumCanvas').getContext('2d');
+        const perfCtx = document.getElementById('performanceCanvas').getContext('2d');
+
+        // Initial parameters
+        let featureCount = 16;
+        let qubitCount = 4;
+        let accuracyHistory = [];
+
+        // Draw initial states
+        drawClassicalNetwork();
+        drawQuantumCircuit();
+        drawPerformanceGraph();
+
+        function drawClassicalNetwork() {
+            classicalCtx.clearRect(0, 0, 400, 300);
+            classicalCtx.fillStyle = '#eee';
+            classicalCtx.fillRect(0, 0, 400, 300);
+
+            // Draw CNN layers
+            const layerWidth = 80;
+            classicalCtx.fillStyle = '#4682b4';
+            for(let i = 0; i < 3; i++) {
+                classicalCtx.fillRect(50 + i * 100, 50, layerWidth, 200);
+                classicalCtx.fillStyle = '#fff';
+                classicalCtx.fillText('Conv Layer ' + (i+1), 55 + i * 100, 150);
+                classicalCtx.fillStyle = '#4682b4';
+            }
+
+            // Draw feature output
+            const featureHeight = 200 / featureCount;
+            classicalCtx.fillStyle = '#32cd32';
+            for(let i = 0; i < featureCount; i++) {
+                classicalCtx.fillRect(350, 50 + i * featureHeight, 20, featureHeight - 2);
+            }
+            document.getElementById('featureCount').textContent = featureCount;
+        }
+
+        function drawQuantumCircuit() {
+            quantumCtx.clearRect(0, 0, 400, 300);
+            quantumCtx.fillStyle = '#eee';
+            quantumCtx.fillRect(0, 0, 400, 300);
+
+            // Draw qubit lines
+            const spacing = 200 / qubitCount;
+            quantumCtx.strokeStyle = '#000';
+            for(let i = 0; i < qubitCount; i++) {
+                const y = 50 + i * spacing;
+                quantumCtx.beginPath();
+                quantumCtx.moveTo(50, y);
+                quantumCtx.lineTo(350, y);
+                quantumCtx.stroke();
+                
+                // Draw quantum gates (simplified)
+                quantumCtx.fillStyle = '#ff69b4';
+                quantumCtx.fillRect(100, y-10, 20, 20);
+                quantumCtx.fillRect(200, y-10, 20, 20);
+            }
+            document.getElementById('qubitCount').textContent = qubitCount;
+        }
+
+        function drawPerformanceGraph() {
+            perfCtx.clearRect(0, 0, 800, 200);
+            perfCtx.fillStyle = '#eee';
+            perfCtx.fillRect(0, 0, 800, 200);
+
+            // Draw axes
+            perfCtx.strokeStyle = '#000';
+            perfCtx.beginPath();
+            perfCtx.moveTo(50, 150);
+            perfCtx.lineTo(750, 150);
+            perfCtx.moveTo(50, 150);
+            perfCtx.lineTo(50, 50);
+            perfCtx.stroke();
+
+            // Draw accuracy history
+            perfCtx.strokeStyle = '#ff0000';
+            perfCtx.beginPath();
+            accuracyHistory.forEach((acc, i) => {
+                const x = 50 + i * 70;
+                const y = 150 - (acc * 100);
+                if(i === 0) perfCtx.moveTo(x, y);
+                else perfCtx.lineTo(x, y);
+            });
+            perfCtx.stroke();
+        }
+
+        function updateFeatureCount(delta) {
+            featureCount = Math.max(4, Math.min(32, featureCount + delta));
+            drawClassicalNetwork();
+            runSimulation();
+        }
+
+        function updateQubits(delta) {
+            qubitCount = Math.max(2, Math.min(8, qubitCount + delta));
+            drawQuantumCircuit();
+            runSimulation();
+        }
+
+        function runSimulation() {
+            // Simplified simulation of hybrid model performance
+            const baseAccuracy = 0.6;
+            const featureEffect = (featureCount - 4) / 28 * 0.2;
+            const qubitEffect = (qubitCount - 2) / 6 * 0.15;
+            const accuracy = Math.min(0.95, baseAccuracy + featureEffect + qubitEffect);
+            
+            accuracyHistory.push(accuracy);
+            if(accuracyHistory.length > 10) accuracyHistory.shift();
+            
+            document.getElementById('accuracy').textContent = (accuracy * 100).toFixed(1) + '%';
+            drawPerformanceGraph();
+        }
+    </script>
+</body>
+</html>

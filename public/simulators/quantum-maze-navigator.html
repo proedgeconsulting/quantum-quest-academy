@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Maze Navigator</title>
+    <style>
+        canvas { border: 1px solid black; }
+        .container { 
+            max-width: 800px; 
+            margin: 20px auto; 
+            font-family: Arial, sans-serif;
+        }
+        .controls { 
+            margin: 10px 0; 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap;
+        }
+        button { padding: 5px 10px; }
+        #status { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Maze Navigator</h1>
+        <canvas id="mazeCanvas" width="400" height="400"></canvas>
+        <div class="controls">
+            <button onclick="resetMaze(5)">Small Maze (5x5)</button>
+            <button onclick="resetMaze(7)">Medium Maze (7x7)</button>
+            <button onclick="resetMaze(10)">Mega Maze (10x10)</button>
+            <button onclick="solveClassical()">Classical Solve</button>
+            <button onclick="solveQuantum()">Quantum Solve</button>
+        </div>
+        <div id="status">Click a maze size to start!</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mazeCanvas');
+        const ctx = canvas.getContext('2d');
+        let gridSize = 5;
+        let cellSize = 400 / gridSize;
+        let maze = [];
+        let quantumPath = [];
+        let classicalPath = [];
+
+        function generateMaze(size) {
+            gridSize = size;
+            cellSize = 400 / gridSize;
+            maze = Array(size).fill().map(() => Array(size).fill(0));
+            
+            // Simple maze generation with random walls
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    if (Math.random() < 0.3 && !(i === 0 && j === 0) && !(i === size-1 && j === size-1)) {
+                        maze[i][j] = 1; // Wall
+                    }
+                }
+            }
+            maze[0][0] = 0; // Start
+            maze[size-1][size-1] = 0; // End
+        }
+
+        function drawMaze() {
+            ctx.clearRect(0, 0, 400, 400);
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (maze[i][j] === 1) {
+                        ctx.fillStyle = '#333';
+                        ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                    }
+                    ctx.strokeStyle = '#ccc';
+                    ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize);
+                }
+            }
+            
+            // Draw start and end
+            ctx.fillStyle = 'green';
+            ctx.fillRect(0, 0, cellSize, cellSize);
+            ctx.fillStyle = 'red';
+            ctx.fillRect((gridSize-1) * cellSize, (gridSize-1) * cellSize, cellSize, cellSize);
+            
+            // Draw paths
+            drawPath(classicalPath, 'blue');
+            drawPath(quantumPath, 'purple');
+        }
+
+        function drawPath(path, color) {
+            ctx.fillStyle = color;
+            for (let [x, y] of path) {
+                ctx.fillRect(y * cellSize + cellSize/4, x * cellSize + cellSize/4, 
+                           cellSize/2, cellSize/2);
+            }
+        }
+
+        // Classical pathfinding (simple BFS)
+        function solveClassical() {
+            classicalPath = [];
+            const queue = [[0, 0]];
+            const visited = new Set();
+            const parent = new Map();
+            
+            while (queue.length > 0) {
+                const [x, y] = queue.shift();
+                if (x === gridSize-1 && y === gridSize-1) {
+                    let current = [x, y];
+                    while (current) {
+                        classicalPath.unshift(current);
+                        current = parent.get(current.toString());
+                    }
+                    break;
+                }
+                
+                const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+                for (let [dx, dy] of directions) {
+                    const nx = x + dx;
+                    const ny = y + dy;
+                    const key = `${nx},${ny}`;
+                    if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize && 
+                        maze[nx][ny] !== 1 && !visited.has(key)) {
+                        queue.push([nx, ny]);
+                        visited.add(key);
+                        parent.set(key, [x, y]);
+                    }
+                }
+            }
+            
+            document.getElementById('status').textContent = 
+                `Classical solution found in ${classicalPath.length} steps`;
+            drawMaze();
+        }
+
+        // Simplified Quantum-inspired solver
+        function solveQuantum() {
+            quantumPath = [];
+            // Simulate superposition by checking multiple paths
+            let states = [{pos: [0, 0], path: [[0, 0]], prob: 1.0}];
+            const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+            let iterations = 0;
+            const maxIterations = Math.pow(gridSize, 2);
+
+            while (iterations < maxIterations) {
+                let newStates = [];
+                for (let state of states) {
+                    if (state.pos[0] === gridSize-1 && state.pos[1] === gridSize-1) {
+                        quantumPath = state.path;
+                        break;
+                    }
+                    
+                    // Quantum superposition: explore all possible directions
+                    for (let [dx, dy] of directions) {
+                        const nx = state.pos[0] + dx;
+                        const ny = state.pos[1] + dy;
+                        if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize && 
+                            maze[nx][ny] !== 1) {
+                            // Simulate interference: amplify probability for shorter paths
+                            const newProb = state.prob * (1 - (state.path.length / maxIterations));
+                            newStates.push({
+                                pos: [nx, ny],
+                                path: [...state.path, [nx, ny]],
+                                prob: newProb
+                            });
+                        }
+                    }
+                }
+                
+                if (quantumPath.length > 0) break;
+                
+                // Simulate measurement: select most probable states
+                newStates.sort((a, b) => b.prob - a.prob);
+                states = newStates.slice(0, 4); // Limit superposition states
+                iterations++;
+            }
+
+            document.getElementById('status').textContent = 
+                `Quantum solution found in ${quantumPath.length} steps after ${iterations} iterations`;
+            drawMaze();
+        }
+
+        function resetMaze(size) {
+            generateMaze(size);
+            classicalPath = [];
+            quantumPath = [];
+            document.getElementById('status').textContent = 'Maze generated! Choose a solving method.';
+            drawMaze();
+        }
+
+        // Initial setup
+        resetMaze(5);
+    </script>
+</body>
+</html>
