@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -171,7 +170,8 @@ const TeachingMethodology = () => {
                       <h3 className="text-xl font-semibold">Social Learning</h3>
                     </div>
                     <p className="text-quantum-700 dark:text-quantum-300 mb-4">
-                      Learn together with friends and classmates through collaborative challenges and friendly competitions.
+                      Learn together with friends and classmates through 
+                      collaborative challenges and friendly competitions.
                     </p>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-start">
@@ -188,7 +188,7 @@ const TeachingMethodology = () => {
                       </li>
                     </ul>
                     <Button asChild variant="link" className="flex items-center gap-1 pl-0">
-                      <Link to="/community">
+                      <Link to="/social">
                         Join Community <ArrowRight className="h-4 w-4" />
                       </Link>
                     </Button>

@@ -28,6 +28,16 @@ export const navItems: NavItem[] = [
     description: "Interactive simulators and quantum tools",
   },
   {
+    title: "Social Learning",
+    href: "/social",
+    description: "Learn together with our community features",
+  },
+  {
+    title: "For Teachers",
+    href: "/teachers",
+    description: "Resources for educators",
+  },
+  {
     title: "About",
     href: "/about",
     description: "Learn about our mission and approach",
