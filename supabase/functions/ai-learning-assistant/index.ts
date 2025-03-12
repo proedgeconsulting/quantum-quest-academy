@@ -26,22 +26,32 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     // Get request data
-    const { message, userId, context, chatMode } = await req.json();
+    const requestData = await req.json();
+    const { message, concept, question, userId, context, chatMode, lessonId } = requestData;
     
-    if (!message) {
+    // Handle both chatbot and assistant requests
+    const userQuery = message || (concept && question ? `${concept}: ${question}` : "");
+    
+    if (!userQuery) {
       return new Response(
-        JSON.stringify({ error: 'Message is required' }),
+        JSON.stringify({ error: 'Message or concept and question are required' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       );
     }
     
-    console.log(`Processing message: ${message}`);
+    console.log(`Processing request: ${userQuery}`);
     
     // Set system message based on chat mode
     let systemMessage = 'You are a helpful assistant that provides concise and accurate information.';
     
     if (chatMode === 'quantum') {
       systemMessage = 'You are an expert quantum physics tutor. Provide clear, concise explanations with helpful analogies for complex quantum concepts. Make your explanations accessible to learners who are new to the field.';
+    }
+    
+    // Enhance context with lesson information if provided
+    let enhancedContext = context || "";
+    if (lessonId) {
+      enhancedContext += ` This question is related to lesson: ${lessonId}`;
     }
     
     // Call OpenAI API for the response
@@ -60,7 +70,7 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: `${message} ${context ? `Context: ${context}` : ''}`
+            content: `${userQuery} ${enhancedContext ? `Context: ${enhancedContext}` : ''}`
           }
         ],
         temperature: 0.7,
@@ -74,20 +84,24 @@ serve(async (req) => {
     }
     
     const data = await response.json();
-    const reply = data.choices[0].message.content;
+    const aiResponse = data.choices[0].message.content;
     
     // Log the interaction if userId is provided
     if (userId) {
       await supabase.from('user_learning_interactions').insert({
         user_id: userId,
-        concept: message.substring(0, 100), // Store first 100 chars as concept
+        concept: userQuery.substring(0, 100), // Store first 100 chars as concept
         interaction_type: chatMode === 'quantum' ? 'quantum_chat' : 'general_chat',
         created_at: new Date().toISOString()
-      }).select();
+      });
     }
     
+    // Return response with both formats to support different components
     return new Response(
-      JSON.stringify({ reply }),
+      JSON.stringify({ 
+        reply: aiResponse,
+        explanation: aiResponse
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
     

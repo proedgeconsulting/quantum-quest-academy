@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,6 +68,12 @@ const Chatbot = ({ initialMessage = "Hi! How can I help you today?", onClose, is
     setIsLoading(true);
     
     try {
+      console.log("Sending request to AI assistant with:", { 
+        message: currentMessage,
+        userId: user?.id,
+        chatMode: 'general'
+      });
+      
       const { data, error } = await supabase.functions.invoke('ai-learning-assistant', {
         body: { 
           message: currentMessage,
@@ -77,14 +82,21 @@ const Chatbot = ({ initialMessage = "Hi! How can I help you today?", onClose, is
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase function error:", error);
+        throw error;
+      }
+      
+      console.log("Received response from AI assistant:", data);
+      
+      const botReply = data.reply || data.explanation || "I couldn't generate a response at this time.";
       
       setMessages(prev => [
         ...prev, 
         {
           id: `bot-${Date.now()}`,
           sender: 'bot',
-          text: data.reply,
+          text: botReply,
           timestamp: new Date()
         }
       ]);

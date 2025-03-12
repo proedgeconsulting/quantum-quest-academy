@@ -34,16 +34,19 @@ const AIAssistant = ({ lessonId, conceptContext, onClose }: AIAssistantProps) =>
     try {
       const { data, error } = await supabase.functions.invoke('ai-learning-assistant', {
         body: { 
-          concept: question, 
+          question: question,
+          concept: "Quantum concept",
           userId: user?.id, 
           context: conceptContext || "",
-          lessonId
+          lessonId,
+          chatMode: "quantum"
         }
       });
       
       if (error) throw error;
       
-      setExplanation(data.explanation);
+      // Handle both formats for backward compatibility
+      setExplanation(data.explanation || data.reply || "I couldn't generate a response at this time.");
       
     } catch (error) {
       console.error("Error getting explanation:", error);
