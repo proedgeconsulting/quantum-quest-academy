@@ -1,4 +1,3 @@
-
 import { Module } from "@/data/types/courseTypes";
 
 // Module 7: Quantum Pattern Detectives
@@ -37,6 +36,7 @@ export const module7: Module = {
       description: "Create a quantum program that can identify animals based on their characteristics.",
       content: "Have you ever wanted to create a computer program that can tell the difference between a lion and a house cat, or an eagle and a penguin? In this lesson, you'll learn about building a quantum animal sorter!\n\nWe'll explore how your quantum computer can learn to recognize animals based on features like:\n- How big they are\n- What they eat (plants, meat, or both)\n- Where they live (land, water, or air)\n- If they have fur, feathers, or scales\n\nThe lesson explains how you would train your quantum circuit using examples of animals where you already know the answers, and then test it on new animals to see if it can classify them correctly. You'll learn how the quantum computer uses special 'quantum gates' that help it learn patterns just like your brain does when you learn to recognize animals!\n\nWe'll discuss the challenges of classifying tricky animals like the platypus, and how quantum approaches might handle these edge cases differently from classical algorithms.",
       type: "video",
+      videoUrl: "https://www.youtube.com/watch?v=QF9DQ-nzj8k",
       duration: 20,
       points: 15
     },

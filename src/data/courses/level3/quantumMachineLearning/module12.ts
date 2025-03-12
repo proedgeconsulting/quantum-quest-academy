@@ -31,6 +31,7 @@ export const module12: Module = {
       description: "Discover exciting careers that might exist in the quantum computing era.",
       content: "What will you be when you grow up? In a world with powerful quantum computers, there might be amazing new jobs that don't even exist today!\n\nIn this video lesson, we'll explore potential careers in the quantum computing field, including:\n- Quantum Algorithm Designer: Creating new quantum software solutions\n- Quantum Machine Learning Engineer: Building AI systems that use quantum advantages\n- Quantum Game Developer: Creating entertainment that uses quantum principles\n- Quantum Healthcare Analyst: Using quantum computing to personalize medical treatments\n- Quantum Network Architect: Designing secure quantum communication systems\n\nFor each potential career, we'll discuss what these professionals might do day-to-day, what skills they would need, and how their work might impact society. Some of these jobs are beginning to emerge now, while others might appear as quantum technology advances.\n\nBy the end of this lesson, you'll have a glimpse of how quantum computing might create new and exciting career opportunities in your future!",
       type: "video",
+      videoUrl: "https://www.youtube.com/watch?v=YoA_MMlGvRo",
       duration: 20,
       points: 15
     },
