@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Social Learning",
-    href: "/social",
+    href: "/social-learning",
     description: "Learn together with our community features",
   },
   {
