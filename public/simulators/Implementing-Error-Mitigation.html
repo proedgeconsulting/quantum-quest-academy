@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Error Mitigation Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Error Mitigation Simulator</h1>
+    <p>Explore different error mitigation techniques in a simulated noisy quantum environment.</p>
+
+    <div class="controls">
+        <h3>Simulation Settings</h3>
+        <label>Noise Level (0-1): 
+            <input type="range" id="noiseLevel" min="0" max="1" step="0.1" value="0.3">
+            <span id="noiseValue">0.3</span>
+        </label><br><br>
+
+        <label>Mitigation Technique:
+            <select id="mitigationType">
+                <option value="none">None</option>
+                <option value="zne">Zero-Noise Extrapolation</option>
+                <option value="dd">Dynamical Decoupling</option>
+                <option value="readout">Readout Error Mitigation</option>
+            </select>
+        </label><br><br>
+
+        <label>Circuit Depth:
+            <input type="range" id="circuitDepth" min="1" max="10" value="5">
+            <span id="depthValue">5</span>
+        </label><br><br>
+
+        <button onclick="runSimulation()">Run Simulation</button>
+    </div>
+
+    <canvas id="resultChart" width="800" height="400"></canvas>
+    <div class="result" id="resultText"></div>
+
+    <script>
+        // Get DOM elements
+        const canvas = document.getElementById('resultChart');
+        const ctx = canvas.getContext('2d');
+        const noiseLevelInput = document.getElementById('noiseLevel');
+        const noiseValueSpan = document.getElementById('noiseValue');
+        const circuitDepthInput = document.getElementById('circuitDepth');
+        const depthValueSpan = document.getElementById('depthValue');
+        const mitigationTypeSelect = document.getElementById('mitigationType');
+        const resultText = document.getElementById('resultText');
+
+        // Update displayed values
+        noiseLevelInput.oninput = () => noiseValueSpan.textContent = noiseLevelInput.value;
+        circuitDepthInput.oninput = () => depthValueSpan.textContent = circuitDepthInput.value;
+
+        // Simulate quantum circuit with noise and mitigation
+        function simulateCircuit(noiseLevel, depth, mitigation) {
+            // Ideal result (perfect quantum computation)
+            const idealResult = 1.0;
+            
+            // Simulate noisy result without mitigation
+            let noisyResult = idealResult;
+            for (let i = 0; i < depth; i++) {
+                noisyResult *= (1 - noiseLevel * Math.random());
+            }
+
+            // Apply selected mitigation technique
+            let mitigatedResult = noisyResult;
+            switch (mitigation) {
+                case 'zne':
+                    // Zero-Noise Extrapolation: simulate multiple noise levels and extrapolate
+                    const noise1 = noisyResult;
+                    const noise2 = noise1 * (1 - noiseLevel * 0.5);
+                    mitigatedResult = noise1 + (noise1 - noise2); // Simple linear extrapolation
+                    mitigatedResult = Math.min(1, mitigatedResult);
+                    break;
+                case 'dd':
+                    // Dynamical Decoupling: reduce effective noise
+                    mitigatedResult = noisyResult / (1 - noiseLevel * 0.3);
+                    mitigatedResult = Math.min(1, mitigatedResult);
+                    break;
+                case 'readout':
+                    // Readout Error Mitigation: correct measurement errors
+                    mitigatedResult = noisyResult + (noiseLevel * 0.2);
+                    mitigatedResult = Math.min(1, mitigatedResult);
+                    break;
+            }
+
+            return { ideal: idealResult, noisy: noisyResult, mitigated: mitigatedResult };
+        }
+
+        // Draw results on canvas
+        function drawResults(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw bars
+            const barWidth = 200;
+            const maxHeight = 300;
+            
+            // Ideal result (green)
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillRect(50, canvas.height - (results.ideal * maxHeight), barWidth, results.ideal * maxHeight);
+            
+            // Noisy result (red)
+            ctx.fillStyle = '#e74c3c';
+            ctx.fillRect(300, canvas.height - (results.noisy * maxHeight), barWidth, results.noisy * maxHeight);
+            
+            // Mitigated result (blue)
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(550, canvas.height - (results.mitigated * maxHeight), barWidth, results.mitigated * maxHeight);
+
+            // Labels
+            ctx.fillStyle = '#000';
+            ctx.font = '16px Arial';
+            ctx.fillText('Ideal', 130, 20);
+            ctx.fillText('Noisy', 380, 20);
+            ctx.fillText('Mitigated', 630, 20);
+        }
+
+        // Run simulation and update display
+        function runSimulation() {
+            const noiseLevel = parseFloat(noiseLevelInput.value);
+            const depth = parseInt(circuitDepthInput.value);
+            const mitigation = mitigationTypeSelect.value;
+
+            const results = simulateCircuit(noiseLevel, depth, mitigation);
+            drawResults(results);
+
+            // Update result text
+            resultText.innerHTML = `
+                <strong>Simulation Results:</strong><br>
+                Ideal Result: ${results.ideal.toFixed(3)}<br>
+                Noisy Result: ${results.noisy.toFixed(3)}<br>
+                Mitigated Result: ${results.mitigated.toFixed(3)}<br>
+                Error Reduction: ${((results.mitigated - results.noisy) / (results.ideal - results.noisy) * 100).toFixed(1)}%
+            `;
+        }
+
+        // Initial simulation
+        runSimulation();
+    </script>
+</body>
+</html>

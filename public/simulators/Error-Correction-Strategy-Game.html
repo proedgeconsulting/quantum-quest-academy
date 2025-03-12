@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Error Correction Strategy Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        #game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .quantum-bit {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            line-height: 50px;
+            font-size: 20px;
+            background-color: #ddd;
+        }
+        .error {
+            background-color: #ff6666;
+        }
+        .corrected {
+            background-color: #66ff66;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Quantum Error Correction Game</h1>
+        <p>Level: <span id="level">1</span> | Score: <span id="score">0</span> | Resources: <span id="resources">10</span></p>
+        <div id="quantum-memory"></div>
+        <div id="controls">
+            <button onclick="measureSyndrome()">Measure Syndrome (Cost: 2)</button>
+            <button onclick="correctError()">Apply Correction (Cost: 3)</button>
+            <button onclick="nextLevel()">Next Level</button>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let level = 1;
+        let score = 0;
+        let resources = 10;
+        let quantumState = [];
+        let errorIndices = [];
+        const maxLevels = 5;
+
+        function initializeGame() {
+            document.getElementById('level').textContent = level;
+            document.getElementById('score').textContent = score;
+            document.getElementById('resources').textContent = resources;
+            generateQuantumState();
+            displayQuantumState();
+            document.getElementById('message').textContent = "Diagnose and correct the errors!";
+        }
+
+        function generateQuantumState() {
+            quantumState = Array(5 + level).fill(0); // Increase size with level
+            errorIndices = [];
+            let errorCount = Math.min(level + 1, quantumState.length);
+            while (errorIndices.length < errorCount) {
+                let idx = Math.floor(Math.random() * quantumState.length);
+                if (!errorIndices.includes(idx)) {
+                    errorIndices.push(idx);
+                    quantumState[idx] = 1; // 1 represents an error
+                }
+            }
+        }
+
+        function displayQuantumState(revealErrors = false) {
+            const memoryDiv = document.getElementById('quantum-memory');
+            memoryDiv.innerHTML = '';
+            quantumState.forEach((bit, index) => {
+                const bitDiv = document.createElement('div');
+                bitDiv.className = 'quantum-bit';
+                if (revealErrors && errorIndices.includes(index)) {
+                    bitDiv.classList.add('error');
+                    bitDiv.textContent = 'X';
+                } else if (bit === 0) {
+                    bitDiv.textContent = '0';
+                } else {
+                    bitDiv.textContent = '?';
+                }
+                memoryDiv.appendChild(bitDiv);
+            });
+        }
+
+        function measureSyndrome() {
+            if (resources < 2) {
+                document.getElementById('message').textContent = "Not enough resources!";
+                return;
+            }
+            resources -= 2;
+            document.getElementById('resources').textContent = resources;
+            displayQuantumState(true);
+            document.getElementById('message').textContent = "Syndrome measured. Apply corrections!";
+        }
+
+        function correctError() {
+            if (resources < 3) {
+                document.getElementById('message').textContent = "Not enough resources!";
+                return;
+            }
+            resources -= 3;
+            document.getElementById('resources').textContent = resources;
+
+            if (errorIndices.length > 0) {
+                quantumState = quantumState.map(() => 0); // Correct all errors
+                errorIndices = [];
+                displayQuantumState();
+                score += 10 * level;
+                document.getElementById('score').textContent = score;
+                document.getElementById('message').textContent = "Errors corrected! Proceed to next level.";
+            } else {
+                document.getElementById('message').textContent = "No errors to correct!";
+            }
+        }
+
+        function nextLevel() {
+            if (errorIndices.length > 0) {
+                document.getElementById('message').textContent = "Correct all errors before proceeding!";
+                return;
+            }
+            level++;
+            if (level > maxLevels) {
+                document.getElementById('message').textContent = `Game Over! Final Score: ${score}`;
+                document.getElementById('controls').innerHTML = '<button onclick="resetGame()">Play Again</button>';
+                return;
+            }
+            resources = Math.min(resources + 5, 15); // Restore some resources
+            document.getElementById('level').textContent = level;
+            document.getElementById('resources').textContent = resources;
+            generateQuantumState();
+            displayQuantumState();
+            document.getElementById('message').textContent = "New level started. Diagnose and correct the errors!";
+        }
+
+        function resetGame() {
+            level = 1;
+            score = 0;
+            resources = 10;
+            initializeGame();
+            document.getElementById('controls').innerHTML = `
+                <button onclick="measureSyndrome()">Measure Syndrome (Cost: 2)</button>
+                <button onclick="correctError()">Apply Correction (Cost: 3)</button>
+                <button onclick="nextLevel()">Next Level</button>
+            `;
+        }
+
+        // Start the game
+        initializeGame();
+    </script>
+</body>
+</html>

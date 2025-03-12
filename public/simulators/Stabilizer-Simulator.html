@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stabilizer Simulator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { display: flex; gap: 20px; margin-top: 20px; }
+        .panel { border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
+        #lattice { background: #f8f8f8; }
+        .qubit { cursor: pointer; transition: fill 0.3s; }
+        .error-x { fill: #ff6666; } 
+        .error-z { fill: #6666ff; }
+        .error-y { fill: #66ff66; }
+        .syndrome { stroke-width: 2; }
+        .control { margin: 10px 0; }
+        .log { height: 100px; overflow-y: auto; border: 1px solid #ddd; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Stabilizer Code Simulator</h1>
+    
+    <div class="container">
+        <div class="panel" style="flex: 3;">
+            <h3>Code Space (3-qubit bit-flip code)</h3>
+            <svg id="lattice" width="500" height="200"></svg>
+            <div>
+                <button onclick="measureSyndrome()">Measure Syndrome</button>
+                <button onclick="applyCorrection()">Apply Correction</button>
+                <button onclick="reset()">Reset</button>
+            </div>
+            <div class="log" id="log"></div>
+        </div>
+        
+        <div class="panel" style="flex: 1;">
+            <h3>Controls</h3>
+            <div class="control">
+                <h4>Apply Error:</h4>
+                <button onclick="selectedError='X'">X (Bit Flip)</button>
+                <button onclick="selectedError='Z'">Z (Phase Flip)</button>
+                <button onclick="selectedError='Y'">Y (Both)</button>
+            </div>
+            <div class="control">
+                <h4>Stabilizers:</h4>
+                <div id="stabilizers">Z₁Z₂<br>Z₂Z₃</div>
+            </div>
+            <div class="control">
+                <h4>Syndrome:</h4>
+                <div id="syndrome">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedError = 'X';
+        let qubitStates = Array(3).fill('I');
+        let stabilizers = ['ZZI', 'ZIZ'];
+        let syndrome = [];
+        
+        function drawLattice() {
+            const svg = document.getElementById('lattice');
+            svg.innerHTML = '';
+            
+            // Draw qubits
+            for(let i = 0; i < 3; i++) {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", 100 + i * 150);
+                circle.setAttribute("cy", 100);
+                circle.setAttribute("r", 20);
+                circle.setAttribute("class", `qubit ${qubitStates[i] !== 'I' ? 'error-'+qubitStates[i].toLowerCase() : ''}`);
+                circle.addEventListener('click', () => applyError(i));
+                svg.appendChild(circle);
+                
+                // Qubit label
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", 100 + i * 150);
+                text.setAttribute("y", 140);
+                text.textContent = `Qubit ${i+1}`;
+                svg.appendChild(text);
+            }
+        }
+
+        function applyError(qubit) {
+            qubitStates[qubit] = selectedError;
+            log(`Applied ${selectedError} error to Qubit ${qubit+1}`);
+            drawLattice();
+        }
+
+        function measureSyndrome() {
+            syndrome = [];
+            // Simplified syndrome measurement
+            syndrome[0] = qubitStates[0] === qubitStates[1] ? 0 : 1;
+            syndrome[1] = qubitStates[1] === qubitStates[2] ? 0 : 1;
+            
+            document.getElementById('syndrome').textContent = syndrome.join(', ');
+            log(`Syndrome measured: [${syndrome}]`);
+            highlightAncilla();
+        }
+
+        function applyCorrection() {
+            if(syndrome.length === 0) {
+                log("Measure syndrome first!");
+                return;
+            }
+            
+            // Simplified correction logic
+            if(syndrome[0] && !syndrome[1]) applyX(0);
+            if(syndrome[1] && !syndrome[0]) applyX(2);
+            if(syndrome[0] && syndrome[1]) applyX(1);
+            
+            log("Applied correction based on syndrome");
+            syndrome = [];
+            drawLattice();
+        }
+
+        function applyX(qubit) {
+            qubitStates[qubit] = qubitStates[qubit] === 'X' ? 'I' : 'X';
+        }
+
+        function reset() {
+            qubitStates = Array(3).fill('I');
+            syndrome = [];
+            document.getElementById('syndrome').textContent = '-';
+            log("System reset");
+            drawLattice();
+        }
+
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += `> ${message}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Initialize
+        drawLattice();
+    </script>
+</body>
+</html>

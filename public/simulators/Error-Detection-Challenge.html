@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Error Detection Challenge</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #gameContainer {
+            position: relative;
+            margin: 20px;
+        }
+        .qubitLine {
+            display: flex;
+            margin: 10px 0;
+        }
+        .qubit {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #444;
+            margin: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .qubit.error-x { background: #ff4444; }
+        .qubit.error-z { background: #4444ff; }
+        .qubit.error-y { background: #44ff44; }
+        .qubit.reported { border: 3px solid gold; }
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            margin: 20px;
+            padding: 10px;
+            background: #333;
+        }
+        #timer {
+            width: 600px;
+            height: 20px;
+            background: #444;
+            margin: 10px;
+        }
+        #progress {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.1s linear;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background: #444;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Error Detection Challenge</h1>
+    <div id="hud">
+        <div>Score: <span id="score">0</span></div>
+        <div>Level: <span id="level">1</span></div>
+        <div>High Score: <span id="highScore">0</span></div>
+    </div>
+    <div id="timer"><div id="progress"></div></div>
+    <div id="gameContainer"></div>
+    <button onclick="startGame()">Start New Game</button>
+
+    <script>
+        let gameActive = false;
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+        let level = 1;
+        let timeLeft = 0;
+        let currentErrors = new Set();
+
+        document.getElementById('highScore').textContent = highScore;
+
+        function createGameGrid(qubits) {
+            const container = document.getElementById('gameContainer');
+            container.innerHTML = '';
+            
+            for(let i = 0; i < qubits; i++) {
+                const line = document.createElement('div');
+                line.className = 'qubitLine';
+                
+                for(let j = 0; j < 8; j++) {
+                    const qubit = document.createElement('div');
+                    qubit.className = 'qubit';
+                    qubit.dataset.pos = `${i}-${j}`;
+                    qubit.onclick = handleQubitClick;
+                    line.appendChild(qubit);
+                }
+                container.appendChild(line);
+            }
+        }
+
+        function addRandomErrors() {
+            const qubits = document.querySelectorAll('.qubit');
+            const errorCount = Math.min(level, 5);
+            const errorTypes = ['x', 'z', 'y'].slice(0, Math.ceil(level/3));
+            
+            currentErrors.clear();
+            
+            for(let i = 0; i < errorCount; i++) {
+                const target = Math.floor(Math.random() * qubits.length);
+                const type = errorTypes[Math.floor(Math.random() * errorTypes.length)];
+                
+                qubits[target].classList.add(`error-${type}`);
+                currentErrors.add(qubits[target].dataset.pos + '-' + type);
+            }
+        }
+
+        function handleQubitClick(e) {
+            if(!gameActive) return;
+            
+            const qubit = e.target;
+            const pos = qubit.dataset.pos;
+            const hasError = qubit.classList.toString().includes('error-');
+            
+            if(hasError) {
+                const type = [...qubit.classList].find(c => c.startsWith('error-')).split('-')[1];
+                if(currentErrors.delete(pos + '-' + type)) {
+                    score += 100 * level;
+                    qubit.classList.remove(`error-${type}`);
+                }
+            } else {
+                score = Math.max(0, score - 50);
+            }
+            
+            qubit.classList.toggle('reported');
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            if(score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+                document.getElementById('highScore').textContent = highScore;
+            }
+        }
+
+        function startGame() {
+            gameActive = true;
+            score = 0;
+            level = 1;
+            timeLeft = 30;
+            createGameGrid(3);
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if(!gameActive) return;
+            
+            timeLeft -= 0.1;
+            document.getElementById('progress').style.width = `${(timeLeft/30)*100}%`;
+            
+            if(timeLeft <= 0) {
+                gameActive = false;
+                alert(`Game Over! Final Score: ${score}`);
+                return;
+            }
+            
+            if(currentErrors.size === 0) {
+                level++;
+                document.getElementById('level').textContent = level;
+                createGameGrid(3 + Math.floor(level/2));
+                addRandomErrors();
+                timeLeft = Math.max(10, 30 - level*2);
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+    </script>
+</body>
+</html>

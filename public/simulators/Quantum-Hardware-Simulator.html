@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Hardware Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quantum Hardware Simulator</h1>
+        <p>Explore quantum error correction by adjusting hardware parameters and visualizing error propagation.</p>
+        
+        <div class="controls">
+            <h3>Hardware Parameters</h3>
+            <label>Number of Qubits (2-5):</label>
+            <input type="number" id="numQubits" min="2" max="5" value="3">
+            <br>
+            <label>Gate Error Rate (0-0.1):</label>
+            <input type="number" id="gateError" min="0" max="0.1" step="0.01" value="0.02">
+            <br>
+            <label>Measurement Error Rate (0-0.1):</label>
+            <input type="number" id="measError" min="0" max="0.1" step="0.01" value="0.03">
+            <br>
+            <label>Decoherence Time (ms, 10-100):</label>
+            <input type="number" id="decoherence" min="10" max="100" step="10" value="50">
+            <br>
+            <label>Error Correction Strategy:</label>
+            <select id="errorCorrection">
+                <option value="none">None</option>
+                <option value="repetition">Repetition Code</option>
+                <option value="surface">Surface Code (Simplified)</option>
+            </select>
+            <br>
+            <button onclick="runSimulation()">Run Simulation</button>
+        </div>
+
+        <h3>Error Propagation Visualization</h3>
+        <canvas id="errorChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let chart;
+
+        // Initialize chart
+        function initChart() {
+            const ctx = document.getElementById('errorChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Error Rate Over Time',
+                        data: [],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Time Steps' } },
+                        y: { title: { display: true, text: 'Error Rate' }, min: 0, max: 1 }
+                    }
+                }
+            });
+        }
+
+        // Simulate quantum hardware with errors
+        function simulateQuantumHardware(numQubits, gateError, measError, decoherence, strategy) {
+            const timeSteps = 10;
+            const errorData = [];
+            let currentError = 0;
+
+            for (let t = 0; t < timeSteps; t++) {
+                // Base error from gates and measurements
+                let stepError = numQubits * (gateError + measError);
+                
+                // Decoherence effect (simplified)
+                const decoherenceFactor = 1 - (t * 10 / decoherence);
+                stepError *= (decoherenceFactor > 0 ? decoherenceFactor : 0);
+
+                // Apply error correction strategy
+                if (strategy === 'repetition') {
+                    stepError *= 0.7; // Reduce error by 30% (simplified)
+                } else if (strategy === 'surface') {
+                    stepError *= 0.5; // Reduce error by 50% (simplified)
+                }
+
+                currentError += stepError;
+                currentError = Math.min(currentError, 1); // Cap at 1
+                errorData.push(currentError);
+            }
+
+            return errorData;
+        }
+
+        // Run simulation and update chart
+        function runSimulation() {
+            const numQubits = parseInt(document.getElementById('numQubits').value);
+            const gateError = parseFloat(document.getElementById('gateError').value);
+            const measError = parseFloat(document.getElementById('measError').value);
+            const decoherence = parseFloat(document.getElementById('decoherence').value);
+            const strategy = document.getElementById('errorCorrection').value;
+
+            const errorData = simulateQuantumHardware(numQubits, gateError, measError, decoherence, strategy);
+            const labels = Array.from({ length: errorData.length }, (_, i) => i + 1);
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = errorData;
+            chart.update();
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initChart();
+            runSimulation(); // Run with default values
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Error Detective Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .game-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .circuit {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Quantum Error Detective Agency</h1>
+        <div class="stats">
+            <span>Reputation: <span id="reputation">0</span></span>
+            <span>Budget: $<span id="budget">100</span></span>
+            <span>Level: <span id="level">1</span></span>
+        </div>
+
+        <div id="case">
+            <h2>New Case</h2>
+            <div class="circuit" id="circuit">
+                Quantum Circuit: [H] -> [X?] -> [M]
+                <br>Expected Output: 50% |0⟩, 50% |1⟩
+                <br>Current Output: <span id="currentOutput">100% |0⟩</span>
+            </div>
+        </div>
+
+        <div id="tools">
+            <h3>Investigation Tools (Cost $)</h3>
+            <button onclick="runTest('state', 20)">Check Quantum State ($20)</button>
+            <button onclick="runTest('gate', 30)">Test Gate Function ($30)</button>
+            <button onclick="runTest('measure', 25)">Verify Measurement ($25)</button>
+            <button onclick="solveCase()">Submit Solution</button>
+        </div>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let reputation = 0;
+        let budget = 100;
+        let level = 1;
+        let errorType = 'gate'; // Initial error in X gate
+        let caseSolved = false;
+
+        function updateStats() {
+            document.getElementById('reputation').textContent = reputation;
+            document.getElementById('budget').textContent = budget;
+            document.getElementById('level').textContent = level;
+        }
+
+        function runTest(testType, cost) {
+            if (caseSolved) return;
+            if (budget < cost) {
+                document.getElementById('output').innerHTML = 'Insufficient budget!';
+                return;
+            }
+
+            budget -= cost;
+            let result = '';
+            
+            switch(testType) {
+                case 'state':
+                    result = 'Quantum state analysis: Hadamard gate creating superposition correctly.';
+                    break;
+                case 'gate':
+                    result = 'Gate analysis: X gate malfunction detected! Not flipping qubit as expected.';
+                    break;
+                case 'measure':
+                    result = 'Measurement analysis: Measurement device functioning normally.';
+                    break;
+            }
+
+            document.getElementById('output').innerHTML = result;
+            updateStats();
+        }
+
+        function solveCase() {
+            if (caseSolved) return;
+            
+            const solution = prompt('Where’s the error? (Type: "gate", "state", or "measure")');
+            if (solution?.toLowerCase() === errorType) {
+                reputation += 25;
+                budget += 50;
+                caseSolved = true;
+                document.getElementById('output').innerHTML = 
+                    'Case solved! The error was in the X gate. +25 reputation, +$50 bonus!<br>' +
+                    'Click "New Case" to continue.';
+                document.getElementById('tools').innerHTML += 
+                    '<button onclick="newCase()">New Case</button>';
+            } else {
+                document.getElementById('output').innerHTML = 
+                    'Wrong solution! Try again. (-$10)';
+                budget -= 10;
+            }
+            updateStats();
+        }
+
+        function newCase() {
+            caseSolved = false;
+            level++;
+            errorType = ['state', 'gate', 'measure'][Math.floor(Math.random() * 3)];
+            const outputs = {
+                'state': '75% |0⟩, 25% |1⟩',
+                'gate': '100% |0⟩',
+                'measure': 'Random noise'
+            };
+            
+            document.getElementById('circuit').innerHTML = 
+                `Quantum Circuit: [H] -> [X?] -> [M]
+                <br>Expected Output: 50% |0⟩, 50% |1⟩
+                <br>Current Output: <span id="currentOutput">${outputs[errorType]}</span>`;
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('tools').innerHTML = 
+                '<h3>Investigation Tools (Cost $)</h3>' +
+                '<button onclick="runTest(\'state\', 20)">Check Quantum State ($20)</button>' +
+                '<button onclick="runTest(\'gate\', 30)">Test Gate Function ($30)</button>' +
+                '<button onclick="runTest(\'measure\', 25)">Verify Measurement ($25)</button>' +
+                '<button onclick="solveCase()">Submit Solution</button>';
+            updateStats();
+        }
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

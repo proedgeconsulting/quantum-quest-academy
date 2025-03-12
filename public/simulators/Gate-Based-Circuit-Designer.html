@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Circuit Simulator</title>
+    <style>
+        .gate { cursor: move; fill: #4CAF50; }
+        .qubit-line { stroke: #666; stroke-width: 2; }
+        .droppable { fill: rgba(0,150,136,0.1); }
+        #stateDisplay { margin-top: 20px; padding: 10px; background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <div style="display: flex;">
+        <div id="toolbar" style="width: 100px; padding: 10px;">
+            <h4>Gates</h4>
+            <svg width="80" height="200">
+                <rect class="gate" x="10" y="10" width="60" height="30" data-gate="H"></rect>
+                <text x="35" y="30">H</text>
+                
+                <rect class="gate" x="10" y="60" width="60" height="30" data-gate="X"></rect>
+                <text x="35" y="80">X</text>
+                
+                <rect class="gate" x="10" y="110" width="60" height="30" data-gate="CNOT"></rect>
+                <text x="30" y="130">CNOT</text>
+            </svg>
+        </div>
+
+        <svg id="circuit" width="600" height="200" style="border: 1px solid #ccc;"></svg>
+    </div>
+
+    <button onclick="runSimulation()">Run Simulation</button>
+    <div id="stateDisplay"></div>
+
+    <script>
+        let currentGate = null;
+        let circuitState = [[1, 0], [1, 0]]; // Initial state |0> for both qubits
+        const gates = [];
+
+        // Create qubit lines
+        const svg = document.getElementById('circuit');
+        [50, 150].forEach(y => {
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("class", "qubit-line");
+            line.setAttribute("x1", "20");
+            line.setAttribute("y1", y);
+            line.setAttribute("x2", "580");
+            line.setAttribute("y2", y);
+            svg.appendChild(line);
+        });
+
+        // Drag and drop functionality
+        document.querySelectorAll('.gate').forEach(gate => {
+            gate.addEventListener('mousedown', e => {
+                currentGate = {
+                    type: e.target.getAttribute('data-gate'),
+                    element: e.target.cloneNode(true)
+                };
+            });
+        });
+
+        svg.addEventListener('mousemove', e => {
+            if (currentGate && !currentGate.placed) {
+                const rect = svg.getBoundingClientRect();
+                const x = e.clientX - rect.left - 30;
+                const y = e.clientY - rect.top - 15;
+                currentGate.element.setAttribute('x', x);
+                currentGate.element.setAttribute('y', y);
+                svg.appendChild(currentGate.element);
+            }
+        });
+
+        svg.addEventListener('mouseup', e => {
+            if (currentGate) {
+                const rect = svg.getBoundingClientRect();
+                const yPos = e.clientY - rect.top;
+                const qubit = yPos > 100 ? 1 : 0;
+                
+                const newGate = {
+                    type: currentGate.type,
+                    qubit,
+                    x: e.clientX - rect.left - 30,
+                    y: qubit === 0 ? 35 : 135
+                };
+                
+                gates.push(newGate);
+                updateCircuitDisplay();
+                currentGate = null;
+            }
+        });
+
+        function updateCircuitDisplay() {
+            svg.querySelectorAll('.placed-gate').forEach(g => g.remove());
+            gates.forEach(gate => {
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute('class', 'placed-gate gate');
+                rect.setAttribute('x', gate.x);
+                rect.setAttribute('y', gate.y);
+                rect.setAttribute('width', '60');
+                rect.setAttribute('height', '30');
+                svg.appendChild(rect);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute('x', gate.x + 25);
+                text.setAttribute('y', gate.y + 20);
+                text.textContent = gate.type;
+                svg.appendChild(text);
+            });
+        }
+
+        function runSimulation() {
+            // Reset state
+            let state = [[1, 0], [1, 0]];
+            
+            gates.forEach(gate => {
+                switch(gate.type) {
+                    case 'H':
+                        state[gate.qubit] = hadamard(state[gate.qubit]);
+                        break;
+                    case 'X':
+                        state[gate.qubit] = pauliX(state[gate.qubit]);
+                        break;
+                    case 'CNOT':
+                        state = cnot(state);
+                        break;
+                }
+            });
+            
+            displayState(state);
+        }
+
+        function hadamard(qubit) {
+            return [
+                [(qubit[0] + qubit[1])/Math.sqrt(2)],
+                [(qubit[0] - qubit[1])/Math.sqrt(2)]
+            ];
+        }
+
+        function pauliX(qubit) {
+            return [qubit[1], qubit[0]];
+        }
+
+        function cnot(state) {
+            // Control qubit is first qubit (0)
+            // Target qubit is second qubit (1)
+            const newState = [[...state[0]], [...state[1]]];
+            if(Math.abs(state[0][0]) > 0.5) { // If control is |1>
+                newState[1] = [state[1][1], state[1][0]];
+            }
+            return newState;
+        }
+
+        function displayState(state) {
+            const stateText = state.map((q, i) => 
+                `Qubit ${i+1}: ${q[0].toFixed(2)}|0> + ${q[1].toFixed(2)}|1>`
+            ).join('<br>');
+            document.getElementById('stateDisplay').innerHTML = stateText;
+        }
+    </script>
+</body>
+</html>

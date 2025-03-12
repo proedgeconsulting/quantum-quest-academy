@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Circuit Optimizer</title>
+    <style>
+        .gate { cursor: move; fill: #4CAF50; }
+        .qubit-line { stroke: #666; stroke-width: 2; }
+        .circuit-container { display: flex; gap: 20px; }
+        .stats { margin: 20px 0; padding: 10px; background: #f0f0f0; }
+        .optimization-btn { margin: 5px; padding: 8px; background: #2196F3; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h3>Quantum Circuit Optimizer</h3>
+    <div class="circuit-container">
+        <div>
+            <h4>Original Circuit</h4>
+            <svg id="originalCircuit" width="400" height="200" style="border: 1px solid #ccc;"></svg>
+        </div>
+        <div>
+            <h4>Optimized Circuit</h4>
+            <svg id="optimizedCircuit" width="400" height="200" style="border: 1px solid #ccc;"></svg>
+        </div>
+    </div>
+
+    <div id="toolbar">
+        <h4>Gate Toolbox</h4>
+        <svg width="400" height="60">
+            <rect class="gate" x="10" y="10" width="40" height="40" data-gate="H"></rect>
+            <text x="25" y="35">H</text>
+            <rect class="gate" x="70" y="10" width="40" height="40" data-gate="X"></rect>
+            <text x="85" y="35">X</text>
+            <rect class="gate" x="130" y="10" width="60" height="40" data-gate="CNOT"></rect>
+            <text x="145" y="35">CNOT</text>
+        </svg>
+    </div>
+
+    <div>
+        <h4>Optimization Rules</h4>
+        <button class="optimization-btn" onclick="applyOptimization('cancelHH')">Cancel H-H</button>
+        <button class="optimization-btn" onclick="applyOptimization('mergeXX')">Merge X-X</button>
+        <button class="optimization-btn" onclick="applyOptimization('cnotCancel')">Cancel CNOT pairs</button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <script>
+        let currentGate = null;
+        let originalGates = [];
+        let optimizedGates = [];
+        
+        // Initialize circuits
+        initializeCircuit('originalCircuit');
+        initializeCircuit('optimizedCircuit');
+
+        function initializeCircuit(circuitId) {
+            const svg = document.getElementById(circuitId);
+            [50, 150].forEach(y => {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("class", "qubit-line");
+                line.setAttribute("x1", "20");
+                line.setAttribute("y1", y);
+                line.setAttribute("x2", "380");
+                line.setAttribute("y2", y);
+                svg.appendChild(line);
+            });
+        }
+
+        // Drag and drop implementation
+        document.querySelectorAll('.gate').forEach(gate => {
+            gate.addEventListener('mousedown', startDrag);
+        });
+
+        function startDrag(e) {
+            currentGate = {
+                type: e.target.getAttribute('data-gate'),
+                element: e.target.cloneNode(true)
+            };
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', drop);
+        }
+
+        function drag(e) {
+            if (currentGate) {
+                const svg = document.getElementById('originalCircuit');
+                const rect = svg.getBoundingClientRect();
+                const x = e.clientX - rect.left - 20;
+                const y = e.clientY - rect.top - 20;
+                currentGate.element.setAttribute('x', x);
+                currentGate.element.setAttribute('y', y);
+                svg.appendChild(currentGate.element);
+            }
+        }
+
+        function drop(e) {
+            if (currentGate) {
+                const svg = document.getElementById('originalCircuit');
+                const rect = svg.getBoundingClientRect();
+                const yPos = e.clientY - rect.top;
+                const qubit = yPos > 100 ? 1 : 0;
+                
+                originalGates.push({
+                    type: currentGate.type,
+                    qubit,
+                    x: e.clientX - rect.left - 20,
+                    y: qubit === 0 ? 30 : 130
+                });
+                
+                updateCircuitDisplay();
+                currentGate = null;
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', drop);
+                updateStats();
+            }
+        }
+
+        function updateCircuitDisplay() {
+            renderCircuit('originalCircuit', originalGates);
+            renderCircuit('optimizedCircuit', optimizedGates);
+        }
+
+        function renderCircuit(circuitId, gates) {
+            const svg = document.getElementById(circuitId);
+            svg.querySelectorAll('.placed-gate').forEach(g => g.remove());
+            
+            gates.forEach(gate => {
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                g.setAttribute('class', 'placed-gate gate');
+                g.setAttribute('x', gate.x);
+                g.setAttribute('y', gate.y);
+                g.setAttribute('width', gate.type === 'CNOT' ? '60' : '40');
+                g.setAttribute('height', '40');
+                svg.appendChild(g);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute('x', gate.x + (gate.type === 'CNOT' ? 20 : 15));
+                text.setAttribute('y', gate.y + 25);
+                text.textContent = gate.type;
+                svg.appendChild(text);
+            });
+        }
+
+        // Optimization rules
+        const optimizationRules = {
+            cancelHH: (gates) => {
+                return gates.filter((gate, i, arr) => 
+                    !(gate.type === 'H' && arr[i+1]?.type === 'H' && gate.qubit === arr[i+1].qubit)
+                );
+            },
+            
+            mergeXX: (gates) => {
+                const newGates = [];
+                let i = 0;
+                while(i < gates.length) {
+                    if(gates[i].type === 'X' && gates[i+1]?.type === 'X' && gates[i].qubit === gates[i+1].qubit) {
+                        i += 2;
+                    } else {
+                        newGates.push(gates[i]);
+                        i++;
+                    }
+                }
+                return newGates;
+            },
+
+            cnotCancel: (gates) => {
+                return gates.filter((gate, i, arr) => 
+                    !(gate.type === 'CNOT' && arr[i+1]?.type === 'CNOT' && 
+                     gate.qubit === arr[i+1].qubit)
+                );
+            }
+        };
+
+        function applyOptimization(ruleName) {
+            optimizedGates = optimizationRules[ruleName](originalGates);
+            updateCircuitDisplay();
+            updateStats();
+        }
+
+        function calculateMetrics(gates) {
+            const qubitOps = {0: 0, 1: 0};
+            gates.forEach(gate => qubitOps[gate.qubit]++);
+            return {
+                gateCount: gates.length,
+                depth: Math.max(...Object.values(qubitOps))
+            };
+        }
+
+        function updateStats() {
+            const originalMetrics = calculateMetrics(originalGates);
+            const optimizedMetrics = calculateMetrics(optimizedGates);
+            
+            document.getElementById('stats').innerHTML = `
+                <strong>Original Circuit:</strong>
+                ${originalMetrics.gateCount} gates, Depth: ${originalMetrics.depth}<br>
+                <strong>Optimized Circuit:</strong>
+                ${optimizedMetrics.gateCount} gates, Depth: ${optimizedMetrics.depth}<br>
+                <strong>Improvement:</strong>
+                ${originalMetrics.gateCount - optimizedMetrics.gateCount} gates removed,
+                ${originalMetrics.depth - optimizedMetrics.depth} depth reduction
+            `;
+        }
+    </script>
+</body>
+</html>

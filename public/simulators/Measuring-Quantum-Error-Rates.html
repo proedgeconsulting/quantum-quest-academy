@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Error Rate Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .controls {
+            margin: 10px 0;
+        }
+        label {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Error Rate Simulator</h1>
+    
+    <div class="section">
+        <h2>1. State Fidelity Measurement</h2>
+        <p>Fidelity (0-1): Measures how close a quantum state is to its ideal form</p>
+        <div class="controls">
+            <label>Noise Level: <input type="range" id="noiseSlider" min="0" max="1" step="0.01" value="0.1"></label>
+            <span id="noiseValue">0.1</span>
+        </div>
+        <canvas id="fidelityCanvas" width="400" height="200"></canvas>
+    </div>
+
+    <div class="section">
+        <h2>2. Noise Model Simulator</h2>
+        <p>Simulate different types of quantum noise</p>
+        <div class="controls">
+            <label>Type: 
+                <select id="noiseType">
+                    <option value="dephasing">Dephasing</option>
+                    <option value="amplitude">Amplitude Damping</option>
+                    <option value="bitflip">Bit Flip</option>
+                </select>
+            </label>
+            <label>Strength: <input type="range" id="noiseStrength" min="0" max="1" step="0.01" value="0.2"></label>
+            <span id="strengthValue">0.2</span>
+        </div>
+        <canvas id="noiseCanvas" width="400" height="200"></canvas>
+    </div>
+
+    <div class="section">
+        <h2>3. Randomized Benchmarking</h2>
+        <p>Measure error rates through random gate sequences</p>
+        <div class="controls">
+            <label>Sequence Length: <input type="range" id="sequenceLength" min="1" max="50" value="10"></label>
+            <span id="lengthValue">10</span>
+            <button onclick="runBenchmarking()">Run Benchmark</button>
+        </div>
+        <canvas id="benchmarkCanvas" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Fidelity Canvas
+        const fidelityCtx = document.getElementById('fidelityCanvas').getContext('2d');
+        const noiseSlider = document.getElementById('noiseSlider');
+        const noiseValue = document.getElementById('noiseValue');
+
+        function drawFidelity(noise) {
+            fidelityCtx.clearRect(0, 0, 400, 200);
+            const fidelity = 1 - noise;
+            
+            fidelityCtx.fillStyle = '#90EE90';
+            fidelityCtx.fillRect(50, 150, 300 * fidelity, 30);
+            fidelityCtx.strokeRect(50, 150, 300, 30);
+            
+            fidelityCtx.fillStyle = 'black';
+            fidelityCtx.fillText(`Fidelity: ${(fidelity * 100).toFixed(1)}%`, 50, 140);
+            fidelityCtx.fillText(`Noise: ${(noise * 100).toFixed(1)}%`, 50, 190);
+        }
+
+        noiseSlider.oninput = function() {
+            noiseValue.textContent = this.value;
+            drawFidelity(parseFloat(this.value));
+        };
+
+        // Noise Model Canvas
+        const noiseCtx = document.getElementById('noiseCanvas').getContext('2d');
+        const noiseType = document.getElementById('noiseType');
+        const noiseStrength = document.getElementById('noiseStrength');
+        const strengthValue = document.getElementById('strengthValue');
+
+        function drawNoiseModel(type, strength) {
+            noiseCtx.clearRect(0, 0, 400, 200);
+            noiseCtx.beginPath();
+            
+            for (let x = 0; x < 400; x++) {
+                let y;
+                if (type === 'dephasing') {
+                    y = 100 + Math.sin(x * 0.1) * 50 * (1 - strength);
+                } else if (type === 'amplitude') {
+                    y = 100 + Math.sin(x * 0.1) * 50 * Math.exp(-strength * x/400);
+                } else {
+                    y = 100 + Math.sin(x * 0.1) * 50 * (Math.random() < strength ? -1 : 1);
+                }
+                if (x === 0) noiseCtx.moveTo(x, y);
+                else noiseCtx.lineTo(x, y);
+            }
+            noiseCtx.stroke();
+            noiseCtx.fillText(`Noise Type: ${type}`, 10, 20);
+        }
+
+        noiseType.onchange = noiseStrength.oninput = function() {
+            strengthValue.textContent = noiseStrength.value;
+            drawNoiseModel(noiseType.value, parseFloat(noiseStrength.value));
+        };
+
+        // Benchmarking Canvas
+        const benchmarkCtx = document.getElementById('benchmarkCanvas').getContext('2d');
+        const sequenceLength = document.getElementById('sequenceLength');
+        const lengthValue = document.getElementById('lengthValue');
+
+        function runBenchmarking() {
+            benchmarkCtx.clearRect(0, 0, 400, 200);
+            const length = parseInt(sequenceLength.value);
+            const errorRate = 0.02; // 2% error per gate
+            
+            benchmarkCtx.beginPath();
+            for (let x = 0; x <= length; x++) {
+                const fidelity = Math.pow(1 - errorRate, x);
+                const y = 180 - (fidelity * 160);
+                if (x === 0) benchmarkCtx.moveTo(50, y);
+                else benchmarkCtx.lineTo(50 + (x * 300/length), y);
+            }
+            benchmarkCtx.stroke();
+            benchmarkCtx.fillText(`Fidelity decay with ${length} gates`, 50, 20);
+        }
+
+        sequenceLength.oninput = function() {
+            lengthValue.textContent = this.value;
+        };
+
+        // Initial drawings
+        drawFidelity(0.1);
+        drawNoiseModel('dephasing', 0.2);
+        runBenchmarking();
+    </script>
+</body>
+</html>

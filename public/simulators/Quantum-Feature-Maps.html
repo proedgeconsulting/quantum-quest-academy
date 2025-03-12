@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Feature Maps Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        h1, h2 {
+            color: #1a73e8;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e8f0fe;
+            border-radius: 5px;
+        }
+        .description {
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        button, input {
+            padding: 5px 10px;
+            margin: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Feature Maps Simulator</h1>
+    <div class="description">
+        <p>This simulator demonstrates the concept of <strong>Quantum Feature Maps</strong>, where classical data is transformed into a higher-dimensional quantum state space. In quantum machine learning, this is similar to kernel methods in classical ML but can potentially be exponentially more efficient on a quantum computer.</p>
+        <p><strong>How it works:</strong> Adjust the controls below to see how 2D classical data points (x, y) are mapped to a 3D "quantum-inspired" space using a simple feature map function: φ(x, y) = (x, y, sin(x² + y²)). This mimics how quantum circuits encode data into a Hilbert space.</p>
+    </div>
+
+    <div class="controls">
+        <h2>Controls</h2>
+        <label for="numPoints">Number of Data Points (2-50):</label>
+        <input type="number" id="numPoints" min="2" max="50" value="10">
+        <br>
+        <label for="noise">Noise Level (0-1):</label>
+        <input type="range" id="noise" min="0" max="1" step="0.1" value="0.2">
+        <br>
+        <button onclick="generateData()">Generate New Data</button>
+        <button onclick="toggleView()">Toggle 2D/3D View</button>
+    </div>
+
+    <canvas id="simCanvas" width="800" height="400"></canvas>
+
+    <div class="description">
+        <h2>Key Concepts</h2>
+        <ul>
+            <li><strong>Quantum Feature Maps & Kernel Methods:</strong> Classical kernel methods map data to higher dimensions for better separation. Quantum feature maps do this in a quantum Hilbert space.</li>
+            <li><strong>Quantum Circuits:</strong> These circuits encode classical data using quantum gates (e.g., rotations based on data values).</li>
+            <li><strong>Quantum Kernel Estimation:</strong> Measures similarity between quantum states, potentially offering advantages for classification.</li>
+            <li><strong>Applications:</strong> Useful in chemistry and materials science where data has inherent quantum properties.</li>
+        </ul>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        let dataPoints = [];
+        let is3DView = false;
+
+        // Generate random 2D data points with noise
+        function generateData() {
+            const numPoints = parseInt(document.getElementById('numPoints').value);
+            const noise = parseFloat(document.getElementById('noise').value);
+            dataPoints = [];
+            for (let i = 0; i < numPoints; i++) {
+                const x = Math.random() * 2 - 1; // Range: [-1, 1]
+                const y = Math.random() * 2 - 1;
+                const noiseX = (Math.random() - 0.5) * noise;
+                const noiseY = (Math.random() - 0.5) * noise;
+                dataPoints.push({ x: x + noiseX, y: y + noiseY });
+            }
+            draw();
+        }
+
+        // Simple quantum-inspired feature map: φ(x, y) = (x, y, sin(x² + y²))
+        function featureMap(point) {
+            const z = Math.sin(point.x * point.x + point.y * point.y);
+            return { x: point.x, y: point.y, z: z };
+        }
+
+        // Toggle between 2D and 3D views
+        function toggleView() {
+            is3DView = !is3DView;
+            draw();
+        }
+
+        // Draw the visualization
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!is3DView) {
+                // 2D View (Classical Data)
+                ctx.fillText("2D Classical Data", 10, 20);
+                dataPoints.forEach(point => {
+                    const px = (point.x + 1) * canvas.width / 4 + canvas.width / 4;
+                    const py = (point.y + 1) * canvas.height / 4 + canvas.height / 4;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'blue';
+                    ctx.fill();
+                });
+            } else {
+                // 3D View (Quantum Feature Map)
+                ctx.fillText("3D Quantum Feature Map", 10, 20);
+                dataPoints.forEach(point => {
+                    const mapped = featureMap(point);
+                    const px = (mapped.x + 1) * canvas.width / 4 + canvas.width / 4;
+                    const py = (mapped.y + 1) * canvas.height / 4 - mapped.z * 50 + canvas.height / 4;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+                });
+            }
+        }
+
+        // Initial generation and draw
+        generateData();
+    </script>
+</body>
+</html>

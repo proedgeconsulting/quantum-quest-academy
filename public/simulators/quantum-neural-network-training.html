@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quantum Neural Network Trainer</title>
+    <style>
+        .gate { cursor: pointer; fill: #4CAF50; }
+        .qubit-line { stroke: #666; stroke-width: 2; }
+        .param { fill: #FFC107; }
+        #lossChart { border: 1px solid #ddd; margin: 20px 0; }
+        .control-panel { padding: 10px; background: #f5f5f5; }
+        .data-point { cursor: pointer; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div style="display: flex; gap: 20px;">
+        <div>
+            <h4>Quantum Circuit</h4>
+            <svg id="circuit" width="400" height="200" style="border: 1px solid #ccc;"></svg>
+        </div>
+        <div>
+            <h4>Data Space</h4>
+            <svg id="dataSpace" width="300" height="200" style="border: 1px solid #ccc;"></svg>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <div>
+            <label>Learning Rate: <input type="range" id="lr" min="0.01" max="1" step="0.1" value="0.5"></label>
+            <label>Epochs: <input type="number" id="epochs" value="50" min="10" max="200"></label>
+            <button onclick="startTraining()">Train Network</button>
+            <button onclick="resetParams()">Reset Parameters</button>
+        </div>
+        <canvas id="lossChart" width="600" height="150"></canvas>
+    </div>
+
+    <script>
+        let params = [Math.PI/4, Math.PI/4, Math.PI/4];
+        let trainingData = [];
+        let lossHistory = [];
+        const ctx = document.getElementById('lossChart').getContext('2d');
+        
+        // Initialize quantum circuit
+        initializeCircuit();
+        initializeDataSpace();
+
+        function initializeCircuit() {
+            const svg = document.getElementById('circuit');
+            [50, 150].forEach(y => {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("class", "qubit-line");
+                line.setAttribute("x1", "20");
+                line.setAttribute("y1", y);
+                line.setAttribute("x2", "380");
+                line.setAttribute("y2", y);
+                svg.appendChild(line);
+            });
+            drawParameterizedGates();
+        }
+
+        function drawParameterizedGates() {
+            const svg = document.getElementById('circuit');
+            svg.querySelectorAll('.param-gate').forEach(g => g.remove());
+            
+            // Input encoding
+            addParamGate(80, 50, "θ₁");
+            addParamGate(80, 150, "θ₂");
+            
+            // Variational layer
+            addParamGate(200, 50, "φ₁");
+            addParamGate(200, 150, "φ₂");
+            addParamGate(320, 50, "φ₃");
+        }
+
+        function addParamGate(x, y, label) {
+            const svg = document.getElementById('circuit');
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", x);
+            circle.setAttribute("cy", y);
+            circle.setAttribute("r", "20");
+            circle.setAttribute("class", "param");
+            svg.appendChild(circle);
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x - 10);
+            text.setAttribute("y", y + 5);
+            text.textContent = label;
+            svg.appendChild(text);
+        }
+
+        function initializeDataSpace() {
+            const svg = document.getElementById('dataSpace');
+            // Create sample data points
+            for(let i = 0; i < 20; i++) {
+                const x = Math.random() * 250 + 25;
+                const y = Math.random() * 150 + 25;
+                const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                point.setAttribute("cx", x);
+                point.setAttribute("cy", y);
+                point.setAttribute("r", "5");
+                point.setAttribute("class", "data-point");
+                point.dataset.label = Math.random() > 0.5 ? 1 : 0;
+                point.style.fill = point.dataset.label === "1" ? "#2196F3" : "#FF5722";
+                point.addEventListener('click', toggleLabel);
+                svg.appendChild(point);
+                trainingData.push({x: x/300, y: y/150, label: parseInt(point.dataset.label)});
+            }
+        }
+
+        function toggleLabel(e) {
+            const point = e.target;
+            point.dataset.label = point.dataset.label === "1" ? 0 : 1;
+            point.style.fill = point.dataset.label === "1" ? "#2196F3" : "#FF5722";
+            trainingData = Array.from(document.querySelectorAll('.data-point')).map(p => ({
+                x: p.cx.baseVal.value/300,
+                y: p.cy.baseVal.value/150,
+                label: parseInt(p.dataset.label)
+            }));
+        }
+
+        function quantumForward(x, y) {
+            // Simplified quantum circuit simulation
+            const [θ1, θ2, φ1, φ2, φ3] = params;
+            
+            // Encode data
+            let state = [
+                Math.cos(x*θ1), 
+                Math.sin(x*θ1),
+                Math.cos(y*θ2),
+                Math.sin(y*θ2)
+            ];
+            
+            // Variational layer
+            const transformed = [
+                state[0]*Math.cos(φ1) - state[1]*Math.sin(φ1),
+                state[0]*Math.sin(φ1) + state[1]*Math.cos(φ1),
+                state[2]*Math.cos(φ2) - state[3]*Math.sin(φ2),
+                state[2]*Math.sin(φ2) + state[3]*Math.cos(φ2)
+            ];
+            
+            // Measurement
+            const prob = transformed[0]**2 + transformed[1]**2;
+            return prob > 0.5 ? 1 : 0;
+        }
+
+        function calculateLoss() {
+            let loss = 0;
+            trainingData.forEach(({x, y, label}) => {
+                const prediction = quantumForward(x, y);
+                loss += (prediction - label)**2;
+            });
+            return loss / trainingData.length;
+        }
+
+        function updateParameters() {
+            const lr = parseFloat(document.getElementById('lr').value);
+            const gradients = params.map((p, i) => {
+                const epsilon = 0.1;
+                params[i] += epsilon;
+                const lossPlus = calculateLoss();
+                params[i] -= 2*epsilon;
+                const lossMinus = calculateLoss();
+                params[i] += epsilon;
+                return (lossPlus - lossMinus) / (2*epsilon);
+            });
+            
+            params = params.map((p, i) => p - lr * gradients[i]);
+        }
+
+        function startTraining() {
+            const epochs = parseInt(document.getElementById('epochs').value);
+            lossHistory = [];
+            
+            // Setup loss chart
+            ctx.clearRect(0, 0, 600, 150);
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            
+            for(let epoch = 0; epoch < epochs; epoch++) {
+                updateParameters();
+                const loss = calculateLoss();
+                lossHistory.push(loss);
+                
+                // Update loss chart
+                ctx.lineTo((epoch/epochs)*600, 150 - loss*150);
+                ctx.strokeStyle = '#2196F3';
+                ctx.stroke();
+                
+                // Update data space visualization
+                updateDataSpace();
+                
+                // Add slight delay for animation
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+        }
+
+        function updateDataSpace() {
+            const svg = document.getElementById('dataSpace');
+            svg.querySelectorAll('.data-point').forEach(point => {
+                const x = point.cx.baseVal.value/300;
+                const y = point.cy.baseVal.value/150;
+                const prediction = quantumForward(x, y);
+                point.style.fill = prediction === 1 ? "#2196F3" : "#FF5722";
+            });
+        }
+
+        function resetParams() {
+            params = [Math.PI/4, Math.PI/4, Math.PI/4, Math.PI/4, Math.PI/4];
+            drawParameterizedGates();
+            ctx.clearRect(0, 0, 600, 150);
+            updateDataSpace();
+        }
+    </script>
+</body>
+</html>

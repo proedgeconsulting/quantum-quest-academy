@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Breaking Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .game-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .code {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Code Breaking Challenge</h1>
+        <div class="stats">
+            <span>Score: <span id="score">0</span></span>
+            <span>Level: <span id="level">1</span></span>
+            <span>Attempts Left: <span id="attempts">3</span></span>
+        </div>
+
+        <div id="challenge">
+            <h2>Current Quantum Code</h2>
+            <div class="code" id="code">
+                Code: Bit-Flip Code (3 qubits)<br>
+                Detects: 1 bit-flip error<br>
+                Corrects: 1 bit-flip error
+            </div>
+        </div>
+
+        <div id="tools">
+            <h3>Noise Monster Tools</h3>
+            <button onclick="applyError('single')">Single Bit-Flip</button>
+            <button onclick="applyError('double')">Double Bit-Flip</button>
+            <button disabled id="phaseBtn" onclick="applyError('phase')">Phase-Flip</button>
+        </div>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let score = 0;
+        let level = 1;
+        let attempts = 3;
+        let currentCode = {
+            name: "Bit-Flip Code (3 qubits)",
+            detects: 1,
+            corrects: 1,
+            type: "bit"
+        };
+
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('attempts').textContent = attempts;
+        }
+
+        function applyError(errorType) {
+            if (attempts <= 0) {
+                document.getElementById('output').innerHTML = 'No attempts left! Moving to next level.';
+                setTimeout(nextLevel, 2000);
+                return;
+            }
+
+            attempts--;
+            let result = '';
+            
+            switch(errorType) {
+                case 'single':
+                    result = currentCode.corrects >= 1 ? 
+                        'Code corrected 1 bit-flip error. Try harder!' :
+                        'Single bit-flip broke the code! +5 points';
+                    if (!currentCode.corrects) score += 5;
+                    break;
+                case 'double':
+                    result = currentCode.detects >= 2 ? 
+                        'Code detected 2 bit-flips but can’t correct. Still safe!' :
+                        'Double bit-flip broke the code! +10 points';
+                    if (currentCode.detects < 2) score += 10;
+                    break;
+                case 'phase':
+                    result = currentCode.type === "bit" ? 
+                        'Phase-flip broke the bit-flip code! +15 points' :
+                        'Code handled phase error.';
+                    if (currentCode.type === "bit") score += 15;
+                    break;
+            }
+
+            document.getElementById('output').innerHTML = result;
+            updateStats();
+
+            if (result.includes('broke the code')) {
+                setTimeout(nextLevel, 2000);
+            }
+        }
+
+        function nextLevel() {
+            level++;
+            attempts = 3;
+            const codes = [
+                { name: "Bit-Flip Code (3 qubits)", detects: 1, corrects: 1, type: "bit" },
+                { name: "Shor Code (9 qubits)", detects: 2, corrects: 1, type: "both" }
+            ];
+            
+            currentCode = codes[Math.min(level - 1, codes.length - 1)];
+            document.getElementById('code').innerHTML = 
+                `Code: ${currentCode.name}<br>` +
+                `Detects: ${currentCode.detects} error${currentCode.detects > 1 ? 's' : ''}<br>` +
+                `Corrects: ${currentCode.corrects} error${currentCode.corrects > 1 ? 's' : ''}`;
+            
+            document.getElementById('output').innerHTML = 'New challenge! Break this code.';
+            if (level >= 2) {
+                document.getElementById('phaseBtn').disabled = false;
+            }
+            updateStats();
+        }
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>

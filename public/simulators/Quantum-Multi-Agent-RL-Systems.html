@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Multi-Agent RL Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+        }
+        .controls {
+            margin: 20px;
+        }
+        .info {
+            margin: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum Multi-Agent RL Simulator</h1>
+    <p>Explore quantum-inspired multi-agent reinforcement learning!</p>
+    <canvas id="simCanvas" width="600" height="400"></canvas>
+    <div class="controls">
+        <label>Entanglement Strength (0-1): <input type="range" id="entanglement" min="0" max="1" step="0.1" value="0.5"></label><br>
+        <label>Cooperation Reward Weight: <input type="range" id="rewardWeight" min="1" max="10" step="1" value="5"></label><br>
+        <button onclick="resetSimulation()">Reset Simulation</button>
+    </div>
+    <div class="info" id="info">Agent 1 Reward: 0 | Agent 2 Reward: 0 | Cooperation Level: 0%</div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const infoDiv = document.getElementById('info');
+        let entanglement = parseFloat(document.getElementById('entanglement').value);
+        let rewardWeight = parseInt(document.getElementById('rewardWeight').value);
+
+        // Agent properties
+        class Agent {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.reward = 0;
+                this.action = 0; // 0 = defect, 1 = cooperate
+                this.probability = 0.5; // Superposition-like decision probability
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                ctx.fillStyle = '#000';
+                ctx.fillText(this.action === 1 ? 'C' : 'D', this.x - 5, this.y + 5);
+            }
+
+            decide(otherAgent) {
+                // Quantum-inspired decision: entanglement influences probability
+                let entangledEffect = entanglement * (otherAgent.probability - 0.5);
+                this.probability = Math.min(1, Math.max(0, 0.5 + entangledEffect + (Math.random() - 0.5) * 0.2));
+                this.action = Math.random() < this.probability ? 1 : 0;
+            }
+
+            updateReward(otherAgent) {
+                // Simplified quantum payoff matrix (Prisoner's Dilemma-like)
+                if (this.action === 1 && otherAgent.action === 1) {
+                    this.reward += rewardWeight; // Both cooperate
+                } else if (this.action === 0 && otherAgent.action === 1) {
+                    this.reward += rewardWeight * 1.5; // Defect while other cooperates
+                } else if (this.action === 1 && otherAgent.action === 0) {
+                    this.reward += 1; // Cooperate while other defects
+                }
+            }
+        }
+
+        // Initialize agents
+        let agent1 = new Agent(200, 200, '#ff5555');
+        let agent2 = new Agent(400, 200, '#5555ff');
+
+        // Simulation loop
+        function simulateStep() {
+            // Update parameters
+            entanglement = parseFloat(document.getElementById('entanglement').value);
+            rewardWeight = parseInt(document.getElementById('rewardWeight').value);
+
+            // Agents decide and update
+            agent1.decide(agent2);
+            agent2.decide(agent1);
+            agent1.updateReward(agent2);
+            agent2.updateReward(agent1);
+
+            // Draw
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            agent1.draw();
+            agent2.draw();
+
+            // Update info
+            let cooperationLevel = ((agent1.action + agent2.action) / 2 * 100).toFixed(0);
+            infoDiv.textContent = `Agent 1 Reward: ${agent1.reward.toFixed(1)} | Agent 2 Reward: ${agent2.reward.toFixed(1)} | Cooperation Level: ${cooperationLevel}%`;
+        }
+
+        // Reset simulation
+        function resetSimulation() {
+            agent1 = new Agent(200, 200, '#ff5555');
+            agent2 = new Agent(400, 200, '#5555ff');
+        }
+
+        // Run simulation
+        setInterval(simulateStep, 500);
+
+        // Instructions
+        console.log("Adjust sliders to change entanglement and reward weight. 'C' = Cooperate, 'D' = Defect.");
+    </script>
+</body>
+</html>
