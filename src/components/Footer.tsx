@@ -57,11 +57,6 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/social-learning" className="hover:text-quantum-500 transition-colors">
-                  Social Learning
-                </Link>
-              </li>
-              <li>
                 <Link to="/teachers" className="hover:text-quantum-500 transition-colors">
                   For Teachers
                 </Link>
