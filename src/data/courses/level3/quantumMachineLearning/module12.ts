@@ -24,7 +24,7 @@ export const module12: Module = {
       type: "video",
       duration: 20,
       points: 15,
-      videoUrl: "https://www.youtube.com/watch?v=DJzE8yzullI",
+      videoUrl: "https://www.youtube.com/watch?v=LKUYxBUrV4o",
     },
     {
       id: "3.1.12.3",
@@ -49,7 +49,7 @@ export const module12: Module = {
       type: "video",
       duration: 20,
       points: 15,
-      videoUrl: "https://www.youtube.com/watch?v=1GnvjPsT_2Y"
+      videoUrl: "https://www.youtube.com/watch?v=P7_SfxRrXTE&t=554s",
     }
   ]
 };
