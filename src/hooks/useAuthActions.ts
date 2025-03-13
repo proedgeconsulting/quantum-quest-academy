@@ -103,12 +103,16 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
-    if (!supabase.auth.getUser()) return;
-    
     try {
       setLoading(true);
       
-      const success = await updateUserProfile(supabase.auth.getUser().data.user?.id || "", updates);
+      // Get the current user first
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Check if we have a valid user before updating profile
+      if (!user) return;
+      
+      const success = await updateUserProfile(user.id, updates);
       
       if (success) {
         setProfile(prev => prev ? { ...prev, ...updates } : null);
