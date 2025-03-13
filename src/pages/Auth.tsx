@@ -6,11 +6,15 @@ import { useAuth } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SignIn from "@/components/auth/SignIn";
 import SignUp from "@/components/auth/SignUp";
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 import Chatbot from "@/components/chat/Chatbot";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 const Auth = () => {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get("tab") === "signup" ? "signup" : "signin";
 
   if (user) {
     return <Navigate to="/" replace />;
@@ -29,7 +33,7 @@ const Auth = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="signin" className="w-full">
+              <Tabs defaultValue={defaultTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-4">
                   <TabsTrigger value="signin">Sign In</TabsTrigger>
                   <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -43,6 +47,17 @@ const Auth = () => {
               </Tabs>
             </CardContent>
           </Card>
+          
+          {/* Email verification information */}
+          <div className="mt-4">
+            <Alert variant="outline" className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <AlertDescription className="text-sm">
+                After signing up, please check your email inbox (and spam folder) for a verification link.
+                You'll need to verify your email before you can sign in.
+              </AlertDescription>
+            </Alert>
+          </div>
         </div>
         
         <div className="max-w-md mx-auto mt-10">

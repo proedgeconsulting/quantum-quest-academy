@@ -20,6 +20,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   loading: boolean;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
+  supabaseClient: typeof supabase;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setInitialSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      console.log("Auth state changed:", event);
       setSession(newSession);
       setUser(newSession?.user ?? null);
 
@@ -221,6 +223,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     loading,
     updateProfile,
+    supabaseClient: supabase,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
