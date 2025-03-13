@@ -10,7 +10,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const { user, profile, session, loading: stateLoading, setProfile } = useAuthState();
-  const { signUp, signIn, signOut, updateProfile } = useAuthActions(setProfile, setLoading);
+  const { signUp, signIn, signInWithGoogle, signOut, updateProfile } = useAuthActions(setProfile, setLoading);
 
   // Sync loading state from useAuthState
   React.useEffect(() => {
@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
     loading,
     updateProfile,

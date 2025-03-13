@@ -82,6 +82,34 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Google sign in failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "An error occurred",
+        description: error.message || "Failed to sign in with Google",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     try {
       setLoading(true);
@@ -122,5 +150,5 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
     }
   };
 
-  return { signUp, signIn, signOut, updateProfile };
+  return { signUp, signIn, signInWithGoogle, signOut, updateProfile };
 }
