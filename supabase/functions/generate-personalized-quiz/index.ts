@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
@@ -115,37 +116,10 @@ serve(async (req) => {
     
     try {
       // Parse the JSON string from OpenAI's response
-      const content = data.choices[0].message.content;
-      console.log("Raw OpenAI response:", content);
-      
-      // Handle different response formats
-      if (typeof content === 'string') {
-        // If it's a string, try to parse it
-        try {
-          quizQuestions = JSON.parse(content);
-        } catch (e) {
-          // If it's not valid JSON but has questions array nested
-          const match = content.match(/\[\s*\{.*\}\s*\]/s);
-          if (match) {
-            quizQuestions = JSON.parse(match[0]);
-          } else {
-            throw new Error("Could not parse OpenAI response");
-          }
-        }
-      } else if (content.questions) {
-        // If it already has a questions property
-        quizQuestions = content.questions;
-      } else {
-        // Otherwise assume the entire object is what we want
-        quizQuestions = content;
-      }
-      
-      // Ensure proper ID format
-      quizQuestions = Array.isArray(quizQuestions) ? quizQuestions.map((q, idx) => ({
+      quizQuestions = JSON.parse(data.choices[0].message.content).map((q, idx) => ({
         ...q,
-        id: `q${idx + 1}`
-      })) : [];
-      
+        id: `q${idx + 1}` // Ensure proper ID format
+      }));
     } catch (e) {
       console.error("Error parsing quiz questions:", e);
       console.log("Raw OpenAI response:", data.choices[0].message.content);
@@ -158,7 +132,7 @@ serve(async (req) => {
       interaction_type: 'personalized_quiz_generation',
       metadata: { weak_areas: quizFocus },
       created_at: new Date().toISOString()
-    });
+    }).select();
     
     return new Response(
       JSON.stringify({ 

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,8 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { BrainCircuit, Send, Sparkles } from "lucide-react";
 import { useLearningAnalytics } from "@/hooks/useLearningAnalytics";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
 
 interface AIAssistanceSectionProps {
   userId: string;
@@ -30,40 +29,11 @@ const AIAssistanceSection = ({ userId }: AIAssistanceSectionProps) => {
     setResponse("");
     
     try {
-      // Try using the hook first
-      try {
-        const data = await getAIAssistance(concept, question);
-        
-        if (data && (data.explanation || data.reply)) {
-          setResponse(data.explanation || data.reply);
-          setIsLoading(false);
-          return;
-        }
-      } catch (error) {
-        console.log("Falling back to direct function call:", error);
+      const data = await getAIAssistance(concept, question);
+      
+      if (data) {
+        setResponse(data.explanation || "I don't have a specific answer for that question right now.");
       }
-      
-      // Fall back to direct function call if the hook fails
-      const { data, error } = await supabase.functions.invoke('ai-learning-assistant', {
-        body: { 
-          concept: concept,
-          question: question,
-          userId: userId, 
-          chatMode: 'quantum'
-        }
-      });
-      
-      if (error) throw error;
-      
-      setResponse(data.explanation || data.reply || "I don't have a specific answer for that question right now.");
-      
-    } catch (error) {
-      console.error("Error getting AI assistance:", error);
-      toast({
-        title: "AI Assistant Error",
-        description: "Couldn't get an answer right now. Please try again later.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }

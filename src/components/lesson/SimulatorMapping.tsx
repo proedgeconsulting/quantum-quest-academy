@@ -8,8 +8,7 @@ import ExternalSimulator from "./ExternalSimulator";
 export const getSimulatorForLesson = (lessonId: string, lesson?: Lesson): React.ReactNode => {
   // First check if this lesson has an external simulator configured
   if (lesson?.externalSimulator) {
-    const simulatorPath = lesson.externalSimulator.url || `${lesson.interactiveComponent}.html`;
-    return <ExternalSimulator lesson={lesson} simulatorPath={simulatorPath} />;
+    return <ExternalSimulator lesson={lesson} />;
   }
   
   // If not, use the internal simulator mapping system
