@@ -50,7 +50,7 @@ const Auth = () => {
           
           {/* Email verification information */}
           <div className="mt-4">
-            <Alert variant="outline" className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+            <Alert variant="default" className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
               <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
               <AlertDescription className="text-sm">
                 After signing up, please check your email inbox (and spam folder) for a verification link.
