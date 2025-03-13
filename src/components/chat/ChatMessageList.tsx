@@ -1,10 +1,10 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2 } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { Message } from "./ChatTypes";
 import MessageBubble from "./MessageBubble";
 import { Avatar } from "@/components/ui/avatar";
+import { useScrollToBottom } from "./useScrollToBottom";
 
 interface ChatMessageListProps {
   messages: Message[];
@@ -12,11 +12,7 @@ interface ChatMessageListProps {
 }
 
 const ChatMessageList = ({ messages, isLoading }: ChatMessageListProps) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const messagesEndRef = useScrollToBottom(messages);
 
   return (
     <ScrollArea className="h-[400px] p-4">

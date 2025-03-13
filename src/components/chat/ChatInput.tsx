@@ -2,7 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
+import { useChatInputState } from "./useChatInputState";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -10,16 +11,7 @@ interface ChatInputProps {
 }
 
 const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = (e?: FormEvent) => {
-    if (e) e.preventDefault();
-    
-    if (!message.trim()) return;
-    
-    onSendMessage(message);
-    setMessage("");
-  };
+  const { message, setMessage, handleSubmit, handleKeyDown } = useChatInputState(onSendMessage);
 
   return (
     <div className="p-4 border-t">
@@ -29,12 +21,7 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="min-h-[40px] resize-none"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
+          onKeyDown={handleKeyDown}
         />
         <Button 
           type="submit" 
