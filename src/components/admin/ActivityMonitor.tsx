@@ -82,9 +82,10 @@ export const ActivityMonitor = () => {
   }, []);
 
   // Helper function to format time ago
-  const formatTimeAgo = (date) => {
+  const formatTimeAgo = (date: Date) => {
     const now = new Date();
-    const diffInSeconds = Math.floor((now - date) / 1000);
+    const diffInMs = now.getTime() - date.getTime(); // Fix: Use getTime() to get numeric timestamps
+    const diffInSeconds = Math.floor(diffInMs / 1000);
     
     if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
