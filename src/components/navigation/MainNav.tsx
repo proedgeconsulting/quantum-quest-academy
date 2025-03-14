@@ -6,6 +6,48 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck } from "lucide-react";
 
+// Export the routes array as navItems for use in MobileNav
+export const navItems = [
+  {
+    href: "/curriculum",
+    label: "Curriculum",
+    title: "Curriculum",
+  },
+  {
+    href: "/courses",
+    label: "Courses",
+    title: "Courses",
+  },
+  {
+    href: "/progress",
+    label: "My Progress",
+    title: "My Progress",
+    requiresAuth: true,
+  },
+  {
+    href: "/tools",
+    label: "Tools",
+    title: "Tools",
+  },
+  {
+    href: "/about",
+    label: "About",
+    title: "About",
+  },
+  {
+    href: "/faq",
+    label: "FAQ",
+    title: "FAQ",
+  },
+  {
+    href: "/admin",
+    label: "Admin",
+    title: "Admin",
+    requiresAuth: true,
+    adminOnly: true,
+  },
+];
+
 export function MainNav({
   className,
   ...props
@@ -17,46 +59,10 @@ export function MainNav({
   // For demo purposes, we'll show the admin link for all logged in users
   const isAdmin = user !== null;
 
-  const routes = [
-    {
-      href: "/curriculum",
-      label: "Curriculum",
-      active: location.pathname === "/curriculum",
-    },
-    {
-      href: "/courses",
-      label: "Courses",
-      active: location.pathname === "/courses",
-    },
-    {
-      href: "/progress",
-      label: "My Progress",
-      active: location.pathname === "/progress",
-      requiresAuth: true,
-    },
-    {
-      href: "/tools",
-      label: "Tools",
-      active: location.pathname === "/tools",
-    },
-    {
-      href: "/about",
-      label: "About",
-      active: location.pathname === "/about",
-    },
-    {
-      href: "/faq",
-      label: "FAQ",
-      active: location.pathname === "/faq",
-    },
-    {
-      href: "/admin",
-      label: "Admin",
-      active: location.pathname === "/admin",
-      requiresAuth: true,
-      adminOnly: true,
-    },
-  ];
+  const routes = navItems.map(item => ({
+    ...item,
+    active: location.pathname === item.href,
+  }));
 
   return (
     <nav
