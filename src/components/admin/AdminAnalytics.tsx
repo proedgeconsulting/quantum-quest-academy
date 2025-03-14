@@ -1,38 +1,55 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { supabase } from "@/integrations/supabase/client";
+import { ChartContainer, ChartTooltip, ChartLegend } from "@/components/ui/chart";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const AdminAnalytics = () => {
-  // Sample data for charts
-  const userActivity = [
-    { name: "Mon", value: 240 },
-    { name: "Tue", value: 300 },
-    { name: "Wed", value: 280 },
-    { name: "Thu", value: 320 },
-    { name: "Fri", value: 350 },
-    { name: "Sat", value: 270 },
-    { name: "Sun", value: 230 },
-  ];
-  
-  const courseEngagement = [
-    { name: "Quantum Basics", completions: 124, enrollments: 458 },
-    { name: "Quantum Circuits", completions: 98, enrollments: 326 },
-    { name: "Quantum Entangle.", completions: 86, enrollments: 214 },
-    { name: "Quantum ML", completions: 42, enrollments: 189 },
-    { name: "Quantum Errors", completions: 28, enrollments: 132 },
-  ];
-  
-  const learnerDemographics = [
-    { name: "10-13", value: 15 },
-    { name: "14-17", value: 25 },
-    { name: "18-24", value: 35 },
-    { name: "25-34", value: 20 },
-    { name: "35+", value: 5 },
-  ];
+  const [analyticsData, setAnalyticsData] = useState({
+    userActivity: [],
+    courseEngagement: [],
+    learnerDemographics: []
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAdminAnalytics = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase.functions.invoke('admin-analytics');
+        
+        if (error) {
+          console.error("Error fetching admin analytics:", error);
+          return;
+        }
+        
+        if (data && data.charts) {
+          setAnalyticsData({
+            userActivity: data.charts.userActivity || [],
+            courseEngagement: data.charts.courseEngagement || [],
+            learnerDemographics: data.charts.learnerDemographics || []
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminAnalytics();
+  }, []);
   
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+  const renderSkeleton = () => (
+    <div className="w-full h-64">
+      <Skeleton className="w-full h-full" />
+    </div>
+  );
 
   return (
     <Tabs defaultValue="overview">
@@ -50,16 +67,20 @@ export const AdminAnalytics = () => {
               <CardDescription>User activity over the past week</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={userActivity}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-                </LineChart>
-              </ResponsiveContainer>
+              {loading ? renderSkeleton() : (
+                <ChartContainer config={{}} className="h-[250px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={analyticsData.userActivity}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <ChartTooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              )}
             </CardContent>
           </Card>
           
@@ -69,25 +90,29 @@ export const AdminAnalytics = () => {
               <CardDescription>Demographic breakdown of users</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={learnerDemographics}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {learnerDemographics.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              {loading ? renderSkeleton() : (
+                <ChartContainer config={{}} className="h-[250px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={analyticsData.learnerDemographics}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {analyticsData.learnerDemographics.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -98,17 +123,21 @@ export const AdminAnalytics = () => {
             <CardDescription>Enrollments vs completions for top courses</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={courseEngagement}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="enrollments" fill="#8884d8" name="Enrollments" />
-                <Bar dataKey="completions" fill="#82ca9d" name="Completions" />
-              </BarChart>
-            </ResponsiveContainer>
+            {loading ? renderSkeleton() : (
+              <ChartContainer config={{}} className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={analyticsData.courseEngagement}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <ChartTooltip />
+                    <Legend />
+                    <Bar dataKey="enrollments" fill="#8884d8" name="Enrollments" />
+                    <Bar dataKey="completions" fill="#82ca9d" name="Completions" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            )}
           </CardContent>
         </Card>
       </TabsContent>
