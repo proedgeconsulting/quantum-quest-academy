@@ -27,33 +27,34 @@ export function MobileNav() {
           </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col space-y-6 text-left">
-          {navItems.map((item, index) => (
-            <motion.div
-              key={item.href}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-            >
-              <Link
-                to={item.href}
-                className="block px-2 py-3 text-lg hover:bg-quantum-100 dark:hover:bg-quantum-800 rounded-md"
-                onClick={() => setOpen(false)}
+          {navItems.map((item, index) => {
+            // Skip items that require auth when user is not logged in
+            if (item.requiresAuth && !user) return null;
+            
+            // Skip admin-only items for non-admin users
+            if (item.adminOnly && !user) return null;
+            
+            return (
+              <motion.div
+                key={item.href}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
-                {item.title}
-              </Link>
-            </motion.div>
-          ))}
+                <Link
+                  to={item.href}
+                  className="block px-2 py-3 text-lg hover:bg-quantum-100 dark:hover:bg-quantum-800 rounded-md"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.title}
+                </Link>
+              </motion.div>
+            );
+          })}
           
           <div className="border-t border-quantum-200 dark:border-quantum-700 pt-4">
             {user ? (
               <div className="space-y-3">
-                <Link
-                  to="/progress"
-                  className="block px-2 py-3 hover:bg-quantum-100 dark:hover:bg-quantum-800 rounded-md"
-                  onClick={() => setOpen(false)}
-                >
-                  My Progress
-                </Link>
                 <Link
                   to="/profile"
                   className="block px-2 py-3 hover:bg-quantum-100 dark:hover:bg-quantum-800 rounded-md"

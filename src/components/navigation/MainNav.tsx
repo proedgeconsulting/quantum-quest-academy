@@ -19,12 +19,6 @@ export const navItems = [
     title: "Courses",
   },
   {
-    href: "/progress",
-    label: "My Progress",
-    title: "My Progress",
-    requiresAuth: true,
-  },
-  {
     href: "/tools",
     label: "Tools",
     title: "Tools",

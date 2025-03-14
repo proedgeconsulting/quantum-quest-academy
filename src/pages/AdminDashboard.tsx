@@ -10,45 +10,38 @@ import { UserManagement } from "@/components/admin/UserManagement";
 import { CourseOverview } from "@/components/admin/CourseOverview";
 import { ActivityMonitor } from "@/components/admin/ActivityMonitor";
 import { AdminAnalytics } from "@/components/admin/AdminAnalytics";
+import { AdminAuth } from "@/components/admin/AdminAuth";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, LogOut } from "lucide-react";
 
 const AdminDashboard = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isPasswordAuthenticated, setIsPasswordAuthenticated] = useState(false);
   
-  // Check if user is admin - in a real app you'd verify this against your database
+  // Check if user is logged in
   useEffect(() => {
-    // This is a placeholder for actual admin verification
-    // In a production app, you would check the user's role in the database
-    const checkAdminStatus = async () => {
-      if (!user) {
-        navigate("/auth");
-        return;
-      }
-      
-      // For demo purposes: consider the first created user as admin
-      // In a real application, replace this with actual role verification
-      if (user.id) {
-        setIsAdmin(true);
-      } else {
-        navigate("/");
-      }
-    };
-    
-    checkAdminStatus();
+    if (!user) {
+      navigate("/auth");
+    }
   }, [user, navigate]);
 
-  if (!isAdmin) {
+  // If not authenticated and not an admin, show access denied
+  if (!user) {
+    return null; // Loading or redirecting
+  }
+  
+  // User is logged in but hasn't entered admin password yet
+  if (!isPasswordAuthenticated) {
     return (
       <div className="min-h-screen bg-quantum-50 dark:bg-quantum-950">
         <Navbar />
-        <div className="container mx-auto py-8 px-4 text-center">
-          <ShieldAlert className="mx-auto h-16 w-16 text-red-500 mb-4" />
-          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-          <p className="mb-4">You don't have permission to access the admin dashboard.</p>
-          <Button onClick={() => navigate("/")}>Return to Homepage</Button>
+        <div className="container mx-auto py-8 px-4">
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-3xl font-bold text-center mb-8">Admin Dashboard</h1>
+            <AdminAuth onAuthenticate={setIsPasswordAuthenticated} />
+          </div>
         </div>
       </div>
     );
@@ -60,9 +53,20 @@ const AdminDashboard = () => {
       <div className="container mx-auto py-4 px-4">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <span className="text-sm text-muted-foreground">
-            Welcome, {profile?.username || user?.email}
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">
+              Welcome, {profile?.username || user?.email}
+            </span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setIsPasswordAuthenticated(false)}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Exit Admin
+            </Button>
+          </div>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
