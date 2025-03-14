@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,7 @@ import CourseDetails from "./pages/CourseDetails";
 import LearningApproach from "./pages/LearningApproach";
 import LevelDetails from "./pages/LevelDetails";
 import ResetPassword from "@/pages/ResetPassword";
+import AdminDashboard from "@/pages/AdminDashboard";
 import { AuthProvider } from "./context/AuthContext";
 import FloatingChatbot from "./components/chat/FloatingChatbot";
 
@@ -37,6 +39,7 @@ const AppRoutes = () => (
     <Route path="/auth" element={<Auth />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/admin" element={<AdminDashboard />} />
     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
     <Route path="*" element={<NotFound />} />
   </Routes>
