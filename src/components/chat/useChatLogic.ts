@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Message } from "./ChatTypes";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export const useChatLogic = (initialMessage: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -75,11 +75,16 @@ export const useChatLogic = (initialMessage: string) => {
       
     } catch (error) {
       console.error("Error getting chatbot response:", error);
-      toast({
-        title: "Failed to get response",
-        description: "There was an error contacting the assistant. Please try again.",
-        variant: "destructive",
-      });
+      
+      // Check if we have the toast function available
+      if (typeof useToast === 'function') {
+        const { toast } = useToast();
+        toast({
+          title: "Failed to get response",
+          description: "There was an error contacting the assistant. Please try again.",
+          variant: "destructive",
+        });
+      }
       
       setMessages(prev => [
         ...prev, 

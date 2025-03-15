@@ -7,7 +7,8 @@ import { Clock, Star, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { Lesson } from "@/data/courseData";
 import LessonContent from "@/components/LessonContent";
 import QuizComponent from "@/components/QuizComponent";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface LessonContainerProps {
   currentLesson: Lesson | undefined;
@@ -28,14 +29,30 @@ const LessonContainer = ({
   isFirstLesson,
   isLastLesson
 }: LessonContainerProps) => {
+  const { toast } = useToast();
+  const [hasShownCompletion, setHasShownCompletion] = useState(false);
+  
   if (!currentLesson) return null;
   
   // Ensure we scroll to top when lesson changes
   useEffect(() => {
     window.scrollTo(0, 0);
+    setHasShownCompletion(false);
   }, [currentLesson.id]);
   
   const isCompleted = !!userProgress[currentLesson.id]?.completed;
+  
+  // Show a toast notification when the last lesson is completed
+  useEffect(() => {
+    if (isLastLesson && isCompleted && !hasShownCompletion) {
+      setHasShownCompletion(true);
+      toast({
+        title: "Module Completed! 🎉",
+        description: "Congratulations on completing this module of the course!",
+        variant: "default",
+      });
+    }
+  }, [isLastLesson, isCompleted, hasShownCompletion, toast]);
   
   return (
     <>

@@ -124,6 +124,13 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
       // Force clear the profile state
       setProfile(null);
       
+      // Add more aggressive state cleanup
+      if (typeof window !== "undefined") {
+        // Clear any auth-related local storage
+        localStorage.removeItem("supabase.auth.token");
+        sessionStorage.removeItem("supabase.auth.token");
+      }
+      
       toast({
         title: "Signed out",
         description: "You have been signed out successfully",

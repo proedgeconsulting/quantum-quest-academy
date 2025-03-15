@@ -20,6 +20,7 @@ serve(async (req) => {
     const openAIKey = Deno.env.get('OPENAI_API_KEY') ?? '';
     
     if (!openAIKey) {
+      console.error("OpenAI API key not configured");
       return new Response(
         JSON.stringify({ error: 'OpenAI API key not configured', reply: "I'm sorry, the assistant is not properly configured. Please contact support." }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
@@ -116,6 +117,8 @@ serve(async (req) => {
         // Continue anyway, don't fail if just the logging fails
       }
     }
+    
+    console.log("Sending successful response with reply:", reply.substring(0, 100) + "...");
     
     return new Response(
       JSON.stringify({ reply }),
