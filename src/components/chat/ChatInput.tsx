@@ -7,7 +7,7 @@ import { useChatInputState } from "./useChatInputState";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
-  isLoading?: boolean;
+  isLoading: boolean;
 }
 
 const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
@@ -22,7 +22,6 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
           onChange={(e) => setMessage(e.target.value)}
           className="min-h-[40px] resize-none"
           onKeyDown={handleKeyDown}
-          disabled={isLoading}
         />
         <Button 
           type="submit" 
