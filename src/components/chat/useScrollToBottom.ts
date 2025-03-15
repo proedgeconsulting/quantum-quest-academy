@@ -1,13 +1,10 @@
 
-import { useEffect, useRef } from "react";
-import { Message } from "./ChatTypes";
+import { useCallback, RefObject } from "react";
 
-export function useScrollToBottom(messages: Message[]) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
+export function useScrollToBottom(messagesEndRef: RefObject<HTMLDivElement>) {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messagesEndRef]);
   
-  return messagesEndRef;
+  return { scrollToBottom };
 }

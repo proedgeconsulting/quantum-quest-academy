@@ -1,43 +1,33 @@
 
-import { Avatar } from "@/components/ui/avatar";
-import ReactMarkdown from "react-markdown";
 import { Message } from "./ChatTypes";
+import { Avatar } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 interface MessageBubbleProps {
   message: Message;
 }
 
 const MessageBubble = ({ message }: MessageBubbleProps) => {
+  const isUser = message.sender === "user";
+
   return (
-    <div 
-      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-    >
-      <div 
-        className={`flex gap-3 max-w-[85%] ${
-          message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
-        }`}
-      >
-        <Avatar className={`h-8 w-8 ${
-          message.sender === 'user' ? 'bg-primary' : 'bg-secondary'
-        }`}>
-          <div className="flex h-full items-center justify-center text-xs font-medium uppercase">
-            {message.sender === 'user' ? 'U' : 'A'}
+    <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
+      <div className={cn("flex gap-3", isUser && "flex-row-reverse")}>
+        <Avatar className="h-8 w-8 bg-secondary">
+          <div className="flex h-full items-center justify-center text-xs">
+            {isUser ? "U" : "A"}
           </div>
         </Avatar>
-        <div 
-          className={`rounded-lg p-3 text-sm ${
-            message.sender === 'user' 
-              ? 'bg-primary text-primary-foreground' 
-              : 'bg-muted'
-          }`}
-        >
-          {message.sender === 'bot' ? (
-            <ReactMarkdown className="prose dark:prose-invert prose-sm max-w-none">
-              {message.text}
-            </ReactMarkdown>
-          ) : (
-            message.text
-          )}
+        <div className={cn(
+          "rounded-lg p-3 max-w-[80%]", 
+          isUser 
+            ? "bg-primary text-primary-foreground" 
+            : "bg-muted text-muted-foreground"
+        )}>
+          <p className="whitespace-pre-wrap">{message.text}</p>
+          <div className="text-xs opacity-70 mt-1">
+            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       </div>
     </div>

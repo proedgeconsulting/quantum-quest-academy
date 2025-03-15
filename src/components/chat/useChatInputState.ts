@@ -1,22 +1,21 @@
 
-import { FormEvent, useState } from "react";
+import { useState, FormEvent, KeyboardEvent } from "react";
 
-export function useChatInputState(onSendMessage: (message: string) => void) {
+export const useChatInputState = (onSendMessage: (message: string) => void) => {
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e?: FormEvent) => {
-    if (e) e.preventDefault();
-    
-    if (!message.trim()) return;
-    
-    onSendMessage(message);
-    setMessage("");
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (message.trim()) {
+      onSendMessage(message.trim());
+      setMessage("");
+    }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      handleSubmit(e as unknown as FormEvent);
     }
   };
 
@@ -24,6 +23,6 @@ export function useChatInputState(onSendMessage: (message: string) => void) {
     message,
     setMessage,
     handleSubmit,
-    handleKeyDown
+    handleKeyDown,
   };
-}
+};
