@@ -7,6 +7,7 @@ import { Clock, Star, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { Lesson } from "@/data/courseData";
 import LessonContent from "@/components/LessonContent";
 import QuizComponent from "@/components/QuizComponent";
+import { useEffect } from "react";
 
 interface LessonContainerProps {
   currentLesson: Lesson | undefined;
@@ -28,6 +29,13 @@ const LessonContainer = ({
   isLastLesson
 }: LessonContainerProps) => {
   if (!currentLesson) return null;
+  
+  // Ensure we scroll to top when lesson changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentLesson.id]);
+  
+  const isCompleted = !!userProgress[currentLesson.id]?.completed;
   
   return (
     <>
@@ -80,14 +88,18 @@ const LessonContainer = ({
               quizContent={currentLesson.content}
               onComplete={(score) => {
                 handleLessonComplete(currentLesson.id, true, score);
-                handleNextLesson();
+                
+                // If it's the last lesson, don't automatically navigate away
+                if (!isLastLesson) {
+                  handleNextLesson();
+                }
               }}
             />
           ) : (
             <LessonContent 
               lesson={currentLesson} 
               onComplete={() => handleLessonComplete(currentLesson.id, true)}
-              isCompleted={!!userProgress[currentLesson.id]?.completed}
+              isCompleted={isCompleted}
               isLastLesson={isLastLesson}
             />
           )}
@@ -104,7 +116,7 @@ const LessonContainer = ({
           Previous Lesson
         </Button>
         
-        {isLastLesson && userProgress[currentLesson.id]?.completed ? (
+        {isLastLesson && isCompleted ? (
           <Button 
             variant="default"
             className="bg-green-600 hover:bg-green-700"
@@ -115,7 +127,7 @@ const LessonContainer = ({
         ) : (
           <Button 
             onClick={handleNextLesson}
-            disabled={isLastLesson}
+            disabled={isLastLesson && isCompleted}
           >
             Next Lesson
             <ChevronRight className="ml-1" size={16} />

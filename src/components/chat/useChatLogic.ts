@@ -38,6 +38,13 @@ export const useChatLogic = (initialMessage: string) => {
     setIsLoading(true);
     
     try {
+      // Log the request to help with debugging
+      console.log("Sending chatbot request:", { 
+        message: currentMessage,
+        userId: user?.id,
+        chatMode: 'general'
+      });
+      
       const { data, error } = await supabase.functions.invoke('ai-learning-assistant', {
         body: { 
           message: currentMessage,
@@ -46,7 +53,15 @@ export const useChatLogic = (initialMessage: string) => {
         }
       });
       
-      if (error) throw error;
+      console.log("Chatbot response:", data, error);
+      
+      if (error) {
+        throw error;
+      }
+      
+      if (!data || !data.reply) {
+        throw new Error("No valid response received from the assistant");
+      }
       
       setMessages(prev => [
         ...prev, 

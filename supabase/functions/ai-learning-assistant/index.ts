@@ -20,22 +20,29 @@ serve(async (req) => {
     const openAIKey = Deno.env.get('OPENAI_API_KEY') ?? '';
     
     if (!openAIKey) {
-      throw new Error('OpenAI API key is required');
+      return new Response(
+        JSON.stringify({ error: 'OpenAI API key not configured', reply: "I'm sorry, the assistant is not properly configured. Please contact support." }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      );
     }
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     // Get request data
-    const { message, userId, context, chatMode } = await req.json();
+    const requestData = await req.json();
+    const message = requestData.message;
+    const userId = requestData.userId;
+    const context = requestData.context;
+    const chatMode = requestData.chatMode;
+    
+    console.log(`Processing message: ${message}, user: ${userId}, mode: ${chatMode}`);
     
     if (!message) {
       return new Response(
-        JSON.stringify({ error: 'Message is required' }),
+        JSON.stringify({ error: 'Message is required', reply: "I couldn't understand your message. Please try again." }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       );
     }
-    
-    console.log(`Processing message: ${message}`);
     
     // Set system message based on chat mode
     let systemMessage = 'You are a helpful assistant that provides concise and accurate information.';
@@ -70,20 +77,44 @@ serve(async (req) => {
     
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
+      console.error(`OpenAI API error: ${JSON.stringify(errorData)}`);
+      return new Response(
+        JSON.stringify({ 
+          error: `OpenAI API error: ${JSON.stringify(errorData)}`,
+          reply: "I'm having trouble generating a response right now. Please try again later."
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      );
     }
     
     const data = await response.json();
+    
+    if (!data || !data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error("Invalid response from OpenAI API:", data);
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid response from OpenAI API", 
+          reply: "I received an invalid response. Please try again later."
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      );
+    }
+    
     const reply = data.choices[0].message.content;
     
     // Log the interaction if userId is provided
     if (userId) {
-      await supabase.from('user_learning_interactions').insert({
-        user_id: userId,
-        concept: message.substring(0, 100), // Store first 100 chars as concept
-        interaction_type: chatMode === 'quantum' ? 'quantum_chat' : 'general_chat',
-        created_at: new Date().toISOString()
-      }).select();
+      try {
+        await supabase.from('user_learning_interactions').insert({
+          user_id: userId,
+          concept: message.substring(0, 100), // Store first 100 chars as concept
+          interaction_type: chatMode === 'quantum' ? 'quantum_chat' : 'general_chat',
+          created_at: new Date().toISOString()
+        }).select();
+      } catch (dbError) {
+        console.error("Could not log interaction:", dbError);
+        // Continue anyway, don't fail if just the logging fails
+      }
     }
     
     return new Response(
@@ -95,7 +126,10 @@ serve(async (req) => {
     console.error('Error generating response:', error);
     
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        reply: "I'm sorry, I encountered an error while processing your request. Please try again."
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );
   }
