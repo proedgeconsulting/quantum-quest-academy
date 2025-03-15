@@ -113,37 +113,13 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
   const signOut = async () => {
     try {
       setLoading(true);
-      
-      // Clear the session
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        throw error;
-      }
-      
-      // Force clear the profile state
-      setProfile(null);
-      
-      // Add more aggressive state cleanup
-      if (typeof window !== "undefined") {
-        // Clear any auth-related local storage
-        localStorage.removeItem("supabase.auth.token");
-        sessionStorage.removeItem("supabase.auth.token");
-      }
-      
+      await supabase.auth.signOut();
       toast({
         title: "Signed out",
         description: "You have been signed out successfully",
       });
-      
-      // Navigate to home page
       navigate("/");
-      
-      // Log the sign out for debugging
-      console.log("User signed out successfully");
-      
     } catch (error: any) {
-      console.error("Sign out error:", error);
       toast({
         title: "Sign out failed",
         description: error.message || "Failed to sign out",

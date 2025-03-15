@@ -7,8 +7,6 @@ import { Clock, Star, ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { Lesson } from "@/data/courseData";
 import LessonContent from "@/components/LessonContent";
 import QuizComponent from "@/components/QuizComponent";
-import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 
 interface LessonContainerProps {
   currentLesson: Lesson | undefined;
@@ -29,30 +27,7 @@ const LessonContainer = ({
   isFirstLesson,
   isLastLesson
 }: LessonContainerProps) => {
-  const { toast } = useToast();
-  const [hasShownCompletion, setHasShownCompletion] = useState(false);
-  
   if (!currentLesson) return null;
-  
-  // Ensure we scroll to top when lesson changes
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setHasShownCompletion(false);
-  }, [currentLesson.id]);
-  
-  const isCompleted = !!userProgress[currentLesson.id]?.completed;
-  
-  // Show a toast notification when the last lesson is completed
-  useEffect(() => {
-    if (isLastLesson && isCompleted && !hasShownCompletion) {
-      setHasShownCompletion(true);
-      toast({
-        title: "Module Completed! 🎉",
-        description: "Congratulations on completing this module of the course!",
-        variant: "default",
-      });
-    }
-  }, [isLastLesson, isCompleted, hasShownCompletion, toast]);
   
   return (
     <>
@@ -105,18 +80,14 @@ const LessonContainer = ({
               quizContent={currentLesson.content}
               onComplete={(score) => {
                 handleLessonComplete(currentLesson.id, true, score);
-                
-                // If it's the last lesson, don't automatically navigate away
-                if (!isLastLesson) {
-                  handleNextLesson();
-                }
+                handleNextLesson();
               }}
             />
           ) : (
             <LessonContent 
               lesson={currentLesson} 
               onComplete={() => handleLessonComplete(currentLesson.id, true)}
-              isCompleted={isCompleted}
+              isCompleted={!!userProgress[currentLesson.id]?.completed}
               isLastLesson={isLastLesson}
             />
           )}
@@ -133,7 +104,7 @@ const LessonContainer = ({
           Previous Lesson
         </Button>
         
-        {isLastLesson && isCompleted ? (
+        {isLastLesson && userProgress[currentLesson.id]?.completed ? (
           <Button 
             variant="default"
             className="bg-green-600 hover:bg-green-700"
@@ -144,7 +115,7 @@ const LessonContainer = ({
         ) : (
           <Button 
             onClick={handleNextLesson}
-            disabled={isLastLesson && isCompleted}
+            disabled={isLastLesson}
           >
             Next Lesson
             <ChevronRight className="ml-1" size={16} />

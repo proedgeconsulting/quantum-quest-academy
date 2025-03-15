@@ -15,38 +15,36 @@ interface CompletionStatusProps {
 
 const CompletionStatus = ({ isCompleted, showComplete, type, onComplete, isLastLesson = false }: CompletionStatusProps) => {
   const { toast } = useToast();
-  const [showToast, setShowToast] = useState(false);
   
   useEffect(() => {
-    // Show toast notification when a lesson is completed and it's the last lesson
-    if (isCompleted && isLastLesson && !showToast) {
-      setShowToast(true);
+    if (isCompleted && isLastLesson) {
       toast({
         title: "Course Module Completed! 🎉",
         description: "Congratulations on completing this module of the course!",
         variant: "default",
       });
     }
-  }, [isCompleted, isLastLesson, toast, showToast]);
+  }, [isCompleted, isLastLesson, toast]);
 
   if (isCompleted) {
     return (
-      <div className="mt-8 flex flex-col items-center">
-        <div className="flex items-center gap-2 text-green-500 font-medium bg-green-50 dark:bg-green-950/30 px-4 py-2 rounded-md">
-          <CheckCircle size={16} />
-          <span>Completed</span>
-        </div>
-        
-        {isLastLesson && (
-          <motion.div 
-            className="mt-4 flex items-center gap-2 text-amber-500 font-medium bg-amber-50 dark:bg-amber-950/30 px-4 py-2 rounded-md"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Trophy size={16} />
-            <span>Module Completed!</span>
-          </motion.div>
+      <div className="mt-8 flex justify-center">
+        {isLastLesson ? (
+          <div className="flex flex-col items-center space-y-4">
+            <div className="flex items-center gap-2 text-green-500 font-medium bg-green-50 dark:bg-green-950/30 px-4 py-2 rounded-md">
+              <CheckCircle size={16} />
+              <span>Completed</span>
+            </div>
+            <div className="flex items-center gap-2 text-amber-500 font-medium bg-amber-50 dark:bg-amber-950/30 px-4 py-2 rounded-md">
+              <Trophy size={16} />
+              <span>Module Completed!</span>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 text-green-500 font-medium bg-green-50 dark:bg-green-950/30 px-4 py-2 rounded-md">
+            <CheckCircle size={16} />
+            <span>Completed</span>
+          </div>
         )}
       </div>
     );
