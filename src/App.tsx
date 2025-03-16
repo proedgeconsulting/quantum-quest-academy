@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import Curriculum from "./pages/Curriculum";
@@ -21,28 +21,43 @@ import ResetPassword from "@/pages/ResetPassword";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { AuthProvider } from "./context/AuthContext";
 import FloatingChatbot from "./components/chat/FloatingChatbot";
+import { useEffect } from "react";
+import { initGA, usePageTracking } from "./utils/analytics";
 
 const queryClient = new QueryClient();
 
+// Analytics wrapper component
+const AnalyticsWrapper = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  usePageTracking();
+
+  return <>{children}</>;
+};
+
 const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Index />} />
-    <Route path="/curriculum" element={<Curriculum />} />
-    <Route path="/curriculum/level/:levelId" element={<LevelDetails />} />
-    <Route path="/courses" element={<Courses />} />
-    <Route path="/courses/:courseId" element={<CourseDetails />} />
-    <Route path="/progress" element={<Progress />} />
-    <Route path="/about" element={<About />} />
-    <Route path="/learning-approach/:approach" element={<LearningApproach />} />
-    <Route path="/tools" element={<Tools />} />
-    <Route path="/faq" element={<Faq />} />
-    <Route path="/auth" element={<Auth />} />
-    <Route path="/profile" element={<Profile />} />
-    <Route path="/reset-password" element={<ResetPassword />} />
-    <Route path="/admin" element={<AdminDashboard />} />
-    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-    <Route path="*" element={<NotFound />} />
-  </Routes>
+  <AnalyticsWrapper>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/curriculum" element={<Curriculum />} />
+      <Route path="/curriculum/level/:levelId" element={<LevelDetails />} />
+      <Route path="/courses" element={<Courses />} />
+      <Route path="/courses/:courseId" element={<CourseDetails />} />
+      <Route path="/progress" element={<Progress />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/learning-approach/:approach" element={<LearningApproach />} />
+      <Route path="/tools" element={<Tools />} />
+      <Route path="/faq" element={<Faq />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </AnalyticsWrapper>
 );
 
 const App = () => (
