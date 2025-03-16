@@ -5,7 +5,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 // Required environment variables
 const GOOGLE_CLIENT_EMAIL = Deno.env.get("GOOGLE_CLIENT_EMAIL") || "";
 const GOOGLE_PRIVATE_KEY = Deno.env.get("GOOGLE_PRIVATE_KEY") || "";
-const GA_PROPERTY_ID = Deno.env.get("GA_PROPERTY_ID") || "";
+const GA_PROPERTY_ID = Deno.env.get("GA_PROPERTY_ID") || "G-FH9J4B85LD"; // Using your GA4 property ID
 const RECIPIENT_EMAIL = "quantumquestacademycanada@gmail.com";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "";
@@ -19,13 +19,13 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function getAnalyticsReport() {
   try {
-    // Simple placeholder implementation
-    // In a real implementation, you would connect to the Google Analytics Data API 
-    // to fetch actual analytics data using the provided credentials
-
-    // Basic report structure
+    // In a real implementation, you would connect to the Google Analytics Data API
+    // using the GA4 Data API: https://developers.google.com/analytics/devguides/reporting/data/v1
+    
+    // For now, we'll use a placeholder implementation that references your GA property
     const report = {
       date: new Date().toISOString().split('T')[0],
+      propertyId: GA_PROPERTY_ID,
       summary: {
         totalVisitors: "Visit Google Analytics Dashboard",
         pageViews: "Visit Google Analytics Dashboard",
@@ -71,6 +71,7 @@ async function sendEmailReport(report: any) {
           <div class="container">
             <h1>Quantum Quest Academy Analytics Report</h1>
             <p class="date">Report Date: ${report.date}</p>
+            <p>Google Analytics Property ID: ${report.propertyId}</p>
             
             <h2>Summary</h2>
             <div class="stat">
@@ -109,7 +110,7 @@ async function sendEmailReport(report: any) {
             
             <div class="footer">
               <p>This is an automated email from Quantum Quest Academy Analytics.</p>
-              <p>For more detailed analytics, please visit your Google Analytics dashboard.</p>
+              <p>For more detailed analytics, please visit your <a href="https://analytics.google.com/analytics/web/#/p${report.propertyId.replace('G-', '')}/reports/reportinghub">Google Analytics dashboard</a>.</p>
             </div>
           </div>
         </body>
@@ -117,13 +118,13 @@ async function sendEmailReport(report: any) {
     `;
 
     // Send email using Supabase's built-in email functionality
-    // Note: This is a placeholder. In a real implementation, you would use a proper email service like SendGrid, Mailgun, or Resend
     console.log(`Email report would be sent to ${RECIPIENT_EMAIL}`);
     console.log("Email HTML:", emailHtml);
     
     return {
       success: true,
-      message: `Analytics report would be sent to ${RECIPIENT_EMAIL}`
+      message: `Analytics report would be sent to ${RECIPIENT_EMAIL}`,
+      propertyId: report.propertyId
     };
   } catch (error) {
     console.error("Error sending email report:", error);

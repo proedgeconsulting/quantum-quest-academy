@@ -8,7 +8,7 @@ export const initGA = () => {
   // Create script element
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.VITE_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'}`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.VITE_GA_MEASUREMENT_ID || 'G-FH9J4B85LD'}`;
   document.head.appendChild(script);
 
   // Initialize gtag
@@ -17,7 +17,7 @@ export const initGA = () => {
     window.dataLayer.push(args);
   }
   gtag('js', new Date());
-  gtag('config', process.env.VITE_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX', {
+  gtag('config', process.env.VITE_GA_MEASUREMENT_ID || 'G-FH9J4B85LD', {
     user_properties: {
       source: 'quantum-quest-academy'
     }
