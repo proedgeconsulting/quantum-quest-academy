@@ -108,7 +108,7 @@ const Faq = () => {
             </p>
             <div className="flex items-center gap-2">
               <HelpCircle className="h-4 w-4 text-quantum-500" />
-              <span className="text-quantum-700 dark:text-quantum-300">Email: support@quantumquest.edu</span>
+              <span className="text-quantum-700 dark:text-quantum-300">Email:quantumquestacademycanada@gmail.com</span>
             </div>
           </div>
         </div>
