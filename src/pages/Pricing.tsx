@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -88,9 +87,9 @@ const Pricing = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 * index }}
                 >
-                  <Card className={`h-full flex flex-col ${plan.isPopular ? 'border-quantum-500 dark:border-quantum-400 shadow-lg' : ''}`}>
-                    <CardHeader className={`${plan.isPopular ? 'bg-quantum-50 dark:bg-quantum-900/50' : ''}`}>
-                      {plan.isPopular && (
+                  <Card className={`h-full flex flex-col ${plan.popular ? 'border-quantum-500 dark:border-quantum-400 shadow-lg' : ''}`}>
+                    <CardHeader className={`${plan.popular ? 'bg-quantum-50 dark:bg-quantum-900/50' : ''}`}>
+                      {plan.popular && (
                         <div className="py-1 px-3 bg-quantum-500 text-white text-xs font-semibold rounded-full w-fit mx-auto mb-2">
                           Most Popular
                         </div>
@@ -118,7 +117,7 @@ const Pricing = () => {
                     </CardContent>
                     <CardFooter className="flex flex-col">
                       <Button 
-                        className={`w-full ${plan.isPopular ? 'bg-quantum-500 hover:bg-quantum-600' : ''}`}
+                        className={`w-full ${plan.popular ? 'bg-quantum-500 hover:bg-quantum-600' : ''}`}
                         onClick={() => handleSelectPlan(plan.id)}
                         disabled={userSubscription?.plan_id === plan.id}
                       >
