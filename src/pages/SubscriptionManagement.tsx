@@ -26,7 +26,8 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   ChevronRight,
-  Loader2 
+  Loader2,
+  ExternalLink
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { getSubscriptionPlanById, formatPrice, subscriptionPlans } from "@/data/subscriptionPlans";
@@ -43,6 +44,7 @@ const SubscriptionManagement = () => {
   
   const [isProcessingCancel, setIsProcessingCancel] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [isLoadingPortal, setIsLoadingPortal] = useState(false);
   
   if (!user) {
     navigate("/auth?redirect=/subscription");
@@ -99,7 +101,7 @@ const SubscriptionManagement = () => {
       });
       
       setShowCancelDialog(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error canceling subscription:", error);
       toast({
         title: "Error canceling subscription",
@@ -108,6 +110,49 @@ const SubscriptionManagement = () => {
       });
     } finally {
       setIsProcessingCancel(false);
+    }
+  };
+
+  // Function to redirect to Stripe Customer Portal
+  const handleManageSubscription = async () => {
+    if (!user || userSubscription?.tier === "free") return;
+    
+    setIsLoadingPortal(true);
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-portal-session`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            return_url: window.location.href
+          })
+        }
+      );
+      
+      const { url, error } = await response.json();
+      
+      if (error) {
+        throw new Error(error);
+      }
+      
+      // Redirect to Stripe Customer Portal
+      window.location.href = url;
+      
+    } catch (error) {
+      console.error("Error creating portal session:", error);
+      toast({
+        title: "Error",
+        description: "Unable to access subscription management portal.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingPortal(false);
     }
   };
   
@@ -212,12 +257,28 @@ const SubscriptionManagement = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="flex flex-col sm:flex-row gap-3 justify-between">
-                  <Button 
-                    variant="outline"
-                    onClick={() => navigate("/pricing")}
-                  >
-                    Change Plan
-                  </Button>
+                  {userSubscription?.tier !== "free" ? (
+                    <Button 
+                      variant="outline"
+                      onClick={handleManageSubscription}
+                      disabled={isLoadingPortal}
+                      className="flex items-center"
+                    >
+                      {isLoadingPortal ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                      )}
+                      Manage Payment Details
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="outline"
+                      onClick={() => navigate("/pricing")}
+                    >
+                      Upgrade Plan
+                    </Button>
+                  )}
                   
                   {userSubscription?.tier !== "free" && (
                     <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>

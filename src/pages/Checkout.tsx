@@ -5,15 +5,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { getSubscriptionPlanById, formatPrice } from "@/data/subscriptionPlans";
 import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { CreditCard, CheckCircle, Calendar, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { stripePromise } from "@/integrations/stripe/client";
 
 const Checkout = () => {
   const { planId } = useParams<{ planId: string }>();
@@ -24,13 +23,51 @@ const Checkout = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   
-  // Form state
-  const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvc, setCardCvc] = useState("");
-  
   const plan = planId ? getSubscriptionPlanById(planId) : undefined;
+
+  // Check for success query param (returned from Stripe)
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const success = url.searchParams.get('success');
+    const sessionId = url.searchParams.get('session_id');
+    
+    if (success === 'true' && sessionId) {
+      setIsSuccess(true);
+      refetchSubscription();
+      
+      // Record purchase event in analytics
+      if (window.gtag && plan) {
+        window.gtag('event', 'purchase', {
+          transaction_id: sessionId,
+          value: plan.price / 100,
+          currency: 'USD',
+          items: [{
+            id: plan.id,
+            name: plan.name,
+            category: 'Subscription',
+            price: plan.price / 100
+          }]
+        });
+      }
+      
+      // Clean up URL
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('success');
+      cleanUrl.searchParams.delete('session_id');
+      window.history.replaceState({}, document.title, cleanUrl.toString());
+      
+      // Show success toast
+      toast({
+        title: "Subscription activated!",
+        description: `Your ${plan?.name} subscription has been successfully activated.`,
+      });
+      
+      // Redirect after delay
+      setTimeout(() => {
+        navigate("/subscription");
+      }, 3000);
+    }
+  }, []);
   
   useEffect(() => {
     if (!user) {
@@ -48,102 +85,74 @@ const Checkout = () => {
     }
   }, [user, plan, navigate, toast]);
 
-  const formatCardNumber = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/g, "");
-    const matches = v.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-    
-    for (let i = 0, len = match.length; i < len; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-    
-    if (parts.length) {
-      return parts.join(" ");
-    } else {
-      return value;
-    }
-  };
-  
-  const formatExpiry = (value: string) => {
-    const v = value.replace(/\s+/g, "").replace(/[^0-9]/g, "");
-    
-    if (v.length >= 2) {
-      return `${v.substring(0, 2)}/${v.substring(2, 4)}`;
-    }
-    
-    return v;
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleCheckout = async () => {
     if (!user || !plan) return;
     
     setIsProcessing(true);
     
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real application, you would use a payment processor like Stripe
-      // For this demo, we'll simulate a successful payment
-      const now = new Date();
-      const endDate = new Date();
-      
-      if (plan.interval === "monthly") {
-        endDate.setMonth(now.getMonth() + 1);
-      } else {
+      // If it's the free plan, handle it directly without Stripe
+      if (plan.price === 0) {
+        const now = new Date();
+        const endDate = new Date();
         endDate.setFullYear(now.getFullYear() + 1);
+        
+        const { error } = await supabase.from("user_subscriptions").insert({
+          user_id: user.id,
+          plan_id: plan.id,
+          status: "active",
+          current_period_start: now.toISOString(),
+          current_period_end: endDate.toISOString(),
+          cancel_at_period_end: false,
+          tier: plan.tier
+        });
+        
+        if (error) {
+          throw error;
+        }
+        
+        await refetchSubscription();
+        setIsSuccess(true);
+        
+        toast({
+          title: "Free plan activated!",
+          description: `Your ${plan.name} has been successfully activated.`,
+        });
+        
+        setTimeout(() => {
+          navigate("/subscription");
+        }, 3000);
+        
+        return;
       }
       
-      // Create subscription record
-      const { error } = await supabase.from("user_subscriptions").insert({
-        user_id: user.id,
-        plan_id: plan.id,
-        status: "active",
-        current_period_start: now.toISOString(),
-        current_period_end: endDate.toISOString(),
-        cancel_at_period_end: false,
-        payment_method: `**** **** **** ${cardNumber.slice(-4)}`,
-        tier: plan.tier
-      });
+      // For paid plans, use Stripe Checkout
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            planId: plan.id,
+            userId: user.id,
+            redirectPath: '/checkout/' + plan.id
+          })
+        }
+      );
+      
+      const { url, sessionId, error } = await response.json();
       
       if (error) {
-        throw error;
+        throw new Error(error);
       }
       
-      // Refresh the user's subscription state
-      await refetchSubscription();
+      // Redirect to Stripe Checkout
+      window.location.href = url;
       
-      // Show success state
-      setIsSuccess(true);
-      
-      // Record the purchase event in analytics
-      if (window.gtag) {
-        window.gtag('event', 'purchase', {
-          transaction_id: Date.now().toString(),
-          value: plan.price / 100,
-          currency: 'USD',
-          items: [{
-            id: plan.id,
-            name: plan.name,
-            category: 'Subscription',
-            price: plan.price / 100
-          }]
-        });
-      }
-      
-      toast({
-        title: "Subscription activated!",
-        description: `Your ${plan.name} subscription has been successfully activated.`,
-      });
-      
-      // Redirect after delay
-      setTimeout(() => {
-        navigate("/subscription");
-      }, 3000);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Subscription error:", error);
       toast({
         title: "Subscription failed",
@@ -189,70 +198,26 @@ const Checkout = () => {
               <div className="md:col-span-3">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Payment Information</CardTitle>
+                    <CardTitle>Complete your purchase</CardTitle>
                     <CardDescription>
-                      Complete your subscription purchase
+                      Subscribe to the {plan.name} plan
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="cardName">Name on card</Label>
-                        <Input 
-                          id="cardName" 
-                          value={cardName} 
-                          onChange={(e) => setCardName(e.target.value)} 
-                          placeholder="Name as it appears on card"
-                          required
-                        />
-                      </div>
+                    <div className="space-y-4">
+                      <p>You're about to subscribe to the {plan.name} plan at {formatPrice(plan.price)}/{plan.interval}.</p>
                       
                       <div className="space-y-2">
-                        <Label htmlFor="cardNumber">Card number</Label>
-                        <div className="relative">
-                          <Input 
-                            id="cardNumber" 
-                            value={cardNumber} 
-                            onChange={(e) => setCardNumber(formatCardNumber(e.target.value))} 
-                            placeholder="0000 0000 0000 0000"
-                            maxLength={19}
-                            required
-                          />
-                          <CreditCard className="absolute right-3 top-2.5 h-5 w-5 text-quantum-400" />
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="expiry">Expiry date</Label>
-                          <div className="relative">
-                            <Input 
-                              id="expiry" 
-                              value={cardExpiry} 
-                              onChange={(e) => setCardExpiry(formatExpiry(e.target.value))} 
-                              placeholder="MM/YY"
-                              maxLength={5}
-                              required
-                            />
-                            <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-quantum-400" />
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="cvc">CVC</Label>
-                          <Input 
-                            id="cvc" 
-                            value={cardCvc} 
-                            onChange={(e) => setCardCvc(e.target.value.replace(/\D/g, ""))} 
-                            placeholder="123"
-                            maxLength={3}
-                            required
-                          />
-                        </div>
+                        <h3 className="font-medium">What's included:</h3>
+                        <ul className="space-y-2 pl-5 list-disc text-quantum-600 dark:text-quantum-400">
+                          {plan.features.map((feature, index) => (
+                            <li key={index}>{feature}</li>
+                          ))}
+                        </ul>
                       </div>
                       
                       <Button 
-                        type="submit" 
+                        onClick={handleCheckout}
                         className="w-full mt-6" 
                         disabled={isProcessing}
                       >
@@ -262,10 +227,12 @@ const Checkout = () => {
                             Processing...
                           </>
                         ) : (
-                          `Pay ${formatPrice(plan.price)}`
+                          plan.price === 0 
+                            ? "Activate Free Plan" 
+                            : `Subscribe for ${formatPrice(plan.price)}/${plan.interval}`
                         )}
                       </Button>
-                    </form>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
