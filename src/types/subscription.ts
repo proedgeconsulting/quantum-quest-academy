@@ -25,3 +25,18 @@ export interface UserSubscription {
   payment_method?: string;
   tier: SubscriptionTier;
 }
+
+// Add module declaration to extend the Supabase types
+declare module '@supabase/supabase-js' {
+  interface Database {
+    public: {
+      Tables: {
+        user_subscriptions: {
+          Row: UserSubscription;
+          Insert: Omit<UserSubscription, 'id' | 'created_at' | 'updated_at'>;
+          Update: Partial<Omit<UserSubscription, 'id'>>;
+        };
+      };
+    };
+  }
+}
