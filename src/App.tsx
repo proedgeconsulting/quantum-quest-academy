@@ -19,7 +19,11 @@ import LearningApproach from "./pages/LearningApproach";
 import LevelDetails from "./pages/LevelDetails";
 import ResetPassword from "@/pages/ResetPassword";
 import AdminDashboard from "@/pages/AdminDashboard";
+import Pricing from "@/pages/Pricing";
+import Checkout from "@/pages/Checkout";
+import SubscriptionManagement from "@/pages/SubscriptionManagement";
 import { AuthProvider } from "./context/AuthContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
 import FloatingChatbot from "./components/chat/FloatingChatbot";
 import { useEffect } from "react";
 import { initGA, usePageTracking } from "./utils/analytics";
@@ -54,6 +58,9 @@ const AppRoutes = () => (
       <Route path="/profile" element={<Profile />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/pricing" element={<Pricing />} />
+      <Route path="/checkout/:planId" element={<Checkout />} />
+      <Route path="/subscription" element={<SubscriptionManagement />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
@@ -65,10 +72,12 @@ const App = () => (
     <TooltipProvider>
       <BrowserRouter>
         <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <AppRoutes />
-          <FloatingChatbot />
+          <SubscriptionProvider>
+            <Toaster />
+            <Sonner />
+            <AppRoutes />
+            <FloatingChatbot />
+          </SubscriptionProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

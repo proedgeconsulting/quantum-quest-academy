@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, CreditCard } from "lucide-react";
 
 // Export the routes array as navItems for use in MobileNav
 export const navItems = [
@@ -24,6 +24,11 @@ export const navItems = [
     title: "Tools",
   },
   {
+    href: "/pricing",
+    label: "Pricing",
+    title: "Pricing",
+  },
+  {
     href: "/about",
     label: "About",
     title: "About",
@@ -34,8 +39,16 @@ export const navItems = [
     title: "FAQ",
   },
   {
+    href: "/subscription",
+    label: "Subscription",
+    icon: CreditCard,
+    title: "Subscription",
+    requiresAuth: true,
+  },
+  {
     href: "/admin",
     label: "Admin",
+    icon: ShieldCheck,
     title: "Admin",
     requiresAuth: true,
     adminOnly: true,
@@ -83,9 +96,9 @@ export function MainNav({
                 : "text-muted-foreground"
             )}
           >
-            {route.adminOnly ? (
+            {route.icon ? (
               <div className="flex items-center gap-1">
-                <ShieldCheck className="h-4 w-4" />
+                <route.icon className="h-4 w-4" />
                 {route.label}
               </div>
             ) : (

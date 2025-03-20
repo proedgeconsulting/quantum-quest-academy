@@ -11,6 +11,17 @@ import ModuleSidebar from "@/components/courses/ModuleSidebar";
 import LessonContainer from "@/components/courses/LessonContainer";
 import { useCourseProgress } from "@/hooks/useCourseProgress";
 import { useLessonNavigation } from "@/hooks/useLessonNavigation";
+import { useSubscription } from "@/context/SubscriptionContext";
+import SubscriptionGate from "@/components/subscription/SubscriptionGate";
+import { Button } from "@/components/ui/button";
+import { SubscriptionTier } from "@/types/subscription";
+
+// Map course levels to subscription tiers
+const levelToTierMap: Record<string, SubscriptionTier> = {
+  "1": "free",
+  "2": "basic",
+  "3": "pro",
+};
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -19,6 +30,10 @@ const CourseDetails = () => {
   const { toast } = useToast();
   
   const course = courseId ? getCourseById(courseId) : undefined;
+
+  // Get course level from the first digit of the courseId
+  const courseLevel = course?.id?.charAt(0) || "1";
+  const requiredTier = levelToTierMap[courseLevel] || "free";
 
   // Course progress management
   const { 
@@ -72,33 +87,39 @@ const CourseDetails = () => {
         
         <section className="py-8">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Course Content Sidebar */}
-              <div className="lg:col-span-3">
-                <ModuleSidebar 
-                  course={course}
-                  activeModule={activeModule || ""}
-                  activeLesson={activeLesson || ""}
-                  userProgress={userProgress}
-                  setActiveModule={setActiveModule}
-                  setActiveLesson={setActiveLesson}
-                  calculateModuleProgress={calculateModuleProgress}
-                />
+            <SubscriptionGate 
+              requiredTier={requiredTier}
+              title={`Level ${courseLevel} Content`}
+              description={`This course requires ${requiredTier === 'free' ? 'Free' : requiredTier === 'basic' ? 'Basic' : requiredTier === 'pro' ? 'Professional' : 'Ultimate'} subscription or higher`}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Course Content Sidebar */}
+                <div className="lg:col-span-3">
+                  <ModuleSidebar 
+                    course={course}
+                    activeModule={activeModule || ""}
+                    activeLesson={activeLesson || ""}
+                    userProgress={userProgress}
+                    setActiveModule={setActiveModule}
+                    setActiveLesson={setActiveLesson}
+                    calculateModuleProgress={calculateModuleProgress}
+                  />
+                </div>
+                
+                {/* Main Lesson Content */}
+                <div className="lg:col-span-9">
+                  <LessonContainer 
+                    currentLesson={currentLesson}
+                    userProgress={userProgress}
+                    handleLessonComplete={handleLessonComplete}
+                    handleNextLesson={handleNextLesson}
+                    handlePrevLesson={handlePrevLesson}
+                    isFirstLesson={isFirstLesson}
+                    isLastLesson={isLastLesson}
+                  />
+                </div>
               </div>
-              
-              {/* Main Lesson Content */}
-              <div className="lg:col-span-9">
-                <LessonContainer 
-                  currentLesson={currentLesson}
-                  userProgress={userProgress}
-                  handleLessonComplete={handleLessonComplete}
-                  handleNextLesson={handleNextLesson}
-                  handlePrevLesson={handlePrevLesson}
-                  isFirstLesson={isFirstLesson}
-                  isLastLesson={isLastLesson}
-                />
-              </div>
-            </div>
+            </SubscriptionGate>
           </div>
         </section>
       </main>

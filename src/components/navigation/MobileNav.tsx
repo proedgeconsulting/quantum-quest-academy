@@ -46,7 +46,14 @@ export function MobileNav() {
                   className="block px-2 py-3 text-lg hover:bg-quantum-100 dark:hover:bg-quantum-800 rounded-md"
                   onClick={() => setOpen(false)}
                 >
-                  {item.title}
+                  {item.icon ? (
+                    <div className="flex items-center gap-2">
+                      <item.icon className="h-5 w-5" />
+                      {item.title}
+                    </div>
+                  ) : (
+                    item.title
+                  )}
                 </Link>
               </motion.div>
             );
