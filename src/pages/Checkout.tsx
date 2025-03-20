@@ -3,16 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { getSubscriptionPlanById, formatPrice } from "@/data/subscriptionPlans";
+import { getSubscriptionPlanById } from "@/data/subscriptionPlans";
 import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { CheckCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { stripePromise } from "@/integrations/stripe/client";
+import CheckoutSuccess from "@/components/checkout/CheckoutSuccess";
+import CheckoutForm from "@/components/checkout/CheckoutForm";
+import OrderSummary from "@/components/checkout/OrderSummary";
 
 const Checkout = () => {
   const { planId } = useParams<{ planId: string }>();
@@ -31,12 +29,12 @@ const Checkout = () => {
     const success = url.searchParams.get('success');
     const sessionId = url.searchParams.get('session_id');
     
-    if (success === 'true' && sessionId) {
+    if (success === 'true' && sessionId && plan) {
       setIsSuccess(true);
       refetchSubscription();
       
       // Record purchase event in analytics
-      if (window.gtag && plan) {
+      if (window.gtag) {
         window.gtag('event', 'purchase', {
           transaction_id: sessionId,
           value: plan.price / 100,
@@ -59,7 +57,7 @@ const Checkout = () => {
       // Show success toast
       toast({
         title: "Subscription activated!",
-        description: `Your ${plan?.name} subscription has been successfully activated.`,
+        description: `Your ${plan.name} subscription has been successfully activated.`,
       });
       
       // Redirect after delay
@@ -173,101 +171,19 @@ const Checkout = () => {
       <main className="flex-grow py-12">
         <div className="container px-4 max-w-4xl mx-auto">
           {isSuccess ? (
-            <Card className="border-green-200 dark:border-green-900">
-              <CardHeader className="bg-green-50 dark:bg-green-900/20 border-b border-green-100 dark:border-green-800">
-                <div className="flex flex-col items-center justify-center text-center">
-                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-                  <CardTitle className="text-2xl">Subscription Activated!</CardTitle>
-                  <CardDescription>
-                    Thank you for subscribing to the {plan.name} plan
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-6 text-center">
-                <p className="mb-4">Your subscription has been successfully activated. You now have access to all the content and features included in the {plan.name} plan.</p>
-                <p className="text-quantum-600 dark:text-quantum-400">You will be redirected to your subscription management page in a few seconds...</p>
-              </CardContent>
-              <CardFooter className="flex justify-center pb-6">
-                <Button onClick={() => navigate("/subscription")}>
-                  Manage Subscription
-                </Button>
-              </CardFooter>
-            </Card>
+            <CheckoutSuccess plan={plan} />
           ) : (
             <div className="grid md:grid-cols-5 gap-8">
               <div className="md:col-span-3">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Complete your purchase</CardTitle>
-                    <CardDescription>
-                      Subscribe to the {plan.name} plan
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <p>You're about to subscribe to the {plan.name} plan at {formatPrice(plan.price)}/{plan.interval}.</p>
-                      
-                      <div className="space-y-2">
-                        <h3 className="font-medium">What's included:</h3>
-                        <ul className="space-y-2 pl-5 list-disc text-quantum-600 dark:text-quantum-400">
-                          {plan.features.map((feature, index) => (
-                            <li key={index}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <Button 
-                        onClick={handleCheckout}
-                        className="w-full mt-6" 
-                        disabled={isProcessing}
-                      >
-                        {isProcessing ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Processing...
-                          </>
-                        ) : (
-                          plan.price === 0 
-                            ? "Activate Free Plan" 
-                            : `Subscribe for ${formatPrice(plan.price)}/${plan.interval}`
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <CheckoutForm 
+                  plan={plan} 
+                  isProcessing={isProcessing} 
+                  onCheckout={handleCheckout} 
+                />
               </div>
               
               <div className="md:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Order Summary</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <span className="font-medium">{plan.name}</span>
-                        <span>{formatPrice(plan.price)}</span>
-                      </div>
-                      
-                      <div className="text-sm text-quantum-600 dark:text-quantum-400">
-                        <p>Billing cycle: {plan.interval}</p>
-                        <p>Next billing date: {new Date(Date.now() + (plan.interval === "monthly" ? 30 : 365) * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div className="font-bold flex justify-between text-lg">
-                        <span>Total</span>
-                        <span>{formatPrice(plan.price)}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="bg-quantum-50 dark:bg-quantum-900/20 flex flex-col items-start text-sm text-quantum-600 dark:text-quantum-400 space-y-2">
-                    <p>✓ Secure payment processing</p>
-                    <p>✓ Cancel anytime</p>
-                    <p>✓ 14-day money-back guarantee</p>
-                  </CardFooter>
-                </Card>
+                <OrderSummary plan={plan} />
               </div>
             </div>
           )}
