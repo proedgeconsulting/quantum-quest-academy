@@ -59,7 +59,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           updated_at: new Date().toISOString()
         });
       } else {
-        setUserSubscription(data);
+        // Ensure the status is one of the allowed values from the UserSubscription type
+        const subscription = data as unknown as UserSubscription;
+        setUserSubscription(subscription);
       }
     } catch (error) {
       console.error('Error in subscription fetch:', error);
