@@ -125,8 +125,9 @@ const Checkout = () => {
       }
       
       // For paid plans, use Stripe Checkout
+      // Use the full URL to the Supabase Edge Function
       const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,
+        "https://tyyimchqyrgrbbceoytu.supabase.co/functions/v1/create-checkout-session",
         {
           method: 'POST',
           headers: {
@@ -141,6 +142,12 @@ const Checkout = () => {
         }
       );
       
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Checkout error response:", errorText);
+        throw new Error(`Failed to create checkout session: ${response.status} ${response.statusText}`);
+      }
+      
       const { url, sessionId, error } = await response.json();
       
       if (error) {
@@ -148,7 +155,11 @@ const Checkout = () => {
       }
       
       // Redirect to Stripe Checkout
-      window.location.href = url;
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error("No URL returned from checkout session");
+      }
       
     } catch (error) {
       console.error("Subscription error:", error);

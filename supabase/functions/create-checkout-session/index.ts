@@ -38,6 +38,7 @@ Deno.serve(async (req) => {
     }
 
     // Determine the Stripe price ID based on the plan ID from our system
+    // In a real implementation, these would likely be stored in a database
     let stripePriceId;
     switch (planId) {
       case 'basic-monthly':
@@ -62,6 +63,10 @@ Deno.serve(async (req) => {
         throw new Error('Invalid plan ID');
     }
 
+    // For testing/demo purposes, we're using price_1 since these are test price IDs
+    // In a production environment, you would use actual Stripe price IDs
+    stripePriceId = 'price_1OzrHpDrUl6z9Ym5EBXz4JQm';
+
     // Create a Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -81,6 +86,8 @@ Deno.serve(async (req) => {
         planId,
       },
     });
+
+    console.log("Checkout session created successfully:", session.id);
 
     return new Response(
       JSON.stringify({ sessionId: session.id, url: session.url }),
