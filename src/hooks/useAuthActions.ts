@@ -113,34 +113,47 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
   const signOut = async () => {
     try {
       console.log("Sign out initiated");
-      // Set loading state first to prevent any potential UI blocking
+      
+      // Set loading state first
       setLoading(true);
       
-      // Clear profile immediately to prevent UI inconsistency
+      // Clear profile immediately to update UI
       setProfile(null);
       
-      // Perform the actual sign out operation
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        throw error;
-      }
-      
-      toast({
-        title: "Signed out",
-        description: "You have been signed out successfully",
-      });
-      
-      // Navigate to home page
-      navigate("/");
+      // Perform the actual sign out operation with a small delay to allow UI to update
+      setTimeout(async () => {
+        try {
+          const { error } = await supabase.auth.signOut();
+          
+          if (error) {
+            throw error;
+          }
+          
+          toast({
+            title: "Signed out",
+            description: "You have been signed out successfully",
+          });
+          
+          // Navigate to home page
+          navigate("/");
+        } catch (innerError: any) {
+          console.error("Sign out error:", innerError);
+          toast({
+            title: "Sign out failed",
+            description: innerError.message || "Failed to sign out",
+            variant: "destructive",
+          });
+        } finally {
+          setLoading(false);
+        }
+      }, 50); // Small delay to allow UI to update
     } catch (error: any) {
-      console.error("Sign out error:", error);
+      console.error("Outer sign out error:", error);
       toast({
         title: "Sign out failed",
         description: error.message || "Failed to sign out",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };

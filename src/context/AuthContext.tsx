@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthContextType } from "@/types/auth";
 import { useAuthState } from "@/hooks/useAuthState";
@@ -17,7 +17,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(stateLoading);
   }, [stateLoading]);
 
-  const value = {
+  // Create a memoized value to prevent unnecessary re-renders
+  const value = React.useMemo(() => ({
     user,
     profile,
     session,
@@ -28,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     updateProfile,
     supabaseClient: supabase,
-  };
+  }), [user, profile, session, loading, signUp, signIn, signInWithGoogle, signOut, updateProfile]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
