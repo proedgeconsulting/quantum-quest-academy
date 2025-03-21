@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { SubscriptionPlan } from "@/data/subscriptionPlans";
 import { getSubscriptionPlanById } from "@/data/subscriptionPlans";
+import { event } from "@/utils/analytics";
 
 export function useCheckout(planId: string | undefined) {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export function useCheckout(planId: string | undefined) {
   const { refetchSubscription } = useSubscription();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   // Get plan from planId
   const plan = planId ? getSubscriptionPlanById(planId) : undefined;
@@ -31,16 +33,12 @@ export function useCheckout(planId: string | undefined) {
       
       // Record purchase event in analytics
       if (window.gtag) {
-        window.gtag('event', 'purchase', {
-          transaction_id: sessionId,
-          value: plan.price / 100,
-          currency: 'USD',
-          items: [{
-            id: plan.id,
-            name: plan.name,
-            category: 'Subscription',
-            price: plan.price / 100
-          }]
+        // Track conversion event
+        event({
+          action: 'purchase',
+          category: 'Subscription',
+          label: plan.name,
+          value: plan.price / 100
         });
       }
       
@@ -66,11 +64,13 @@ export function useCheckout(planId: string | undefined) {
   // Validate plan and user
   useEffect(() => {
     if (!user) {
+      console.log("No user found, redirecting to auth page");
       navigate("/auth?redirect=/pricing");
       return;
     }
     
     if (!plan) {
+      console.log("Invalid plan ID:", planId);
       toast({
         title: "Invalid plan",
         description: "The selected subscription plan is not valid.",
@@ -81,18 +81,23 @@ export function useCheckout(planId: string | undefined) {
   }, [user, plan, navigate, toast]);
 
   const handleCheckout = async () => {
-    if (!user || !plan || !session) return;
+    if (!user || !plan || !session) {
+      setError("User session or plan information is missing");
+      return;
+    }
     
     setIsProcessing(true);
+    setError(null);
     
     try {
       // If it's the free plan, handle it directly without Stripe
       if (plan.price === 0) {
+        console.log("Processing free plan activation");
         const now = new Date();
         const endDate = new Date();
         endDate.setFullYear(now.getFullYear() + 1);
         
-        const { error } = await supabase.from("user_subscriptions").insert({
+        const { error: subscriptionError } = await supabase.from("user_subscriptions").insert({
           user_id: user.id,
           plan_id: plan.id,
           status: "active",
@@ -102,12 +107,22 @@ export function useCheckout(planId: string | undefined) {
           tier: plan.tier
         });
         
-        if (error) {
-          throw error;
+        if (subscriptionError) {
+          console.error("Error activating free plan:", subscriptionError);
+          throw new Error(`Failed to activate free plan: ${subscriptionError.message}`);
         }
         
         await refetchSubscription();
         setIsSuccess(true);
+        
+        // Track conversion in analytics
+        if (window.gtag) {
+          event({
+            action: 'free_plan_activated',
+            category: 'Subscription',
+            label: plan.name
+          });
+        }
         
         toast({
           title: "Free plan activated!",
@@ -122,6 +137,8 @@ export function useCheckout(planId: string | undefined) {
       }
       
       // For paid plans, use Stripe Checkout
+      console.log("Initiating Stripe checkout for plan:", plan.id);
+      
       // Use the full URL to the Supabase Edge Function
       const response = await fetch(
         "https://tyyimchqyrgrbbceoytu.supabase.co/functions/v1/create-checkout-session",
@@ -142,17 +159,32 @@ export function useCheckout(planId: string | undefined) {
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Checkout error response:", errorText);
-        throw new Error(`Failed to create checkout session: ${response.status} ${response.statusText}`);
+        let errorMessage = `Failed to create checkout session: ${response.status} ${response.statusText}`;
+        
+        try {
+          // Try to parse the error response for more details
+          const errorData = JSON.parse(errorText);
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (e) {
+          // If we can't parse JSON, use the raw text
+          console.log("Could not parse error response as JSON");
+        }
+        
+        throw new Error(errorMessage);
       }
       
-      const { url, sessionId, error } = await response.json();
+      const { url, sessionId, error: responseError } = await response.json();
       
-      if (error) {
-        throw new Error(error);
+      if (responseError) {
+        console.error("Error in checkout response:", responseError);
+        throw new Error(responseError);
       }
       
       // Redirect to Stripe Checkout
       if (url) {
+        console.log("Redirecting to Stripe checkout URL");
         window.location.href = url;
       } else {
         throw new Error("No URL returned from checkout session");
@@ -160,6 +192,8 @@ export function useCheckout(planId: string | undefined) {
       
     } catch (error) {
       console.error("Subscription error:", error);
+      setError(error.message || "There was a problem processing your subscription.");
+      
       toast({
         title: "Subscription failed",
         description: error.message || "There was a problem processing your subscription.",
@@ -173,6 +207,8 @@ export function useCheckout(planId: string | undefined) {
   return {
     isProcessing,
     isSuccess,
-    handleCheckout
+    error,
+    handleCheckout,
+    plan
   };
 }

@@ -2,104 +2,135 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7'
 import Stripe from 'https://esm.sh/stripe@14.12.0';
 
+// Initialize Stripe
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
   apiVersion: '2023-10-16',
 });
 
-const endpointSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET') || '';
+// Initialize Supabase
 const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+// Map of plan IDs
+// This should match the planId in your frontend code
+const STRIPE_PRICE_TO_PLAN_MAP = {
+  'price_1OzrHpDrUl6z9Ym5EBXz4JQm': 'basic-monthly',
+  'price_1OzrHpDrUl6z9Ym5aatrKKFD': 'basic-yearly',
+  'price_1OzrHqDrUl6z9Ym599CIxKJw': 'pro-monthly',
+  'price_1OzrHqDrUl6z9Ym5pBctdEXq': 'pro-yearly',
+  'price_1OzrHrDrUl6z9Ym5Y5Y4DTRT': 'ultimate-monthly',
+  'price_1OzrHrDrUl6z9Ym5v0pROsZD': 'ultimate-yearly'
+};
+
+// Map of plan tiers
+const PLAN_TO_TIER_MAP = {
+  'basic-monthly': 'basic',
+  'basic-yearly': 'basic',
+  'pro-monthly': 'pro',
+  'pro-yearly': 'pro',
+  'ultimate-monthly': 'ultimate',
+  'ultimate-yearly': 'ultimate'
+};
+
 Deno.serve(async (req) => {
-  const signature = req.headers.get('stripe-signature');
-  
-  if (!signature) {
-    return new Response('Webhook signature missing', { status: 400 });
-  }
-
   try {
+    // Ensure this is a POST request
+    if (req.method !== 'POST') {
+      return new Response('Method Not Allowed', { status: 405 });
+    }
+
+    // Get the signature from the header
+    const signature = req.headers.get('stripe-signature');
+    if (!signature) {
+      return new Response('Stripe signature missing', { status: 400 });
+    }
+
+    // Get the webhook secret
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
+    if (!webhookSecret) {
+      return new Response('Webhook secret not configured', { status: 500 });
+    }
+
+    // Get the request body as text
     const body = await req.text();
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      endpointSecret
-    );
 
-    console.log(`Received Stripe event: ${event.type}`);
+    // Verify the webhook signature
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    } catch (err) {
+      return new Response(`Webhook signature verification failed: ${err.message}`, { status: 400 });
+    }
 
-    // Handle the event
+    console.log(`Processing webhook event: ${event.type}`);
+
+    // Handle the event based on its type
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
-        const userId = session.metadata.userId;
-        const planId = session.metadata.planId;
-        const subscriptionId = session.subscription;
+        const { client_reference_id: userId, metadata } = session;
 
-        // Retrieve the subscription to get billing details
+        // Get the subscription
+        const subscriptionId = session.subscription;
+        if (!subscriptionId) {
+          console.error('No subscription ID in checkout session');
+          break;
+        }
+
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
         
-        // Determine the subscription tier based on planId
-        let tier;
-        if (planId.includes('basic')) {
-          tier = 'basic';
-        } else if (planId.includes('pro')) {
-          tier = 'pro';
-        } else if (planId.includes('ultimate')) {
-          tier = 'ultimate';
+        // Get plan details
+        const priceId = subscription?.items?.data[0]?.price?.id;
+        if (!priceId || !STRIPE_PRICE_TO_PLAN_MAP[priceId]) {
+          console.error('Invalid price ID or no mapping found:', priceId);
+          break;
         }
+        
+        const planId = STRIPE_PRICE_TO_PLAN_MAP[priceId];
+        const tier = PLAN_TO_TIER_MAP[planId];
 
-        // Create or update user_subscription record
-        const { error } = await supabase.from('user_subscriptions').insert({
-          user_id: userId,
-          plan_id: planId,
-          status: 'active',
-          current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-          cancel_at_period_end: subscription.cancel_at_period_end,
-          payment_method: `**** **** **** ${session.customer_details?.payment_method_details?.card?.last4 || ''}`,
-          tier: tier
-        });
+        // Store subscription details
+        if (userId) {
+          // Store customer ID if needed
+          const customerId = session.customer;
+          if (customerId) {
+            const { data: customerExists } = await supabase
+              .from('stripe_customers')
+              .select('id')
+              .eq('user_id', userId)
+              .maybeSingle();
 
-        if (error) {
-          console.error('Error creating subscription record:', error);
-          throw error;
-        }
-
-        break;
-      }
-      
-      case 'invoice.payment_succeeded': {
-        const invoice = event.data.object;
-        if (invoice.billing_reason === 'subscription_cycle') {
-          const subscriptionId = invoice.subscription;
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-          
-          // Find the subscription in our database
-          const { data: subscriptionData, error: fetchError } = await supabase
-            .from('user_subscriptions')
-            .select('*')
-            .eq('id', subscription.metadata.subscription_id)
-            .single();
-            
-          if (fetchError) {
-            console.error('Error fetching subscription:', fetchError);
-            throw fetchError;
+            if (!customerExists) {
+              await supabase.from('stripe_customers').insert({
+                user_id: userId,
+                stripe_customer_id: customerId,
+                email: session.customer_details?.email
+              });
+            }
           }
           
-          // Update the subscription dates
-          const { error: updateError } = await supabase
-            .from('user_subscriptions')
-            .update({
-              current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', subscriptionData.id);
-            
-          if (updateError) {
-            console.error('Error updating subscription:', updateError);
-            throw updateError;
+          // Start and end dates
+          const current_period_start = new Date(subscription.current_period_start * 1000).toISOString();
+          const current_period_end = new Date(subscription.current_period_end * 1000).toISOString();
+          
+          // Insert/update subscription record
+          const { error } = await supabase.from('user_subscriptions').insert({
+            user_id: userId,
+            plan_id: planId,
+            stripe_subscription_id: subscriptionId,
+            payment_method: 'Stripe',
+            status: subscription.status,
+            tier,
+            current_period_start,
+            current_period_end,
+            cancel_at_period_end: subscription.cancel_at_period_end
+          });
+          
+          if (error) {
+            console.error('Error storing subscription:', error);
+          } else {
+            console.log(`Subscription created for user: ${userId}, plan: ${planId}`);
           }
         }
         break;
@@ -107,96 +138,113 @@ Deno.serve(async (req) => {
       
       case 'customer.subscription.updated': {
         const subscription = event.data.object;
+        const subscriptionId = subscription.id;
         
-        // Find the subscription in our database
-        const { data: subscriptionData, error: fetchError } = await supabase
+        // Get user ID from subscription
+        const { data: userData, error: userError } = await supabase
           .from('user_subscriptions')
-          .select('*')
-          .eq('id', subscription.metadata.subscription_id)
-          .single();
-          
-        if (fetchError) {
-          console.error('Error fetching subscription:', fetchError);
-          // Skip if not found - might be a new subscription
+          .select('user_id')
+          .eq('stripe_subscription_id', subscriptionId)
+          .maybeSingle();
+        
+        if (userError || !userData) {
+          console.error('Error fetching user for subscription update:', userError);
           break;
         }
         
-        // Update the subscription status and other fields
-        const { error: updateError } = await supabase
+        const userId = userData.user_id;
+        
+        // Get plan details
+        const priceId = subscription?.items?.data[0]?.price?.id;
+        if (!priceId || !STRIPE_PRICE_TO_PLAN_MAP[priceId]) {
+          console.error('Invalid price ID or no mapping found:', priceId);
+          break;
+        }
+        
+        const planId = STRIPE_PRICE_TO_PLAN_MAP[priceId];
+        const tier = PLAN_TO_TIER_MAP[planId];
+        
+        // Update subscription record
+        const { error } = await supabase
           .from('user_subscriptions')
           .update({
             status: subscription.status,
-            cancel_at_period_end: subscription.cancel_at_period_end,
+            current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
             current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-            updated_at: new Date().toISOString()
+            cancel_at_period_end: subscription.cancel_at_period_end,
+            plan_id: planId,
+            tier
           })
-          .eq('id', subscriptionData.id);
-          
-        if (updateError) {
-          console.error('Error updating subscription:', updateError);
-          throw updateError;
-        }
+          .eq('stripe_subscription_id', subscriptionId);
         
+        if (error) {
+          console.error('Error updating subscription:', error);
+        } else {
+          console.log(`Subscription updated for user: ${userId}, status: ${subscription.status}`);
+        }
         break;
       }
       
       case 'customer.subscription.deleted': {
         const subscription = event.data.object;
+        const subscriptionId = subscription.id;
         
-        // Find the subscription in our database
-        const { data: subscriptionData, error: fetchError } = await supabase
+        // Get user ID from subscription
+        const { data: userData, error: userError } = await supabase
           .from('user_subscriptions')
-          .select('*')
-          .eq('id', subscription.metadata.subscription_id)
-          .single();
-          
-        if (fetchError) {
-          console.error('Error fetching subscription:', fetchError);
+          .select('user_id')
+          .eq('stripe_subscription_id', subscriptionId)
+          .maybeSingle();
+        
+        if (userError || !userData) {
+          console.error('Error fetching user for subscription deletion:', userError);
           break;
         }
         
-        // Update the subscription status
-        const { error: updateError } = await supabase
+        const userId = userData.user_id;
+        
+        // Update subscription record to cancelled
+        const { error } = await supabase
           .from('user_subscriptions')
           .update({
             status: 'canceled',
-            updated_at: new Date().toISOString()
+            cancel_at_period_end: true
           })
-          .eq('id', subscriptionData.id);
+          .eq('stripe_subscription_id', subscriptionId);
+        
+        if (error) {
+          console.error('Error marking subscription as cancelled:', error);
+        } else {
+          console.log(`Subscription cancelled for user: ${userId}`);
           
-        if (updateError) {
-          console.error('Error updating subscription:', updateError);
-          throw updateError;
+          // Create a new free subscription
+          const endDate = new Date(subscription.current_period_end * 1000);
+          const oneYearLater = new Date(endDate);
+          oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+          
+          await supabase.from('user_subscriptions').insert({
+            user_id: userId,
+            plan_id: 'free',
+            status: 'active',
+            tier: 'free',
+            current_period_start: endDate.toISOString(),
+            current_period_end: oneYearLater.toISOString(),
+            cancel_at_period_end: false
+          });
         }
-        
-        // Create a new free subscription
-        const { error: insertError } = await supabase.from('user_subscriptions').insert({
-          user_id: subscriptionData.user_id,
-          plan_id: 'free',
-          status: 'active',
-          tier: 'free',
-          current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          cancel_at_period_end: false
-        });
-        
-        if (insertError) {
-          console.error('Error creating free subscription:', insertError);
-          throw insertError;
-        }
-        
         break;
       }
     }
 
     return new Response(JSON.stringify({ received: true }), {
+      headers: { 'Content-Type': 'application/json' },
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
     });
-  } catch (err) {
-    console.error(`Webhook error: ${err.message}`);
-    return new Response(`Webhook Error: ${err.message}`, {
-      status: 400
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 500,
     });
   }
 });

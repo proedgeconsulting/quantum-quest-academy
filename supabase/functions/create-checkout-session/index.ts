@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7'
 import Stripe from 'https://esm.sh/stripe@14.12.0';
 
@@ -21,6 +20,17 @@ function errorResponse(message, statusCode = 400, details = null) {
     }
   );
 }
+
+// Map of plan IDs to Stripe price IDs
+// In production, this should be stored in a database or environment variables
+const PLAN_PRICE_MAP = {
+  'basic-monthly': 'price_1OzrHpDrUl6z9Ym5EBXz4JQm', // Example price ID
+  'basic-yearly': 'price_1OzrHpDrUl6z9Ym5aatrKKFD',  // These should be updated with actual
+  'pro-monthly': 'price_1OzrHqDrUl6z9Ym599CIxKJw',    // price IDs from your Stripe dashboard
+  'pro-yearly': 'price_1OzrHqDrUl6z9Ym5pBctdEXq',
+  'ultimate-monthly': 'price_1OzrHrDrUl6z9Ym5Y5Y4DTRT',
+  'ultimate-yearly': 'price_1OzrHrDrUl6z9Ym5v0pROsZD'
+};
 
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
@@ -91,22 +101,31 @@ Deno.serve(async (req) => {
     }
 
     // Validate plan ID and determine Stripe price
-    // For testing/demo purposes, we're using price_1 since these are test price IDs
-    // In a production environment, you would validate against actual plans
-    let stripePriceId;
-    const validPlans = ['basic-monthly', 'basic-yearly', 'pro-monthly', 'pro-yearly', 'ultimate-monthly', 'ultimate-yearly'];
+    const validPlans = Object.keys(PLAN_PRICE_MAP);
     
     if (!validPlans.includes(planId)) {
       return errorResponse('Invalid plan ID', 400, { providedPlanId: planId, validPlans });
     }
 
-    // In a production environment, you would map to actual Stripe price IDs
-    // For now, use a test price ID
-    stripePriceId = 'price_1OzrHpDrUl6z9Ym5EBXz4JQm';
+    // Get the Stripe price ID for the selected plan
+    const stripePriceId = PLAN_PRICE_MAP[planId];
+    
+    // Check if user already has a Stripe customer ID
+    const { data: customerData, error: customerError } = await supabase
+      .from('stripe_customers')
+      .select('stripe_customer_id')
+      .eq('user_id', userId)
+      .maybeSingle();
+      
+    if (customerError) {
+      console.error('Error fetching customer data:', customerError);
+    }
+    
+    let customerId = customerData?.stripe_customer_id;
 
     try {
-      // Create a Stripe Checkout Session with improved error handling
-      const session = await stripe.checkout.sessions.create({
+      // Create checkout session options
+      const sessionOptions = {
         payment_method_types: ['card'],
         line_items: [
           {
@@ -117,13 +136,25 @@ Deno.serve(async (req) => {
         mode: 'subscription',
         success_url: `${req.headers.get('origin')}${redirectPath || '/subscription'}?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.get('origin')}/pricing`,
-        customer_email: userData.email || undefined,
         client_reference_id: userId,
         metadata: {
           userId,
           planId,
         },
-      });
+      };
+      
+      // If customer exists, use it
+      if (customerId) {
+        sessionOptions.customer = customerId;
+        console.log(`Using existing customer ID: ${customerId}`);
+      } else if (userData.email) {
+        // Otherwise use the email
+        sessionOptions.customer_email = userData.email;
+        console.log(`No customer ID found, using email: ${userData.email}`);
+      }
+      
+      // Create a Stripe Checkout Session
+      const session = await stripe.checkout.sessions.create(sessionOptions);
 
       console.log("Checkout session created successfully:", session.id);
 
