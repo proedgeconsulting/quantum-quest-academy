@@ -6,7 +6,12 @@ CREATE TABLE IF NOT EXISTS public.stripe_customers (
   stripe_customer_id TEXT NOT NULL,
   email TEXT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+  
+  -- Add constraint for unique stripe_customer_id
+  CONSTRAINT unique_stripe_customer_id UNIQUE (stripe_customer_id),
+  -- Add constraint for unique user_id
+  CONSTRAINT unique_user_id UNIQUE (user_id)
 );
 
 -- Create index for faster lookups
@@ -29,3 +34,17 @@ CREATE POLICY "Users can read their own customer records" ON public.stripe_custo
 CREATE POLICY "Service role can do anything" ON public.stripe_customers
   USING (auth.jwt() ->> 'role' = 'service_role')
   WITH CHECK (auth.jwt() ->> 'role' = 'service_role');
+
+-- Create a trigger to update the updated_at column
+CREATE OR REPLACE FUNCTION public.update_timestamp_stripe_customers()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_stripe_customers_timestamp
+BEFORE UPDATE ON public.stripe_customers
+FOR EACH ROW
+EXECUTE FUNCTION public.update_timestamp_stripe_customers();

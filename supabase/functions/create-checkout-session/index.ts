@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7'
 import Stripe from 'https://esm.sh/stripe@14.12.0';
 
@@ -24,12 +25,12 @@ function errorResponse(message, statusCode = 400, details = null) {
 // Map of plan IDs to Stripe price IDs
 // In production, this should be stored in a database or environment variables
 const PLAN_PRICE_MAP = {
-  'basic-monthly': 'price_1OzrHpDrUl6z9Ym5EBXz4JQm', // Example price ID
-  'basic-yearly': 'price_1OzrHpDrUl6z9Ym5aatrKKFD',  // These should be updated with actual
-  'pro-monthly': 'price_1OzrHqDrUl6z9Ym599CIxKJw',    // price IDs from your Stripe dashboard
-  'pro-yearly': 'price_1OzrHqDrUl6z9Ym5pBctdEXq',
-  'ultimate-monthly': 'price_1OzrHrDrUl6z9Ym5Y5Y4DTRT',
-  'ultimate-yearly': 'price_1OzrHrDrUl6z9Ym5v0pROsZD'
+  'basic-monthly': Deno.env.get('STRIPE_PRICE_BASIC_MONTHLY') || 'price_1OzrHpDrUl6z9Ym5EBXz4JQm',
+  'basic-yearly': Deno.env.get('STRIPE_PRICE_BASIC_YEARLY') || 'price_1OzrHpDrUl6z9Ym5aatrKKFD',
+  'pro-monthly': Deno.env.get('STRIPE_PRICE_PRO_MONTHLY') || 'price_1OzrHqDrUl6z9Ym599CIxKJw',
+  'pro-yearly': Deno.env.get('STRIPE_PRICE_PRO_YEARLY') || 'price_1OzrHqDrUl6z9Ym5pBctdEXq',
+  'ultimate-monthly': Deno.env.get('STRIPE_PRICE_ULTIMATE_MONTHLY') || 'price_1OzrHrDrUl6z9Ym5Y5Y4DTRT',
+  'ultimate-yearly': Deno.env.get('STRIPE_PRICE_ULTIMATE_YEARLY') || 'price_1OzrHrDrUl6z9Ym5v0pROsZD'
 };
 
 Deno.serve(async (req) => {
@@ -117,7 +118,7 @@ Deno.serve(async (req) => {
       .eq('user_id', userId)
       .maybeSingle();
       
-    if (customerError) {
+    if (customerError && !customerError.message.includes('No rows found')) {
       console.error('Error fetching customer data:', customerError);
     }
     
