@@ -12,13 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ChevronRight } from "lucide-react";
-import { UserSubscription } from "@/types/subscription";
 
 interface ContentAccessCardProps {
-  userSubscription: UserSubscription | null;
+  planName: string;
+  features: string[];
+  userSubscription?: any; // Using the existing prop
 }
 
-const ContentAccessCard: React.FC<ContentAccessCardProps> = ({ userSubscription }) => {
+const ContentAccessCard: React.FC<ContentAccessCardProps> = ({ 
+  planName, 
+  features, 
+  userSubscription 
+}) => {
   const navigate = useNavigate();
   
   return (

@@ -58,6 +58,7 @@ const SubscriptionManagement = () => {
               <ContentAccessCard 
                 planName={plan.name}
                 features={plan.features}
+                userSubscription={userSubscription}
               />
             )}
             
