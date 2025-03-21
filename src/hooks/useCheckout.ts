@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { SubscriptionPlan } from "@/data/subscriptionPlans";
+import { getSubscriptionPlanById } from "@/data/subscriptionPlans";
 
 export function useCheckout(planId: string | undefined) {
   const navigate = useNavigate();
@@ -14,6 +15,9 @@ export function useCheckout(planId: string | undefined) {
   const { refetchSubscription } = useSubscription();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  // Get plan from planId
+  const plan = planId ? getSubscriptionPlanById(planId) : undefined;
 
   // Check for success query param (returned from Stripe)
   useEffect(() => {
