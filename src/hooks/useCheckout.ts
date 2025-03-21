@@ -8,6 +8,7 @@ import { useSubscription } from "@/context/SubscriptionContext";
 import { SubscriptionPlan } from "@/data/subscriptionPlans";
 import { getSubscriptionPlanById } from "@/data/subscriptionPlans";
 import { event } from "@/utils/analytics";
+import { useMockCheckout } from "@/integrations/stripe/client";
 
 export function useCheckout(planId: string | undefined) {
   const navigate = useNavigate();
@@ -136,7 +137,56 @@ export function useCheckout(planId: string | undefined) {
         return;
       }
       
-      // For paid plans, use Stripe Checkout
+      // For paid plans, check if we're using mock checkout
+      if (useMockCheckout) {
+        console.log("Using mock checkout for plan:", plan.id);
+        
+        // Create a mock subscription
+        const now = new Date();
+        const endDate = new Date();
+        
+        // Set end date based on plan interval
+        if (plan.interval === "monthly") {
+          endDate.setMonth(now.getMonth() + 1);
+        } else {
+          endDate.setFullYear(now.getFullYear() + 1);
+        }
+        
+        // Create a mock subscription in the database
+        const { error: subscriptionError } = await supabase.from("user_subscriptions").insert({
+          user_id: user.id,
+          plan_id: plan.id,
+          price_id: `mock_price_${plan.id}`,
+          stripe_subscription_id: `mock_sub_${Date.now()}`,
+          stripe_customer_id: `mock_cus_${user.id}`,
+          status: "active",
+          current_period_start: now.toISOString(),
+          current_period_end: endDate.toISOString(),
+          cancel_at_period_end: false,
+          tier: plan.tier
+        });
+        
+        if (subscriptionError) {
+          console.error("Error creating mock subscription:", subscriptionError);
+          throw new Error(`Failed to create mock subscription: ${subscriptionError.message}`);
+        }
+        
+        await refetchSubscription();
+        setIsSuccess(true);
+        
+        toast({
+          title: "Mock subscription activated!",
+          description: `Your ${plan.name} subscription has been activated in development mode.`,
+        });
+        
+        setTimeout(() => {
+          navigate("/subscription");
+        }, 3000);
+        
+        return;
+      }
+      
+      // For paid plans with real Stripe, use the checkout API
       console.log("Initiating Stripe checkout for plan:", plan.id);
       
       // Use the full URL to the Supabase Edge Function

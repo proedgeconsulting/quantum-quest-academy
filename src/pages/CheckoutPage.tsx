@@ -7,6 +7,7 @@ import { getSubscriptionPlanById } from "@/data/subscriptionPlans";
 import CheckoutSuccess from "@/components/checkout/CheckoutSuccess";
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import OrderSummary from "@/components/checkout/OrderSummary";
+import MockCheckoutBanner from "@/components/subscription/MockCheckoutBanner";
 import { useCheckout } from "@/hooks/useCheckout";
 
 const CheckoutPage = () => {
@@ -22,6 +23,8 @@ const CheckoutPage = () => {
       
       <main className="flex-grow py-12">
         <div className="container px-4 max-w-4xl mx-auto">
+          <MockCheckoutBanner />
+          
           {isSuccess ? (
             <CheckoutSuccess plan={plan} />
           ) : (
