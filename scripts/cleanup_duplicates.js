@@ -1,3 +1,5 @@
+
+#!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
 
@@ -89,3 +91,8 @@ if (duplicates.length === 0) {
   
   console.log("\nCleanup complete!");
 }
+
+// Add this note for users running the script
+console.log("\nNote: To run this script, use:");
+console.log("  node scripts/cleanup_duplicates.js");
+console.log("No modification to package.json is needed.");
