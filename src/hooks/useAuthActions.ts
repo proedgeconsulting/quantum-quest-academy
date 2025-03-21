@@ -112,14 +112,29 @@ export function useAuthActions(setProfile: React.Dispatch<React.SetStateAction<P
 
   const signOut = async () => {
     try {
+      console.log("Sign out initiated");
+      // Set loading state first to prevent any potential UI blocking
       setLoading(true);
-      await supabase.auth.signOut();
+      
+      // Clear profile immediately to prevent UI inconsistency
+      setProfile(null);
+      
+      // Perform the actual sign out operation
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        throw error;
+      }
+      
       toast({
         title: "Signed out",
         description: "You have been signed out successfully",
       });
+      
+      // Navigate to home page
       navigate("/");
     } catch (error: any) {
+      console.error("Sign out error:", error);
       toast({
         title: "Sign out failed",
         description: error.message || "Failed to sign out",
