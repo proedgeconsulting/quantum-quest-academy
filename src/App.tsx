@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import Curriculum from "./pages/Curriculum";
@@ -67,21 +67,23 @@ const AppRoutes = () => (
   </AnalyticsWrapper>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
           <SubscriptionProvider>
-            <Toaster />
-            <Sonner />
-            <AppRoutes />
-            <FloatingChatbot />
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <AppRoutes />
+              <FloatingChatbot />
+            </TooltipProvider>
           </SubscriptionProvider>
         </AuthProvider>
       </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </QueryClientProvider>
+  );
+}
 
 export default App;

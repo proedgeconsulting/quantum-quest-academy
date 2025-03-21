@@ -24,7 +24,13 @@ const SubscriptionManagement = () => {
     getSubscriptionPlanById("free");
   
   if (!user) {
-    return <SubscriptionGate />;
+    return (
+      <SubscriptionGate 
+        requiredTier="basic"
+      >
+        <div>Please sign in to access subscription management.</div>
+      </SubscriptionGate>
+    );
   }
   
   return (
@@ -50,7 +56,8 @@ const SubscriptionManagement = () => {
             {/* Content Access Card */}
             {plan && (
               <ContentAccessCard 
-                plan={plan} 
+                planName={plan.name}
+                features={plan.features}
               />
             )}
             

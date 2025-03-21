@@ -9,7 +9,7 @@ const MockCheckoutBanner = () => {
   if (!useMockCheckout) return null;
   
   return (
-    <Alert variant="warning" className="mb-6 bg-yellow-50 border-yellow-200 dark:bg-yellow-950 dark:border-yellow-800">
+    <Alert className="mb-6 bg-yellow-50 border-yellow-200 dark:bg-yellow-950 dark:border-yellow-800">
       <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
       <AlertTitle>Development Mode</AlertTitle>
       <AlertDescription>
